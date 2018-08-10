@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_autoriza"
+            />
+
+        <ScrollView
+            android:background="@drawable/background"
+            android:id="@+id/scroll_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:background="@drawable/background"
+                    android:layout_marginTop="2dp"
+                    android:padding="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="610dp"
+                    android:orientation="horizontal">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:orientation="horizontal"
+                        android:background="@drawable/estilo_boton_blanco"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+
+                        <LinearLayout
+                            android:id="@+id/linearLayoutHeader"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:orientation="horizontal"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="18dp"
+                                android:layout_weight="1"
+                                android:text=""
+                                android:textColor="@color/azultaco"
+                                android:textSize="14sp"
+                                app:typeface="robotoRegular" />
+
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginTop="10dp"
+                            app:typeface="robotoBold"
+                            android:text="Puntos"
+                            android:textColor="@color/colorPrimaryDark"/>
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:background="@color/blanco"
+                            android:id="@+id/linearLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="2dp"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayoutHeader">
+
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:id="@+id/tituloMacro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_margin="0dp"
+                                android:textSize="14dp"
+                                app:typeface="robotoBold"
+                                android:layout_marginTop="0dp"
+                                android:text="@string/macro_ubicaci_n"
+                                android:textColor="@color/colorPrimaryDark"/>
+
+                            <TableLayout
+                                android:layout_marginTop="4dp"
+                                android:id="@+id/factores"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:divider="@drawable/line"
+                                android:dividerPadding="-2dp"
+                                android:orientation="horizontal"
+                                android:showDividers="middle"
+                                android:layout_marginBottom="4dp"
+                                android:stretchColumns="*">
+
+                            </TableLayout>
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:id="@+id/tituloMicro"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="left"
+                                android:layout_margin="0dp"
+                                android:textSize="14dp"
+                                android:layout_marginTop="4dp"
+                                app:typeface="robotoBold"
+                                android:text="@string/micro_ubicaci_n"
+                                android:textColor="@color/colorPrimaryDark"/>
+
+                            <TableLayout
+                                android:id="@+id/factoresMicro"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:divider="@drawable/line"
+                                android:dividerPadding="-2dp"
+                                android:layout_marginTop="4dp"
+                                android:orientation="horizontal"
+                                android:showDividers="middle"
+                                android:stretchColumns="*">
+
+                            </TableLayout>
+
+                        </LinearLayout>
+
+
+
+
+                    </android.support.constraint.ConstraintLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

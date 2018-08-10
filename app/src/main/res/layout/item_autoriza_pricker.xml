@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <import type="android.view.View" />
+        <variable
+            name="listener"
+            type="expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolder.Listener"/>
+        <variable
+            name="autorizaModel"
+            type="expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Autorizadas.Memoria"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/card_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_margin="@dimen/card_margin"
+            android:elevation="1dp"
+            card_view:cardCornerRadius="@dimen/card_album_radius">
+
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:onClick="@{view -> listener.onAutorizaSelect(autorizaModel)}">
+
+                <LinearLayout
+                    android:id="@+id/borde_card"
+                    android:background="@drawable/estilo_boton_blanco"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+
+                    <ImageView
+                        android:layout_marginStart="7dp"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_clock_rojo"
+                        android:layout_marginTop="5dp"
+                        android:visibility="@{autorizaModel.atrasada == 0 ? View.GONE : View.VISIBLE}"
+                        />
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="3dp"
+                        android:paddingTop="2dp"
+                        android:text=" "
+                        android:textSize="8dp"
+                        android:visibility="@{autorizaModel.atrasada == 0 ? View.VISIBLE : View.GONE}"
+                        />
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/nombre_md"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="3dp"
+                        android:text="@{String.valueOf(autorizaModel.nombresitio)}"
+                        android:textColor="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                        android:textSize="12dp" />
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/nombre_creo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="2dp"
+                        android:paddingTop="5dp"
+                        android:text="@{String.valueOf(autorizaModel.creador)}"
+                        android:textColor="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                        android:textSize="8dp" />
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:id="@+id/categoria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginLeft="8dp"
+                            android:layout_marginTop="1dp"
+                            android:text="@{String.valueOf(autorizaModel.categoria)}"
+                            android:textColor="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                            android:textSize="12dp" />
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:id="@+id/puntuacion"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="3dp"
+                            android:layout_marginLeft="50dp"
+                            android:layout_marginTop="1dp"
+                            android:text="@{String.valueOf(autorizaModel.puntuacionmd)}"
+                            android:textColor="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                            android:textSize="12dp" />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_height="wrap_content">
+
+
+                        <ProgressBar
+                            android:id="@+id/colaboradores"
+                            android:backgroundTint="@color/azultaco"
+                            style="?android:attr/progressBarStyleHorizontal"
+                            android:layout_width="60dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:progressTint="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                            android:max="100"
+                            android:progress="@{String.valueOf(autorizaModel.categoria).equals(@string/categoria_a) ? 100 : String.valueOf(autorizaModel.categoria).equals(@string/categoria_b) ? 60 : 30}"
+                            />
+
+                        <LinearLayout
+                            android:layout_marginStart="-4dp"
+                            android:layout_marginTop="-3dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+
+                            <ImageView
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:tint="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                                android:src="@drawable/estrella" />
+
+                            <ImageView
+                                android:layout_marginStart="2dp"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:src="@drawable/estrella"
+                                android:tint="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                                android:visibility="@{String.valueOf(autorizaModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}"
+                                />
+
+                            <ImageView
+                                android:layout_marginStart="2dp"
+                                android:layout_width="10dp"
+                                android:layout_height="10dp"
+                                android:src="@drawable/estrella"
+                                android:tint="@{autorizaModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                                android:visibility="@{String.valueOf(autorizaModel.categoria).equals(@string/categoria_b) || String.valueOf(autorizaModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}"
+                                />
+
+                        </LinearLayout>
+
+
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+
+
+        </android.support.v7.widget.CardView>
+
+    </LinearLayout>
+
+</layout>

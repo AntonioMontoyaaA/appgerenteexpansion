@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:background="@drawable/background"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/buscar"
+            android:padding="4dp"
+            android:backgroundTint="@color/blanco"
+            android:drawableLeft="@drawable/places_ic_search"
+            android:drawableTint="@color/azultaco"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_edit_buscar"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            android:layout_height="28dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/buscar"
+            android:imeOptions="actionSearch"/>
+
+
+        <LinearLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/layouts"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_autoriza"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+
+            <ProgressBar
+                android:layout_gravity="center"
+                android:id="@+id/prog"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:indeterminate="true" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>

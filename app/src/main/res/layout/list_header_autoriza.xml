@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/blanco"
+    android:paddingLeft="22dp"
+    android:paddingRight="22dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="8dp"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/tienes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tienes"
+            android:textColor="@color/azul"
+            android:textSize="16sp"
+            app:typeface="robotoLight" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/numeroPendientes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="3"
+            android:textColor="@color/azul"
+            android:textSize="20sp"
+            app:typeface="robotoLight" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/texto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MD pendientes a realizar"
+            android:textColor="@color/azul"
+            android:textSize="16sp"
+            app:typeface="robotoLight" />
+    </LinearLayout>
+
+</LinearLayout>

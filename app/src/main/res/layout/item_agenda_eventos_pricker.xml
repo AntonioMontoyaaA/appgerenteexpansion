@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="listener"
+            type="expansion.neto.com.mx.gerenteapp.sorted.agenda.AgendaEventosHolder.Listener"/>
+
+        <variable
+            name="agenda"
+            type="expansion.neto.com.mx.gerenteapp.modelView.agendaModel.ConsultaEvento.Agenda"/>
+
+        <variable
+            name="visible"
+            type="Boolean"/>
+
+        <import type="android.view.View" />
+
+
+    </data>
+
+
+
+    <android.support.constraint.ConstraintLayout
+        android:onClick="@{view -> listener.onAgendaSelect(agenda)}"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/estilo_boton_azul_claro"
+        android:orientation="horizontal">
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/robotoTextView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="16dp"
+            android:text="@{ `De `+String.valueOf(agenda.fechaCompleta)}"
+            android:textColor="@color/blanco"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typeface="robotoRegular" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/robotoTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ `a las ` + String.valueOf(agenda.tiempoInicio)}"
+            android:textColor="@color/blanco"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/robotoTextView6"
+            app:typeface="robotoRegular" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/robotoTextView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ `Para `+String.valueOf(agenda.fechaCompletaFinal)}"
+            android:textColor="@color/blanco"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/robotoTextView"
+            app:typeface="robotoRegular" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/robotoTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ `a las ` + String.valueOf(agenda.tiempoFinal)}"
+            android:textColor="@color/blanco"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/robotoTextView8"
+            app:typeface="robotoRegular" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/robotoTextView7"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ String.valueOf(agenda.status)}"
+            android:textColor="@color/blanco"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/robotoTextView1"
+            app:typeface="robotoRegular" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout15"
+            android:layout_width="219dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/estilo_boton_blanco"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0">
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/nombreevento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="4dp"
+                android:text="@{ String.valueOf(agenda.nombre)}"
+                android:textColor="@color/azul"
+                android:textSize="12sp"
+                app:typeface="robotoRegular" />
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/direccion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:text="@{ String.valueOf(agenda.lugar)}"
+                android:textColor="@color/azul"
+                android:textSize="10sp"
+                app:typeface="robotoRegular" />
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/descripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:text="@{ String.valueOf(agenda.descripcion)}"
+                android:textColor="@color/azul"
+                android:textSize="10sp"
+                app:typeface="robotoRegular" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/participantes"
+                    android:textColor="@color/azul"
+                    android:textSize="10sp"
+                    app:typeface="robotoRegular" />
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/participantes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="2dp"
+                    android:text="@{ String.valueOf(agenda.listaUsuariosAsignados.get(0).nombre)}"
+                    android:textColor="@color/azul"
+                    android:textSize="10sp"
+                    app:typeface="robotoRegular" />
+
+            </LinearLayout>
+
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/asignado"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                android:layout_marginEnd="4dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="2dp"
+                android:text="@{ `Asignado por `+String.valueOf(agenda.nombreUsuarioAsigna)}"
+                android:textColor="@color/azul"
+                android:textSize="10sp"
+                app:typeface="robotoRegular" />
+
+
+        </LinearLayout>
+
+
+    </android.support.constraint.ConstraintLayout>
+
+
+</layout>

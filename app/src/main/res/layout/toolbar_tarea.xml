@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable name="usuario"
+            type="expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario"/>
+    </data>
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_top"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@color/colorPrimary">
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tarea"
+            android:layout_gravity="center"
+            android:textSize="20dp"
+            app:typeface="robotoBold"
+            />
+
+
+    </android.support.v7.widget.Toolbar>
+
+</layout>

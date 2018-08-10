@@ -1,0 +1,225 @@
+<resources>
+
+    <string name="app_name">Evaluación de sitios</string>
+
+
+    <!-- Splash Screen -->
+
+    <string name="tituloAnimacion">EVALUACIÓN DE SITIOS</string>
+
+
+
+    <!-- activity login -->
+    <string name="atrasadas">1</string>
+
+    <string name="tituloLogin">ADMINISTRA TUS MD</string>
+    <string name="usuarioLogin">Usuario</string>
+    <string name="contraLogin">Contraseña</string>
+    <string name="entrarLogin">Iniciar sesión</string>
+    <string name="administramd">EVALUA TUS MD</string>
+
+    <string name="internet">Necesitas estar conectado a internet</string>
+    <string name="reintentar">Reintentar</string>
+    <string name="reintenta">Reintente más tarde</string>
+
+
+    <string name="usuarioIncorrecto">Tu usuario y contraseña no son correctos</string>
+    <string name="sizeContra">Usuario y contraseña debe tener más de 10 carácteres</string>
+    <string name="conexionInternet">Tu conexión a Internet es inestable</string>
+
+    <string name="mdnull">En este mes no existe ninguna MD por autorizar</string>
+    <string name="sinMDAutorizadas">No existen MDs por autorizar</string>
+    <string name="sinMDProceso">No existen MDs en proceso</string>
+
+    <!-- Dashboard Activity -->
+
+    <string name="nombreUsuario">GUADALUPE MARIANA\u0020</string>
+    <string name="cambiarContra">Cambiar contraseña\u0020</string>
+    <string name="salir">Salir\u0020</string>
+    <string name="intentaSalir">Presiona de nuevo para salir\u0020</string>
+
+
+    <!-- Activity Autoriza -->
+
+
+    <string name="favor">Favor de escribir un comentario</string>
+
+
+    <string name="md">MD</string>
+    <string name="area">Área</string>
+    <string name="puntos">Puntos</string>
+    <string name="categoria">Categoría</string>
+
+    <string name="obtuvo">Este sitio obtuvo</string>
+    <string name="direccion">Dirección</string>
+
+    <string name="frente">Frente:</string>
+    <string name="profundidad">Profundidad</string>
+    <string name="total">Total</string>
+    <string name="frontal">Frontal</string>
+    <string name="lateral1">Lateral 1</string>
+    <string name="lateral2">Lateral 2</string>
+
+
+    <string name="nombre">Nombre</string>
+    <string name="telefono">Teléfono</string>
+    <string name="email">Email</string>
+
+    <string name="local">\u2022 Local</string>
+
+    <string name="bien">\u2022 </string>
+
+
+    <string name="renta">Renta</string>
+    <string name="amortizacion">Amortización</string>
+    <string name="periodo">Periodo de gracia</string>
+    <string name="tiempode">Tiempo de amortización</string>
+    <string name="autorizado">Se autorizará este punto</string>
+
+    <string name="rechazado">Se rechazará este punto</string>
+
+    <string name="disponibilidad">Disponibilidad</string>
+    <string name="inmediata">\u2022 Inmediata</string>
+
+
+    <string name="porAutorizar">Por autorizar</string>
+    <string name="enProceso">En proceso</string>
+    <string name="mdsRechazadas">Rechazadas</string>
+    <string name="mdsAutorizadas">Autorizadas</string>
+
+    <string name="enProcesoMenuTiempos">TIEMPOS</string>
+    <string name="enProcesoMenuChat">CHAT</string>
+
+    <string name="material_icon_point_empty">&#xe868;</string>
+    <string name="material_icon_point_full">&#xe869;</string>
+    <string name="autoriza">POR AUTORIZAR\u0020</string>
+    <string name="revisar">REVISAR\u0020</string>
+    <string name="siguiente">SIGUIENTE\u0020</string>
+    <string name="conteo">Conteo\u0020</string>
+
+    <string name="aceptar">Aceptar</string>
+
+    <string name="datossitio">1. Datos del sitio</string>
+    <string name="datospropietario">2. Datos del propietario</string>
+    <string name="datossuperficie">3. Superficie</string>
+    <string name="zonifica">4. Zonificación</string>
+    <string name="construccion">5. Construcción</string>
+    <string name="generalidades">6. Generalidades del sitio</string>
+    <string name="flujopeatonal">7. Flujo peatonal</string>
+    <string name="resumenpuntuacion">Resumen Puntuación</string>
+    <string name="resumenautorizacion">Resumen Autorización</string>
+
+
+
+    <!-- mapa -->
+    <string name="google_maps_key">AIzaSyAo-L-dbGjebd6KJd0-UeJprGk9o6YMVqY</string>
+
+    <!-- agenda -->
+    <string name="agenda">AGENDA\u0020</string>
+    <string name="tarea">TAREA\u0020</string>
+
+    <string name="evento">Evento</string>
+    <string name="tododia">Todo el dia</string>
+    <string name="empleados">Empleados</string>
+
+
+    <string name="accion_hoy">Hoy</string>
+    <string name="accion_ver">Ver 1.1.1</string>
+    <string name="accion_tres">Ver 3 días</string>
+    <string name="accion_semana">Ver la semana</string>
+    <string name="calendario">Calendario</string>
+    <string name="fin">Fin</string>
+    <string name="nuevoevento">Nuevo evento</string>
+
+    <string name="nombreTitulo">Título</string>
+    <string name="personas_contadas">Personas contadas</string>
+    <string name="micro_ubicaci_n">MICRO UBICACIÓN</string>
+    <string name="macro_ubicaci_n">MACRO UBICACIÓN</string>
+    <string name="resumen_puntuaci_n">Resumen Puntuación</string>
+    <!-- menu izquierdo -->
+
+    <string name="inicio">Inicio</string>
+    <string name="crear">Por autorizar</string>
+    <string name="terminar">Por terminar</string>
+    <string name="proceso">En proceso</string>
+    <string name="rechazadas">Rechazadas</string>
+    <string name="agendas">Agenda</string>
+    <string name="colaboradores">Mis colaboradores</string>
+
+    <string name="contra">Cambiar contraseña</string>
+    <string name="sesion">Cerrar sesión</string>
+
+    <string name="navigation_drawer_open" translatable="false">Abrir left menu</string>
+    <string name="navigation_drawer_close" translatable="false">Cerrar left menu</string>
+
+    <string name="fontello_logo">&#xe8ad;</string>
+    <string name="fontello_search">&#xea01;</string>
+    <string name="fontello_x_mark">&#xe887;</string>
+    <string name="fontello_x_mark_masked">&#xe885;</string>
+    <string name="fontello_microfon">&#xea18;</string>
+    <string name="fontello_user">&#xe800;</string>
+    <string name="fontello_password">&#xe9df;</string>
+    <string name="fontello_upload">&#xeb30;</string>
+    <string name="fontello_play">&#xea7d;</string>
+    <string name="fontello_heart_empty">&#xe9b5;</string>
+    <string name="fontello_heart_full">&#xe9b6;</string>
+    <string name="fontello_drag_and_drop">&#xe988;</string>
+
+    <string name="material_icon_favorite">&#xe9b6;</string>
+    <string name="material_icon_share">&#xeac0;</string>
+    <string name="material_icon_like">&#xeb03;</string>
+
+    <string name="tip">Mensaje tip</string>
+    <string name="participantes">Participantes:</string>
+    <string name="categoria_a">A</string>
+    <string name="categoria_b">B</string>
+    <string name="categoria_c">C</string>
+
+    <string name="buscar">Buscar</string>
+
+    <string name="finaliza_md">Tus comentarios serán enviados a tu jefe de expansión:</string>
+
+    <string name="descripcion_razon_rechazo">Un módulo presenta un rechazo definitivo cuando el motivo de rechazo es determinante para no crear el sitio</string>
+
+    <string name="verdetalle">Ver detalle</string>
+
+    <!-- agenda -->
+
+    <string name="pendientes">Pendientes</string>
+
+    <string name="notificaciones">Notificaciones</string>
+
+    <string name="porvencer">Por vencer</string>
+    <string name="hoy_24_de_abril_2018">Hoy 24 de Abril 2018</string>
+    <string name="plan">Plan</string>
+    <string name="real">Real</string>
+    <string name="creada">Creada el:</string>
+
+    <string name="modificar">Modificar</string>
+    <string name="valida">R</string>
+    <string name="aceptado">A</string>
+    <string name="entrar">ACEPTADO</string>
+    <string name="correciones">Esta MD llego a su máximo de correcciones</string>
+    <string name="creation">Creada el:</string>
+    <string name="g_expansi_n">G Expansión</string>
+    <string name="expansi_n">Expansión</string>
+    <string name="gestor_a">Gestoría</string>
+    <string name="construcci_n">Construcción</string>
+    <string name="operaciones">Operaciones</string>
+    <string name="auditor_a">Auditoría</string>
+    <string name="puntuaci_n">Puntuación</string>
+    <string name="guion">-</string>
+    <string name="categor_a">Categoría</string>
+    <string name="escribir">Escribir mensaje</string>
+    <string name="escribir_e">Escribir mensaje a expansión</string>
+    <string name="escribir_g">Escribir mensaje a gestoría</string>
+    <string name="escribir_c">Escribir mensaje a construcción</string>
+    <string name="escribir_o">Escribir mensaje a operaciones</string>
+    <string name="permisosnocompletados">Permisos no completados</string>
+    <string name="datos_faltantes">Datos faltantes</string>
+    <string name="cronometro">Cronómetro</string>
+    <string name="no_estas">No estas ubicado en la MD, no puedes volver a tomar las fotos</string>
+    <string name="chat">Chat</string>
+    <string name="horario_mal">Revisa el total de peatones u el horario</string>
+
+</resources>

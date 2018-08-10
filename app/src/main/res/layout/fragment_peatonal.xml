@@ -1,0 +1,391 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:orientation="vertical">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="5dp"
+            android:layout_marginHorizontal="13dp"
+            android:background="@drawable/lineal1" />
+
+        <LinearLayout
+            android:id="@+id/content_agregar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+
+
+            <ImageView
+                android:id="@+id/regresar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginStart="25dp"
+                android:background="@drawable/flechaizqazul"
+                android:textColor="@color/letra"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:typeface="robotoBold" />
+
+
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Fecha"
+                    app:typeface="robotoRegular"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/fecha_hoy"
+                    android:layout_width="0dp"
+                    app:typeface="robotoRegular"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.5"
+                    android:gravity="right"
+
+                    android:text="08 de Abril 2018"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginTop="2dp"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    app:typeface="robotoRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Hora"
+                    android:layout_gravity="center"
+                    android:gravity="left"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+
+                <com.jaredrummler.materialspinner.MaterialSpinner
+                    android:id="@+id/spinnerHora"
+                    android:layout_width="190dp"
+                    android:textSize="12sp"
+                    android:layout_height="40dp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginTop="-10dp"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    app:typeface="robotoRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="@string/personas_contadas"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+                <android.support.design.widget.TextInputLayout
+                    android:id="@+id/til_estado"
+                    android:layout_width="match_parent"
+                    android:layout_height="55dp"
+                    android:layout_marginHorizontal="16dp"
+                    android:backgroundTint="@color/colorPrimary"
+                    android:textColorHint="@color/colorPrimary"
+                    android:visibility="gone"
+
+                    >
+
+                    <EditText
+                        android:visibility="gone"
+                        android:id="@+id/et_total"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="number"
+                        android:maxLength="5"
+                        android:singleLine="true"
+                        android:textColor="#254581"
+                        android:textSize="13sp" />
+                </android.support.design.widget.TextInputLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="2dp"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:layout_width="200dp"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:alpha=".3"
+                    android:background="@drawable/background_peatonal"
+                    android:layout_weight="1"
+                    android:layout_width="40dp"
+                    android:layout_height="70dp">
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/mil"
+                        app:typeface="robotoRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="52sp" />
+
+                </LinearLayout>
+                <LinearLayout
+                    android:alpha=".3"
+                    android:background="@drawable/background_peatonal"
+                    android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_width="40dp"
+                    android:layout_height="70dp">
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/cien"
+                        app:typeface="robotoRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="52sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:alpha=".3"
+                    android:background="@drawable/background_peatonal"
+                    android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_width="40dp"
+                    android:layout_height="70dp">
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/diez"
+                        app:typeface="robotoRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="52sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:alpha=".3"
+                    android:background="@drawable/background_peatonal"
+                    android:layout_weight="1"
+                    android:layout_marginStart="2dp"
+                    android:layout_width="40dp"
+                    android:layout_height="70dp">
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/real"
+                        app:typeface="robotoRegular"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="@color/colorPrimaryDark"
+                        android:textSize="52sp" />
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    app:typeface="robotoRegular"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="Presiona el boton por cada persona que mires"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/presion"
+                    android:src="@drawable/push"
+                    app:typeface="robotoRegular"
+                    android:layout_width="85dp"
+                    android:layout_height="85dp"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/reset"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                >
+
+                <ImageView
+                    android:layout_marginStart="200dp"
+                    android:layout_marginTop="0dp"
+                    android:id="@+id/borrar"
+                    android:src="@drawable/garbage_59"
+                    app:typeface="robotoRegular"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/colorPrimaryDark"
+                    android:textSize="12sp" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_marginHorizontal="13dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/lineal1" />
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                app:typeface="robotoRegular"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginTop="4dp"
+                android:gravity="left"
+                android:text="@string/cronometro"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                app:typeface="robotoRegular"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="26dp"
+                android:text="00:00"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:id="@+id/contador"
+                android:textSize="40sp"
+                android:textColor="@color/colorPrimaryDark" />
+
+            <Chronometer
+                android:visibility="gone"
+                android:layout_marginTop="4dp"
+                android:id="@+id/chronometer1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Chronometer"
+                android:textColor="@color/colorPrimaryDark"
+                android:textSize="40sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="40dp"
+                android:layout_marginTop="-2dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/cronometro_play"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/play"
+                    android:visibility="visible" />
+
+                <ImageView
+                    android:visibility="gone"
+                    android:id="@+id/cronometro_pause"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_pause" />
+
+                <ImageView
+                    android:id="@+id/cronometro_stop"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/stop" />
+            </LinearLayout>
+
+            <Button
+                android:enabled="false"
+                android:layout_marginTop="20dp"
+                android:id="@+id/btn_guardar"
+                android:layout_width="200dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:background="@drawable/estilo_boton_azul_claro"
+                android:text="Guardar"
+                android:textAllCaps="false"
+                android:textColor="@color/blanco" />
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                app:typeface="robotoRegular"
+                android:textSize="12sp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center"
+                android:text="Recuerda que el conteo peatonal debe ser de 1 hora"
+                android:textColor="@color/colorPrimaryDark" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

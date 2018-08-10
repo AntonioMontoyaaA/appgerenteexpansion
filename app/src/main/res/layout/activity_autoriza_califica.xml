@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+    </data>
+
+    <ScrollView
+        android:id="@+id/scroll_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/blanco">
+
+        <LinearLayout
+
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_autoriza"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:layout_marginTop="18dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/numeroMD"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="MD 180228001 Oaxaca Centro"
+                    android:textColor="@color/tituloAutoriza"
+                    android:textSize="14sp"
+                    app:typeface="robotoRegular" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Autoriza la MD"
+                    android:textColor="@color/letra"
+                    android:textSize="26sp"
+                    app:typeface="robotoBold" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="right">
+
+                <Button
+                    android:textColor="@color/blanco"
+                    android:text="AUTORIZAR"
+                    android:background="@color/autorizabox"
+                    android:layout_margin="10dp"
+                    android:layout_height="48dp"
+                    android:layout_weight="1"
+
+                    android:layout_width="100dp" />
+
+                <Button
+                    android:textColor="@color/blanco"
+                    android:text="RECHAZAR"
+                    android:background="@color/rechazar"
+                    android:layout_weight="1"
+                    android:layout_margin="10dp"
+                    android:layout_height="48dp"
+                    android:layout_width="100dp" />
+
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/autorizabox"
+                android:orientation="vertical">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Comentarios:"
+                    android:textColor="@color/letra"
+                    android:textSize="16sp"
+                    app:typeface="robotoRegular" />
+
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:layout_marginTop="15dp"
+                    android:layout_marginEnd="15dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginBottom="15dp"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:text="Las fotografías no son claras"
+                    android:textColor="@color/letra"
+                    android:textSize="14sp"
+                    app:typeface="robotoRegular" />
+            </LinearLayout>
+
+
+
+            <LinearLayout
+                android:layout_marginTop="7dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal">
+
+                <Button
+                    android:id="@+id/enviar"
+                    android:textColor="@color/blanco"
+                    android:text="ENVIAR"
+                    android:background="@color/azulclaro"
+                    android:layout_margin="10dp"
+                    android:layout_height="48dp"
+                    android:layout_width="180dp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </ScrollView>
+</layout>

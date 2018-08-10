@@ -1,0 +1,133 @@
+<resources>
+
+    <style name="datepicker" parent="Theme.AppCompat.Light.Dialog">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimary</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+
+    <style name="tabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">10sp</item>
+    </style>
+    <!-- Base application sin bar. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/blanco</item>
+
+        <!-- To change the popup menu and app text color  -->
+        <item name="android:textColor">@color/blanco</item>
+        <!-- To change the background of options menu-->
+        <item name="android:itemBackground">@color/azulclaro</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/mySpinnerItemStyle</item>
+        <item name="android:spinnerItemStyle">@style/mySpinnerItemStyle</item>
+
+    </style>
+
+
+    <!-- Base application con bar. -->
+    <style name="AppThemeActionBar" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/blanco</item>
+    </style>
+
+    <style name="vertical_separator">
+        <item name="android:layout_width">@dimen/login_vertical_separation</item>
+        <item name="android:layout_height">@dimen/login_vertical_separation</item>
+    </style>
+
+    <style name="AppTheme.CharacterCounter" parent="TextAppearance.AppCompat.Small">
+        <item name="android:textColor">@color/azul</item>
+        <item name="android:background">@color/azul</item>
+    </style>
+
+    <style name="TextLabel" parent="TextAppearance.AppCompat">
+        <!-- Hint color and label color in FALSE state -->
+        <item name="android:textColorHint">@color/colorPrimary</item>
+        <item name="android:textSize">18sp</item>
+        <!-- Label color in TRUE state and bar color FALSE and TRUE State -->
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="colorControlNormal">@color/colorPrimary</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+
+    <style name="AppTheme.RoundedCornerMaterialButton" parent="Widget.AppCompat.Button.Colored">
+        <item name="android:background">@drawable/estilo_boton</item>
+    </style>
+
+
+
+    <style name="carview" parent="CardView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginStart">4dp</item>
+        <item name="android:layout_marginEnd">4dp</item>
+        <item name="cardCornerRadius">0dp</item>
+        <item name="cardElevation">0dp</item>
+    </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+        <item name="colorControlNormal">@color/estrellaWithout</item>
+        <item name="colorControlActivated">@color/estrellaWith</item>
+    </style>
+
+    <style name="textInput" parent="TextAppearance.AppCompat">
+        <item name="android:textColor">@color/colorPrimary</item>
+    </style>
+
+    <style name="SalidaSubHeaderSeparador">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:text">|</item>
+        <item name="android:textColor">@color/azul</item>
+    </style>
+
+    <style name="edtText" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="colorControlNormal">@color/azul</item>
+    <item name="colorControlActivated">@color/azul</item>
+    <item name="colorControlHighlight">@color/azul</item>
+    <item name="android:textColor">?attr/colorPrimary</item>
+    <item name="editTextColor">@color/azul</item>
+    <item name="textColor">@color/azul</item>
+    <item name="colorPrimary">@color/azul</item>
+    <item name="colorPrimaryDark">@color/azul</item>
+    <item name="colorAccent">@color/azul</item>
+    <item name="android:textColorHint">@color/azul</item>
+    </style>
+
+
+    <!-- ListView related themes -->
+    <style name="ListViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/azultaco</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:choiceMode">singleChoice</item>
+        <item name="android:divider">@android:color/transparent</item>
+        <item name="android:dividerHeight">0dp</item>
+    </style>
+    <!-- ListView related themes end here -->
+
+    <style name="ImageViewStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:contentDescription">@string/inicio</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <!-- <item name="android:paddingBottom">8dp</item> -->
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:cropToPadding">true</item>
+    </style>
+
+    <style name="mySpinnerItemStyle" parent="@android:style/Widget.Holo.DropDownItem.Spinner">
+        <item name="android:textColor">@color/my_spinner_text_color</item>
+    </style>
+
+</resources>

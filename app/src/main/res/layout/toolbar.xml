@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@color/colorPrimary"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:theme="@style/Theme.AppCompat"
+        app:elevation="0dp"
+        android:elevation="0dp"
+        app:titleTextColor="@color/blanco"
+        >
+
+        <LinearLayout
+            android:id="@+id/linearNotificacion"
+            android:layout_gravity="end"
+            android:layout_marginEnd="5dp"
+            android:layout_width="50dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:layout_marginStart="5dp"
+                android:layout_gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/notificaciones"
+                />
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/numNotificacion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                tools:text=""
+                android:layout_gravity="center"
+                android:layout_marginTop="-10dp"
+                android:textColor="@color/blanco"
+                android:textSize="12sp"
+                app:typeface="robotoBold" />
+        </LinearLayout>
+
+    </android.support.v7.widget.Toolbar>
+
+    <View
+        android:id="@+id/elevation"
+        android:layout_width="0dp"
+        android:alpha="0.0"
+        android:layout_height="0dp"
+        android:background="#80000000"/>
+
+</LinearLayout>

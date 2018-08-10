@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#363c4a</color>
+    <color name="colorPrimaryGerente">#363C4A</color>
+    <color name="colorPrimaryDark">#363C4A</color>
+    <color name="colorAccent">#363C4A</color>
+
+    <color name="blanco">#ffffff</color>
+    <color name="azul">#254581</color>
+    <color name="azulclaro">#67adf2</color>
+    <color name="azultaco">#162341</color>
+    <color name="backAppGerente">#1F262E</color>
+
+    <color name="colorLineas">#CCCCCC</color>
+
+
+    <color name="grisedt">#E4E4E4</color>
+
+
+    <color name="snackBar">#ffffff</color>
+
+    <color name="editText">#8cffdea3</color>
+
+
+    <color name="mdMes">#e7c1b5</color>
+    <color name="mdSemana">#91f5a5</color>
+
+    <color name="superficiecaja">#c9df8e</color>
+
+
+    <color name="estrellaWithout">#d2d2d2</color>
+    <color name="estrellaWith">#ffd700</color>
+
+
+    <color name="letra">#636363</color>
+
+    <color name="autorizabox">#ffecb3</color>
+    <color name="tituloAutoriza">#a1a1a1</color>
+
+
+    <color name="rechazar">#ed7973</color>
+
+
+    <color name="week_letra">#8f000000</color>
+    <color name="toolbar">#efefef</color>
+
+
+    <color name="event_color_01">#59dbe0</color>
+    <color name="event_color_02">#f57f68</color>
+    <color name="event_color_03">#87d288</color>
+    <color name="event_color_04">#f8b552</color>
+
+    <color name="back_atrasada">#B54A2D</color>
+
+    <color name="colorBotonGenerico">#213054</color>
+
+    <color name="my_spinner_text_color">#213054</color>
+
+</resources>

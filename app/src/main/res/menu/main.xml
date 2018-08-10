@@ -1,0 +1,28 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+        <item android:id="@+id/accion_dia_view"
+            android:title="@string/accion_ver"
+            android:orderInCategory="0"
+            app:showAsAction="ifRoom"/>
+
+        <item android:id="@+id/accion_calendario"
+            android:title="@string/calendario"
+            android:orderInCategory="500"
+            app:showAsAction="ifRoom"/>
+
+        <item android:id="@+id/action_hoy_ir"
+            android:title="@string/accion_hoy"
+            android:orderInCategory="200"
+            app:showAsAction="ifRoom"/>
+
+
+
+        <item android:id="@+id/action_semana"
+            android:title="@string/accion_semana"
+            android:orderInCategory="400"
+            app:showAsAction="ifRoom"/>
+
+</menu>

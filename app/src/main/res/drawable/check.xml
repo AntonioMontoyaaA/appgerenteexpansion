@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true"
+        android:drawable="@color/azultaco"
+        android:state_focused="false">
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="@color/azultaco" />
+            <gradient  android:endColor="@color/blanco" android:startColor="@color/azultaco" android:type="sweep"  />
+            <size android:height="30dp" android:width="30dp" />
+        </shape>
+    </item>
+    <item android:state_checked="true"
+        android:drawable="@color/azultaco"
+        android:state_focused="true">
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="@color/blanco" />
+            <gradient  android:endColor="@color/blanco" android:startColor="@color/azultaco" android:type="sweep"  />
+            <size android:height="30dp" android:width="30dp" />
+        </shape>
+    </item>
+    <item android:state_checked="false"
+        android:drawable="@color/azultaco"
+        android:state_focused="false">
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="@color/azultaco" />
+            <size android:height="30dp" android:width="30dp" />
+        </shape>
+    </item>
+    <item android:state_checked="false"
+        android:drawable="@color/azultaco"
+        android:state_focused="true">
+        <shape android:shape="rectangle">
+            <stroke android:width="2dp" android:color="@color/blanco" />
+            <size android:height="30dp" android:width="30dp" />
+        </shape>
+    </item>
+</selector>

@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="listener"
+            type="expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolderPeatonal.Listener"/>
+        <variable
+            name="peatonal"
+            type="expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Peatonal"/>
+    </data>
+    <!--android:onClick="@{view -> listener.onAutorizaSelect(autoriza)}"-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        style="@style/carview">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="10dp">
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    app:typeface="robotoRegular"
+                    android:layout_marginStart="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="10sp"
+                    android:text="@{ String.valueOf(peatonal.numConteo)}"
+                    android:gravity="center"/>
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:textColor="@color/azul"
+                    app:typeface="robotoRegular"
+                    android:textSize="14sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@{ String.valueOf(peatonal.fechaPeatonal)}"
+                    android:gravity="center"/>
+
+                <TextView style="@style/SalidaSubHeaderSeparador"/>
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:textColor="@color/azul"
+                    app:typeface="robotoRegular"
+                    android:layout_marginStart="3dp"
+                    android:layout_marginEnd="3dp"
+                    android:textSize="13sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@{ String.valueOf(peatonal.nombreGenerador)}"
+                    android:gravity="center"/>
+
+                <TextView style="@style/SalidaSubHeaderSeparador"/>
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:textColor="@color/azul"
+                    app:typeface="robotoRegular"
+                    android:textSize="14sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
+                    android:text="@{ String.valueOf(peatonal.numPeatones)}"
+                    android:gravity="center"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

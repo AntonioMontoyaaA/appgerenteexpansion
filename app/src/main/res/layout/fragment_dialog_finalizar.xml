@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/estilo_boton_azul_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/tipo_autorizacion"
+            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="MD ---"
+            android:textColor="@color/blanco"
+            android:textSize="18sp"
+            app:typeface="robotoRegular" />
+
+
+
+        <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/cell_shape">
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text=""
+                    android:layout_width="100dp"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginBottom="3px"
+                    android:layout_marginRight="3px"
+                    android:layout_marginTop="3px"
+                    android:background="@drawable/cell_shape" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/text_autoriza_rechaza"
+                    android:text="---"
+                    android:textColor="@color/azul"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginBottom="3px"
+                    android:layout_marginRight="3px"
+                    android:layout_marginTop="3px"
+                    android:gravity="center"
+                    android:background="@color/blanco" />
+            </TableRow>
+            <TableRow
+                android:layout_marginStart="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:gravity="center">
+
+                <TextView
+                    android:text="@string/finaliza_md"
+                    android:textColor="@color/azul"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginBottom="3px"
+                    android:layout_marginRight="3px"
+                    android:layout_marginTop="3px"
+                    android:gravity="center"
+                    android:background="@color/blanco" />
+            </TableRow>
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/nombre_responsable_md"
+                    android:text="---"
+                    android:textColor="@color/azul"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="3px"
+                    android:layout_marginBottom="3px"
+                    android:layout_marginRight="3px"
+                    android:layout_marginTop="3px"
+                    android:gravity="center"
+                    android:background="@color/blanco" />
+            </TableRow>
+            <TableRow
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/aceptar"
+                    android:layout_width="151dp"
+                    android:layout_height="35dp"
+                    android:layout_gravity="center"
+                    android:layout_margin="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/estilo_boton_azul_claro"
+                    android:text="@string/aceptar"
+                    android:textColor="@color/blanco"
+                    android:textSize="12sp" />
+
+            </TableRow>
+
+        </TableLayout>
+
+        <TableLayout
+            android:id="@+id/TableLayout01"
+            android:layout_marginTop="-210dp"
+            android:layout_width="1000dp"
+            android:layout_height="60dp"
+            >
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <GridLayout
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:columnCount="1"
+                    android:rowCount="2"
+                    android:background="@drawable/rounded_boton_generico">
+
+                    <TextView
+                        android:text="Categoría"
+                        android:textSize="12dp"
+                        android:textColor="@color/blanco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3px"
+                        android:layout_marginBottom="3px"
+                        android:layout_marginRight="3px"
+                        android:layout_marginTop="3px"
+                        android:gravity="center"
+                        />
+
+                    <TextView
+                        android:id="@+id/categoria_md_fin"
+                        android:text="-"
+                        android:textSize="30dp"
+                        android:textColor="@color/blanco"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="3px"
+                        android:layout_marginBottom="3px"
+                        android:layout_marginRight="3px"
+                        android:layout_marginTop="3px"
+                        android:gravity="center"
+                        />
+
+                </GridLayout>
+
+
+
+            </TableRow>
+
+
+        </TableLayout>
+
+
+    </LinearLayout>
+</layout>

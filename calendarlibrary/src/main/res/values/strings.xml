@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="time_next">Next</string>
+    <string name="time_prev">Previous</string>
+
+    <string-array name="weeks">
+        <item>L</item>
+        <item>M</item>
+        <item>M</item>
+        <item>J</item>
+        <item>V</item>
+        <item>S</item>
+        <item>D</item>
+    </string-array>
+
+</resources>

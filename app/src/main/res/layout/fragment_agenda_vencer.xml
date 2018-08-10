@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:layout_marginTop="3dp"
+                    android:id="@+id/nombreSemana"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/blanco"
+                    android:textColorHint="@color/blanco"
+                    android:textSize="14dp"
+                    app:typeface="robotoRegular"
+                    tools:text="@string/agendas" />
+
+                <!--<noman.weekcalendar.WeekCalendar-->
+                    <!--android:visibility="gone"-->
+                    <!--android:background="@drawable/estilo_boton_blanco"-->
+                    <!--app:typeface="robotoRegular"-->
+                    <!--android:layout_marginTop="4dp"-->
+                    <!--android:id="@+id/weekCalendar"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="65dp"-->
+                    <!--app:numOfPages="100"-->
+                    <!--app:daysTextColor="@color/azul"-->
+                    <!--app:todaysDateTextColor="@color/azul"-->
+                    <!--app:weekTextColor="@color/azul"-->
+                    <!--app:todaysDateBgColor="@color/event_color_04"-->
+                    <!--app:daysBackgroundColor="@color/blanco"-->
+                    <!--app:weekBackgroundColor="@color/blanco"-->
+                    <!--app:weekTextSize="14sp"-->
+                    <!--app:daysTextSize="12sp" />-->
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/fecha"
+                    android:layout_marginTop="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/blanco"
+                    android:textColorHint="@color/blanco"
+                    android:textSize="20dp"
+                    app:typeface="robotoRegular"
+                    tools:text="20 Abril 2018" />
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/dia"
+                    android:layout_marginTop="2dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/blanco"
+                    android:textColorHint="@color/blanco"
+                    android:textSize="14dp"
+                    app:typeface="robotoRegular"
+                    tools:text="Viernes" />
+
+                <LinearLayout
+                    android:layout_marginStart="2dp"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginTop="10dp"
+                    android:id="@+id/layouts"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recycler_autoriza"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="3dp"/>
+
+
+
+                    <ProgressBar
+                        android:layout_gravity="center"
+                        android:id="@+id/prog"
+                        style="?android:attr/progressBarStyleLarge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:indeterminate="true" />
+
+                </LinearLayout>
+
+
+                <!--<attr name="daysTextColor" format="color"/>-->
+                <!--<attr name="weekTextColor" format="color"/>-->
+                <!--<attr name="selectedBgColor" format="color"/>-->
+
+
+            </LinearLayout>
+
+
+    </LinearLayout>
+
+</layout>

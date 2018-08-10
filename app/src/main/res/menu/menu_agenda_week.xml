@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/day_view"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="Eliminar" />
+    <item
+        android:id="@+id/tree_day"
+        android:icon="@drawable/ic_perm_contact_calendar_black_24dp"
+        android:title="Añadir tarea"/>
+    <item
+        android:id="@+id/week_view"
+        android:icon="@drawable/ic_account_circle_black_24dp"
+        android:title="Guardar tarea" />
+</menu>

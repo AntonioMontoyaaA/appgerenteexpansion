@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <!--<variable-->
+        <!--name="listener"-->
+        <!--type="expansion.neto.com.mx.jefeapp.sorted.autoriza.AutorizaHolderCompetencia.Listener"/>-->
+        <!--<variable-->
+        <!--name="competencia"-->
+        <!--type="expansion.neto.com.mx.jefeapp.modelView.autorizaModel.Zonificacion.Competencium"/>-->
+    </data>
+    <!--android:onClick="@{view -> listener.onAutorizaSelect(autoriza)}"-->
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        style="@style/carview">
+
+        <LinearLayout
+            android:gravity="center_horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginTop="0dp">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:textColor="@color/azul"
+                    android:id="@+id/nombre"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="2 - 1 AM"
+                    android:textSize="10sp"
+                    app:typeface="robotoRegular"
+                    android:layout_marginStart="2dp"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </android.support.v7.widget.CardView>
+
+</layout>

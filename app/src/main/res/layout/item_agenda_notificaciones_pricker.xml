@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="listener"
+            type="expansion.neto.com.mx.gerenteapp.sorted.agenda.AgendaEventosNotificacionesHolder.Listener"/>
+
+        <variable
+            name="agenda"
+            type="expansion.neto.com.mx.gerenteapp.modelView.agendaModel.Notificaciones.Notificacione"/>
+
+        <import type="expansion.neto.com.mx.gerenteapp.utils.Util"/>
+
+
+    </data>
+
+
+
+    <LinearLayout
+        android:onClick="@{view -> listener.onAgendaSelect(agenda)}"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:background="@{agenda.estatus.equals(@string/atrasadas) ? @drawable/estilo_boton_blanco : @drawable/estilo_boton_borde_rojo_item}">
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/num_md"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ String.valueOf(agenda.mensaje)}"
+            android:textColor="@color/azul"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typeface="robotoLight" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/fecha_notificacion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:text="@{ Util.fecha(String.valueOf(agenda.fechaRegistro))}"
+            android:textColor="@color/azul"
+            android:textSize="12dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typeface="robotoLight" />
+
+
+
+    </LinearLayout>
+
+
+</layout>
