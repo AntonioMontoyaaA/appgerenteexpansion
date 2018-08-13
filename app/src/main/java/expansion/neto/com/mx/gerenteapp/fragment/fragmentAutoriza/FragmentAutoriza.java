@@ -401,7 +401,10 @@ public class FragmentAutoriza extends Fragment implements
                             editorDatosSitio.putString("categoria", datosSitio.getDatossitio().get(0).getCategoria());
                             editorDatosSitio.putString("creadorMd", datosSitio.getDatossitio().get(0).getNombreUsuario());
                             if(datosSitio.getDatossitio().get(0).getValidado() == 1) {
-                                if(datosSitio.getDatossitio().get(0).getDetallesValidacion() != null && datosSitio.getDatossitio().get(0).getDetallesValidacion().size() > 0 && datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                                if(datosSitio.getDatossitio().get(0).getDetallesValidacion() != null
+                                        && datosSitio.getDatossitio().get(0).getDetallesValidacion().size() > 0
+                                        && datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+
                                     binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
                                     binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION", AUTORIZA_ID);
@@ -2116,6 +2119,7 @@ public class FragmentAutoriza extends Fragment implements
         final String mdId = preferences.getString("mdId","");
         final String usuarioId = preferences.getString("usuario","");
 
+
         if(tipoAccion == RECHAZA_MD) {
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             SharedPreferences.Editor editorFinalizar = preferences.edit();
@@ -2124,6 +2128,7 @@ public class FragmentAutoriza extends Fragment implements
 
             FragmentDialogCancelar a = new FragmentDialogCancelar();
             a.show(getChildFragmentManager(),"child");
+
             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                 @Override
                 public void onModuloRechazado(int modulo) {

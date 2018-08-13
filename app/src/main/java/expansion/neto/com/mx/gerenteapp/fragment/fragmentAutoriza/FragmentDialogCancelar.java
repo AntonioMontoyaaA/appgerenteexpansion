@@ -1,5 +1,6 @@
 package expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
@@ -24,6 +25,8 @@ import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.MotivosRechazo;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutorizaModulo;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderMotivosRechazo;
 
+import static expansion.neto.com.mx.gerenteapp.utils.Util.loadingProgress;
+
 /**
  *
  */
@@ -37,6 +40,7 @@ public class FragmentDialogCancelar extends DialogFragment {
     private int motivoSeleccionadoId = 0;
     private int rechazoDefinitivo = 0;
     private int moduloSeleccionado = 0;
+    ProgressDialog progressDialog;
 
     private final int MODULO_1 = 1;
     private final int MODULO_2 = 2;
@@ -62,7 +66,9 @@ public class FragmentDialogCancelar extends DialogFragment {
 
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dialog_cancelar,container,false);
         View view = binding.getRoot();
-
+        progressDialog = new ProgressDialog(getContext(), R.style.AppCompatAlertDialogStyle);
+        binding.aceptar.setEnabled(false);
+        binding.aceptar.setAlpha(.4f);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         moduloSeleccionado = preferences.getInt("moduloAutorizaRechaza",0);
@@ -78,7 +84,9 @@ public class FragmentDialogCancelar extends DialogFragment {
                         listaDescripciones.add(":: SELECCIONA UN MOTIVO ::");
                         for(int i = 0; i < motivosRechazo.getMotivos().size(); i++) {
                             listaDescripciones.add(motivosRechazo.getMotivos().get(i).getDescripcion());
-                            listaMotivos.add(new MotivoVO(motivosRechazo.getMotivos().get(i).getMotivoId(), motivosRechazo.getMotivos().get(i).getDescripcion(), motivosRechazo.getMotivos().get(i).getRechazoDefinitvo()));
+                            listaMotivos.add(new MotivoVO(motivosRechazo.getMotivos().get(i).getMotivoId(),
+                                    motivosRechazo.getMotivos().get(i).getDescripcion(),
+                                    motivosRechazo.getMotivos().get(i).getRechazoDefinitvo()));
                         }
 
                         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getContext(),
@@ -94,9 +102,13 @@ public class FragmentDialogCancelar extends DialogFragment {
                                 if(i != 0) {
                                     motivoSeleccionadoId = listaMotivos.get(i-1).getIdMotivo();
                                     rechazoDefinitivo = listaMotivos.get(i-1).getRechazoDefinitivo();
+                                    binding.aceptar.setEnabled(true);
+                                    binding.aceptar.setAlpha(1);
                                 }else{
                                     motivoSeleccionadoId = 0;
                                     rechazoDefinitivo = 0;
+                                    binding.aceptar.setEnabled(false);
+                                    binding.aceptar.setAlpha(.4f);
                                 }
                             }
 
@@ -142,7 +154,8 @@ public class FragmentDialogCancelar extends DialogFragment {
                 } else if(binding.comentario.getText().toString().equals("")) {
                     binding.mensajesErrores.setText("Debes introducir un comentario");
                 } else {
-
+                    loadingProgress(progressDialog, 0);
+                    dismiss();
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editorRechazos = preferences.edit();
 
@@ -203,16 +216,21 @@ public class FragmentDialogCancelar extends DialogFragment {
                             if(autorizaResponse.getCodigo() == 200) {
                                 listener.onModuloRechazado(moduloSeleccionado);
                                 dismiss();
+                                loadingProgress(progressDialog, 1);
+
                             } else {
                                 Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
                                         Toast.LENGTH_LONG).show();
+                                loadingProgress(progressDialog, 1);
+
                             }
                         }
-
                         @Override
                         public void reject(Exception e) {
                             Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
                                     Toast.LENGTH_LONG).show();
+                            loadingProgress(progressDialog, 1);
+
                         }
                     });
                 }

@@ -20,6 +20,8 @@ import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutori
 import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicioAutoriza;
 
+import static expansion.neto.com.mx.gerenteapp.utils.Util.loadingProgress;
+
 public class FragmentDialogFinalizar extends DialogFragment {
 
     FragmentDialogFinalizarBinding binding;
@@ -57,7 +59,8 @@ public class FragmentDialogFinalizar extends DialogFragment {
 
                 Intent main = new Intent(getContext(), FragmentInicioAutoriza.class);
                 getContext().startActivity(main);
-                //dismiss();
+
+
             }
         });
     }

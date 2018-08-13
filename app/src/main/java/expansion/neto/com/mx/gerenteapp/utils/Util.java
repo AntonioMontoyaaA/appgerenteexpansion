@@ -3,6 +3,7 @@ package expansion.neto.com.mx.gerenteapp.utils;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,6 +44,16 @@ import static android.content.Context.TELEPHONY_SERVICE;
  */
 public class Util {
 
+    public static void loadingProgress(ProgressDialog progressDialog, int i){
+        if(i == 0){
+            progressDialog.setTitle("Enviando...");
+            progressDialog.setMessage("Espera mientras se carga tu informacion...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }else{
+            progressDialog.dismiss();
+        }
+    }
     /**
      * Metodo regresa fecha
      * @return
