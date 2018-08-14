@@ -65,7 +65,7 @@ public class AdapterListaGeneradores extends RecyclerView.Adapter<AdapterListaGe
             Drawable res = context.getResources().getDrawable(imageResource);
             holder.imagen.setImageDrawable(res);
         }else if(listas_im.get(position).getGeneradorId()==7){
-            String uri = "@drawable/g_escuela";
+            String uri = "@drawable/escuela";
             int imageResource = context.getResources().getIdentifier(uri, null, context.getPackageName());
             Drawable res = context.getResources().getDrawable(imageResource);
             holder.imagen.setImageDrawable(res);

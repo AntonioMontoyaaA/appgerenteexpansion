@@ -1231,12 +1231,15 @@ public class FragmentDetalle extends Fragment implements
                     }
 
                     for (int i = 0; i < datosPuntuacion.getFactores().size(); i++) {
-                        if (datosPuntuacion.getFactores().get(i).getRangoubica().equals("MACRO UBICACION")) {
-                            factoresMacro.add(datosPuntuacion.getFactores().get(i));
-                        } else{
+                        if(datosPuntuacion.getFactores().get(i).getRangoubica()!=null){
+                            if (datosPuntuacion.getFactores().get(i).getRangoubica().equals(getString(R.string.micro_ub))) {
+                                factoresMacro.add(datosPuntuacion.getFactores().get(i));
+                            } else{
+                                factoresMicro.add(datosPuntuacion.getFactores().get(i));
+                            }
+                        }else{
                             factoresMicro.add(datosPuntuacion.getFactores().get(i));
                         }
-
                     }
 
                     if (factoresMicro.size() <= 0) {
@@ -1249,6 +1252,7 @@ public class FragmentDetalle extends Fragment implements
 
                     generarDetallesMicro(binding, factoresMicro);
                     generarDetallesMacro(binding, factoresMacro);
+
 
                     final SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("categoria", categoria);
@@ -1299,7 +1303,9 @@ public class FragmentDetalle extends Fragment implements
 
             TextView t3v1 = new TextView(getContext());
             t3v1.setTextSize(12);
+
             t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
+
             t3v1.setTextColor(resource.getColor(R.color.azul));
             t3v1.setGravity(Gravity.END);
             t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
@@ -1308,7 +1314,12 @@ public class FragmentDetalle extends Fragment implements
 
             TextView t3v2 = new TextView(getContext());
             t3v2.setTextSize(12);
-            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
+                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            }else{
+                binding.tituloMacro.setVisibility(View.GONE);
+                binding.tituloMicro.setVisibility(View.GONE);
+            }
             t3v2.setTextColor(resource.getColor(R.color.azul));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
@@ -1356,7 +1367,12 @@ public class FragmentDetalle extends Fragment implements
 
             TextView t3v2 = new TextView(getContext());
             t3v2.setTextSize(12);
-            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
+                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            }else{
+                binding.tituloMacro.setVisibility(View.GONE);
+                binding.tituloMicro.setVisibility(View.GONE);
+            }
             t3v2.setTextColor(resource.getColor(R.color.azul));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,

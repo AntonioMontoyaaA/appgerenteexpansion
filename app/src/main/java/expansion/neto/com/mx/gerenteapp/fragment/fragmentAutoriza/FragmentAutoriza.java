@@ -3165,9 +3165,13 @@ public class FragmentAutoriza extends Fragment implements
                     }
 
                     for (int i = 0; i < datosPuntuacion.getFactores().size(); i++) {
-                        if (datosPuntuacion.getFactores().get(i).getRangoubica().equals("MACRO UBICACION")) {
-                            factoresMacro.add(datosPuntuacion.getFactores().get(i));
-                        } else{
+                        if(datosPuntuacion.getFactores().get(i).getRangoubica()!=null){
+                            if (datosPuntuacion.getFactores().get(i).getRangoubica().equals(getString(R.string.micro_ub))) {
+                                factoresMacro.add(datosPuntuacion.getFactores().get(i));
+                            } else{
+                                factoresMicro.add(datosPuntuacion.getFactores().get(i));
+                            }
+                        }else{
                             factoresMicro.add(datosPuntuacion.getFactores().get(i));
                         }
                     }

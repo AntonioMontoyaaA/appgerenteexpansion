@@ -122,9 +122,10 @@
     <string name="tododia">Todo el dia</string>
     <string name="empleados">Empleados</string>
 
+    <string name="micro_ub">MACRO UBICACION</string>
 
     <string name="accion_hoy">Hoy</string>
-    <string name="accion_ver">Ver 1.1.1</string>
+    <string name="accion_ver">Ver 1.1.2</string>
     <string name="accion_tres">Ver 3 días</string>
     <string name="accion_semana">Ver la semana</string>
     <string name="calendario">Calendario</string>

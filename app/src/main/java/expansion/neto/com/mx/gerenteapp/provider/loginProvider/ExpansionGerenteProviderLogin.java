@@ -43,12 +43,13 @@ public class ExpansionGerenteProviderLogin {
             protected UsuarioLogin doInBackground(Void... voids) {
                 //TODO CONNECT AND GET DATA
                 try {
+                    //"202020202020202"
                     //356017073328381
                     //351881091770691
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("usuarioId", usuario.getUsuario())
                             .add("contrasena", usuario.getContra())
-                            .add("numImei", Util.getImei(context)/*"202020202020202"*/)
+                            .add("numImei", Util.getImei(context))
                             .add("tipoLog", "1");
 
                     RequestBody formBody = formBuilder.build();
