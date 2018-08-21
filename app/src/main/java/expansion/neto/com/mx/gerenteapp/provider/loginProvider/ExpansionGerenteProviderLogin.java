@@ -15,6 +15,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
+
 /**
  * Clase singleton que regresa la validación del usuario así como también regresa el modelo de la persona
  * Created by marcosmarroquin on 21/03/18.
@@ -43,6 +45,7 @@ public class ExpansionGerenteProviderLogin {
             protected UsuarioLogin doInBackground(Void... voids) {
                 //TODO CONNECT AND GET DATA
                 try {
+                    //Util.getImei(context)
                     //"202020202020202"
                     //356017073328381
                     //351881091770691
@@ -50,6 +53,7 @@ public class ExpansionGerenteProviderLogin {
                             .add("usuarioId", usuario.getUsuario())
                             .add("contrasena", usuario.getContra())
                             .add("numImei", Util.getImei(context))
+                            .add("versionapp", VERSION_APP)
                             .add("tipoLog", "1");
 
                     RequestBody formBody = formBuilder.build();

@@ -1,44 +1,39 @@
-package expansion.neto.com.mx.gerenteapp.provider.autorizaProvider;
+package expansion.neto.com.mx.gerenteapp.provider.agendaProvider;
 
 import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
-import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
 import expansion.neto.com.mx.gerenteapp.constantes.RestUrl;
-import expansion.neto.com.mx.gerenteapp.modelView.crearModel.CrearPeatonal;
+import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.NUM_TELEFONO;
-import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_SERVICIO;
-import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
-
 /**
  * Created by marcosmarroquin on 21/03/18.
  */
-public class ProviderCrearPeatonal {
+public class ProviderLocalizador {
 
-    private static ProviderCrearPeatonal instance;
+    private static ProviderLocalizador instance;
     Context context;
     String respuesta;
     Codigos codigo = null;
 
-    public ProviderCrearPeatonal() {}
+    public ProviderLocalizador() {}
 
-    public static ProviderCrearPeatonal getInstance(Context context) {
+    public static ProviderLocalizador getInstance(Context context) {
         if(instance == null) {
-            instance = new ProviderCrearPeatonal();
+            instance = new ProviderLocalizador();
         }
         instance.context = context;
         return instance;
     }
 
-    public void guardarPeatonal(final CrearPeatonal crearPeatonal, final InterfaceCrearDatosPeatonal promise){
+    public void guardaLocalizacion(final String usuarioId, final String jsonLocalizador, final InterfaceLocalizador promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Codigos>() {
             @Override
@@ -47,22 +42,12 @@ public class ProviderCrearPeatonal {
                 try {
 
                     FormBody.Builder formBuilder = new FormBody.Builder()
-                            .add("usuarioId", crearPeatonal.getUsuarioId())
-                            .add("mdId", crearPeatonal.getMdId())
-                            .add("fecha", crearPeatonal.getFecha())
-                            .add("horaInicio", crearPeatonal.getHoraInicio())
-                            .add("horaFinal", crearPeatonal.getHoraFinal())
-                            .add("total", crearPeatonal.getTotal())
-                            .add("latitud", crearPeatonal.getLatitud())
-                            .add("longitud", crearPeatonal.getLongitud())
-                            .add("bajaConteos", crearPeatonal.getBajaConteos())
-                            .add("numTelefono", NUM_TELEFONO)
-                            .add("versionApp", VERSION_APP)
-                            .add("tipoServicio", TIPO_SERVICIO);
+                            .add("usuarioId", usuarioId)
+                            .add("ubicaciones", jsonLocalizador);
 
                     RequestBody formBody = formBuilder.build();
                     Request request = new Request.Builder()
-                            .url(RestUrl.REST_ACTION_CREAR_CONTEO)
+                            .url(RestUrl.REST_ACTION_GUARDAR_UBICACION)
                             .post(formBody)
                             .build();
 
@@ -92,7 +77,7 @@ public class ProviderCrearPeatonal {
         }).execute();
     }
 
-    public interface InterfaceCrearDatosPeatonal {
+    public interface InterfaceLocalizador{
         void resolve(Codigos codigo);
         void reject(Exception e);
     }

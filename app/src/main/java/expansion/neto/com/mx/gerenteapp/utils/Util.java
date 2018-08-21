@@ -31,8 +31,10 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentAutoriza;
 import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityLogin;
 
 import static android.content.Context.TELEPHONY_SERVICE;
@@ -98,6 +100,18 @@ public class Util {
         return fecha;
     }
 
+    /**
+     * Metodo regresa fecha con horas
+     * @return
+     */
+    public static boolean getEntreFechas(){
+        Boolean hora = false;
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("kk:mm");
+        final String strDate = sdf.format(c.getTime());
+        hora =  FragmentAutoriza.isHourInInterval(strDate, "07:00", "19:00");
+        return hora;
+    }
 
     public interface IOnFocusListenable {
         public void onWindowFocusChanged(boolean hasFocus);

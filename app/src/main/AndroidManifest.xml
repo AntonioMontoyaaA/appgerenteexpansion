@@ -86,6 +86,15 @@
             android:name=".sqlite.GerenteProvider"
             android:authorities="expansion.neto.com.mx.gerenteapp" />
 
+        <service android:name=".utils.ServicioRutas" android:label="Localizador" />
+        <receiver
+            android:name=".utils.StartMyServiceAtBootReceiver"
+            android:label="StartMyServiceAtBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

@@ -23,6 +23,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
+import android.text.InputFilter;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -85,6 +86,7 @@ import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioP
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Autorizadas;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPredial;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosSitio;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.GeneralidadesSitio;
@@ -105,6 +107,7 @@ import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderCrearP
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosConstruccion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosGeneralidadesSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPeatonal;
+import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPredial;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPropietario;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSuperficie;
@@ -119,6 +122,7 @@ import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolderPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaCompetencia;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradores;
 import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
+import expansion.neto.com.mx.gerenteapp.utils.CustomTextWatcher;
 import expansion.neto.com.mx.gerenteapp.utils.ServicioGPS;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
@@ -154,6 +158,7 @@ public class FragmentAutoriza extends Fragment implements
     String urlFrente = "";
     String urlLateral1 = "";
     String urlLateral2 = "";
+    String urlPredial = "";
     private final int AUTORIZA_MD = 1;
     private final int RECHAZA_MD = 0;
 
@@ -369,9 +374,7 @@ public class FragmentAutoriza extends Fragment implements
                             binding.categoria.setText(datosSitio.getDatossitio().get(0).getCategoria()+"");
                             binding.puntuacion.setText(datosSitio.getDatossitio().get(0).getTotalMdId()+"");
                             binding.direccion.setText(datosSitio.getDatossitio().get(0).getDireccion()+"");
-                            //binding.colonia.setText(datosSitio.getDatossitio().get(0).getLocalidad()+"");
                             binding.estado.setText(datosSitio.getDatossitio().get(0).getEstado()+"");
-                            //binding.cp.setText(datosSitio.getDatossitio().get(0).getCodigoPostal()+"");
                             lat = Double.valueOf(datosSitio.getDatossitio().get(0).getLatitud());
                             lot = Double.valueOf(datosSitio.getDatossitio().get(0).getLongitud());
 
@@ -670,6 +673,32 @@ public class FragmentAutoriza extends Fragment implements
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_3));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_2));
 
+            binding.frente.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
+            binding.profundidad.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
+
+            ProviderDatosPredial.getInstance(getContext()).obtenerDatosPredial(mdId, usuarioId, new ProviderDatosPredial.ConsultaDatosPredial() {
+                @Override
+                public void resolve(DatosPredial datosPredial) {
+                    if(datosPredial!=null){
+                        if(datosPredial.getCodigo().equals("200")){
+                            if(datosPredial.getAplicaPredial().equals("1")){
+                                binding.predial.setVisibility(View.VISIBLE);
+                            }else{
+                                binding.predial.setVisibility(View.GONE);
+                                urlPredial = " ";
+                            }
+                        }
+                    }else{
+                        binding.predial.setVisibility(View.GONE);
+                        urlPredial = " ";
+                    }
+                }
+                @Override
+                public void reject(Exception e) {
+                    binding.predial.setVisibility(View.GONE);
+                    urlPredial = " ";
+                }
+            });
 
             if(permisoP3){
                 binding.aceptar.setVisibility(View.VISIBLE);
@@ -716,7 +745,7 @@ public class FragmentAutoriza extends Fragment implements
                                     }
                                 }
 
-                                int esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
+                                Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
 
                                 if(esquina==1){
                                     binding.escogeEsquina.setChecked(true);
@@ -730,12 +759,12 @@ public class FragmentAutoriza extends Fragment implements
                                 String fondoS = String.valueOf(superficie.getNiveles().get(valorFondo).getFondo());
                                 fondoS = fondoS.replace(" ", "");
 
-                                binding.frente.setText("  "+superficieS);
-                                binding.profundidad.setText("  "+fondoS);
+                                binding.frente.setText(""+superficieS);
+                                binding.profundidad.setText(""+fondoS);
 
-                                String total = String.valueOf((Integer.valueOf(superficieS)
-                                        *(Integer.valueOf(fondoS))));
-                                binding.total.setText("  "+total+"mts2");
+                                String total = String.valueOf((Double.valueOf(superficieS)
+                                        *(Double.valueOf(fondoS))));
+                                binding.total.setText(""+total+"");
 
                                 binding.frontal.setAlpha(1.0f);
                                 binding.lateral1.setAlpha(0.35f);
@@ -754,6 +783,7 @@ public class FragmentAutoriza extends Fragment implements
                                         binding.frontal.setAlpha(1.0f);
                                         binding.lateral1.setAlpha(0.35f);
                                         binding.lateral2.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
                                         if(superficie.getNiveles().get(finalValorFoto).getImgFrenteId().length()>0){
                                             if(urlFrente.length()>0){
                                                 Picasso.get().load(urlFrente).into(binding.imagen);
@@ -774,6 +804,7 @@ public class FragmentAutoriza extends Fragment implements
                                         binding.lateral1.setAlpha(1.0f);
                                         binding.frontal.setAlpha(0.35f);
                                         binding.lateral2.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
                                         if(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id().length()>0){
                                             if(urlLateral1.length()>0){
                                                 Picasso.get().load(urlLateral1).into(binding.imagen);
@@ -790,6 +821,30 @@ public class FragmentAutoriza extends Fragment implements
                                 urlFrente = superficie.getNiveles().get(finalValorFoto).getImgFrenteId();
                                 urlLateral1 = superficie.getNiveles().get(finalValorFoto).getImgLateral1Id();
                                 urlLateral2 = superficie.getNiveles().get(finalValorFoto).getImgLateral2Id();
+                                urlPredial = superficie.getNiveles().get(finalValorFoto).getImgPredial();
+
+                                binding.predial.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if(!superficie.getNiveles().get(finalValorFoto).getImgPredial().equals("")){
+                                            Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
+                                            binding.lateral1.setAlpha(0.35f);
+                                            binding.frontal.setAlpha(0.35f);
+                                            binding.lateral2.setAlpha(0.35f);
+                                            binding.predial.setAlpha(1.0f);
+
+                                            if(superficie.getNiveles().get(finalValorFoto).getImgPredial().length()>0){
+                                                if(urlPredial.length()>0){
+                                                    Picasso.get().load(urlPredial).into(binding.imagen);
+                                                } else {
+                                                    Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
+                                                }
+                                            }else{
+
+                                            }
+                                        }
+                                    }
+                                });
 
                                 binding.lateral2.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -797,6 +852,8 @@ public class FragmentAutoriza extends Fragment implements
                                         binding.lateral2.setAlpha(1.0f);
                                         binding.frontal.setAlpha(0.35f);
                                         binding.lateral1.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
+
                                         if(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id().length()>0){
                                             if(urlLateral2.length()>0){
                                                 Picasso.get().load(urlLateral2).into(binding.imagen);
@@ -833,6 +890,7 @@ public class FragmentAutoriza extends Fragment implements
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                 }
+
                                 if(superficie.getTip().size() > 0) {
                                     StringBuffer tipMod3 = new StringBuffer("");
                                     for(Superficie.Tip tip : superficie.getTip()) {
@@ -963,8 +1021,8 @@ public class FragmentAutoriza extends Fragment implements
                         list = new ArrayList<>();
                         listGeneradores = new ArrayList<>();
                         puntosCompentencias = new ArrayList<>();
-                        int puntuacionCompetencia = 0;
-                        int puntuacionGeneradores = 0;
+//                        int puntuacionCompetencia = 0;
+//                        int puntuacionGeneradores = 0;
 
                         for (int i = 0; i < zonificacion.getCompetencia().size(); i++) {
 
@@ -3142,12 +3200,11 @@ public class FragmentAutoriza extends Fragment implements
     String puntuacion, categoria;
     ArrayList<DatosPuntuacion.Factore> factoresMacro;
     ArrayList<DatosPuntuacion.Factore> factoresMicro;
-    public void getDatos(final FragmentAutoriza7Binding binding){
 
+    public void getDatos(final FragmentAutoriza7Binding binding){
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mdid = preferences.getString("mdId", "");
         String usuario = preferences.getString("usuario", "");
-
         ProviderConsultaFinaliza.getInstance(getContext()).obtenerPuntos(mdid, usuario, new ProviderConsultaFinaliza.ConsultaPuntos() {
             @Override
             public void resolve(DatosPuntuacion datosPuntuacion) {
@@ -3203,100 +3260,100 @@ public class FragmentAutoriza extends Fragment implements
         });
     }
 
-        public void generarDetallesMacro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
+    public void generarDetallesMacro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
 
-            Resources resource = this.getResources();
-            binding.factores.removeAllViews();
-            TableRow rowPlomo = new TableRow(getContext());
-            rowPlomo.setBackgroundColor(resource.getColor(R.color.blanco));
-            int paddingDp = 2;
+        Resources resource = this.getResources();
+        binding.factores.removeAllViews();
+        TableRow rowPlomo = new TableRow(getContext());
+        rowPlomo.setBackgroundColor(resource.getColor(R.color.blanco));
+        int paddingDp = 2;
 
-            float density = getResources().getDisplayMetrics().density;
-            int paddingPixel = (int)(paddingDp * density);
+        float density = getResources().getDisplayMetrics().density;
+        int paddingPixel = (int)(paddingDp * density);
 
-            for(int i = 0; i < datosPuntuacion.size(); i ++){
+        for(int i = 0; i < datosPuntuacion.size(); i ++){
 
-                TableRow tbrow = new TableRow(getContext());
-                tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
-                TextView t1v1 = new TextView(getContext());
-                t1v1.setTextSize(12);
-                t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-                t1v1.setTextColor(resource.getColor(R.color.azul));
-                t1v1.setPadding(0, paddingPixel,0,0);
-                t1v1.setGravity(Gravity.START);
+            TableRow tbrow = new TableRow(getContext());
+            tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
+            TextView t1v1 = new TextView(getContext());
+            t1v1.setTextSize(12);
+            t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
+            t1v1.setTextColor(resource.getColor(R.color.azul));
+            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setGravity(Gravity.START);
 
-                t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t1v1);
+            t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t1v1);
 
-                TextView t3v1 = new TextView(getContext());
-                t3v1.setTextSize(10);
-                t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-                t3v1.setTextColor(resource.getColor(R.color.azul));
-                t3v1.setGravity(Gravity.LEFT);
-                t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t3v1);
+            TextView t3v1 = new TextView(getContext());
+            t3v1.setTextSize(10);
+            t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
+            t3v1.setTextColor(resource.getColor(R.color.azul));
+            t3v1.setGravity(Gravity.LEFT);
+            t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t3v1);
 
-                TextView t3v2 = new TextView(getContext());
-                t3v2.setTextSize(10);
-                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-                t3v2.setTextColor(resource.getColor(R.color.azul));
-                t3v2.setGravity(Gravity.LEFT);
-                t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t3v2);
+            TextView t3v2 = new TextView(getContext());
+            t3v2.setTextSize(10);
+            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setGravity(Gravity.LEFT);
+            t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t3v2);
 
-                binding.factores.addView(tbrow);
-            }
+            binding.factores.addView(tbrow);
         }
+    }
 
-        public void generarDetallesMicro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
+    public void generarDetallesMicro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
 
-            Resources resource = this.getResources();
-            binding.factoresMicro.removeAllViews();
-            TableRow rowPlomo = new TableRow(getContext());
-            rowPlomo.setBackgroundColor(resource.getColor(R.color.blanco));
-            int paddingDp = 2;
+        Resources resource = this.getResources();
+        binding.factoresMicro.removeAllViews();
+        TableRow rowPlomo = new TableRow(getContext());
+        rowPlomo.setBackgroundColor(resource.getColor(R.color.blanco));
+        int paddingDp = 2;
 
-            float density = getResources().getDisplayMetrics().density;
-            int paddingPixel = (int)(paddingDp * density);
+        float density = getResources().getDisplayMetrics().density;
+        int paddingPixel = (int)(paddingDp * density);
 
-            for(int i = 0; i < datosPuntuacion.size(); i ++){
+        for(int i = 0; i < datosPuntuacion.size(); i ++){
 
-                TableRow tbrow = new TableRow(getContext());
-                tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
-                TextView t1v1 = new TextView(getContext());
-                t1v1.setTextSize(12);
-                t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-                t1v1.setTextColor(resource.getColor(R.color.azul));
-                t1v1.setPadding(0, paddingPixel,0,0);
-                t1v1.setGravity(Gravity.START);
+            TableRow tbrow = new TableRow(getContext());
+            tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
+            TextView t1v1 = new TextView(getContext());
+            t1v1.setTextSize(12);
+            t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
+            t1v1.setTextColor(resource.getColor(R.color.azul));
+            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setGravity(Gravity.START);
 
-                t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t1v1);
-                //Selecciona el tipo de sitio
-                TextView t3v1 = new TextView(getContext());
-                t3v1.setTextSize(10);
-                t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-                t3v1.setTextColor(resource.getColor(R.color.azul));
-                t3v1.setGravity(Gravity.LEFT);
-                t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t3v1);
+            t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t1v1);
+            //Selecciona el tipo de sitio
+            TextView t3v1 = new TextView(getContext());
+            t3v1.setTextSize(10);
+            t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
+            t3v1.setTextColor(resource.getColor(R.color.azul));
+            t3v1.setGravity(Gravity.LEFT);
+            t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t3v1);
 
-                TextView t3v2 = new TextView(getContext());
-                t3v2.setTextSize(10);
-                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-                t3v2.setTextColor(resource.getColor(R.color.azul));
-                t3v2.setGravity(Gravity.LEFT);
-                t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
-                        android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                tbrow.addView(t3v2);
+            TextView t3v2 = new TextView(getContext());
+            t3v2.setTextSize(10);
+            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setGravity(Gravity.LEFT);
+            t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            tbrow.addView(t3v2);
 
-                binding.factoresMicro.addView(tbrow);
-            }
+            binding.factoresMicro.addView(tbrow);
         }
+    }
 
 }

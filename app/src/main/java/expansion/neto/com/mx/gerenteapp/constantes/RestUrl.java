@@ -8,12 +8,18 @@ public class RestUrl {
     //358781
     //289106
     //public static String ip = "206.189.68.177"; // desarrollo
-    //public static String ip = "167.99.102.173"; // QA
-    public static String ip = "206.189.223.154"; // produccion
+    public static String ip = "167.99.102.173"; // QA
+    //public static String ip = "206.189.223.154"; // produccion
 
     //public static String dominio = "voksedesapi"; // desarrollo
-    //public static String dominio = "vokseqaapi"; // QA
-    public static String dominio = "vokseapi"; // produccion
+    public static String dominio = "vokseqaapi"; // QA
+    //public static String dominio = "vokseapi"; // produccion
+
+    public static String VERSION_APP = "1.1.3";
+
+    public static String NUM_TELEFONO = "0";
+
+    public static String REST_ACTION_CONSULTAR_PREDIAL = "http://"+ ip +"/"+ dominio +"/superficiepreconsulta/";
 
     public static String REST_ACTION_CONSULTA_FINALIZA_MD = "http://"+ ip +"/"+ dominio +"/consultafinalizamd/";
 
@@ -78,6 +84,8 @@ public class RestUrl {
     public static String REST_ACTION_CREAR_EVENTO = "http://"+ ip +"/"+ dominio +"/agendaguardaevento/";
 
     public static String REST_ACTION_GUARDAR_NOTIFICACION = "http://"+ ip +"/"+ dominio +"/validaNotificacion/";
+
+    public static String REST_ACTION_GUARDAR_UBICACION = "http://"+ ip +"/"+ dominio +"/guardaubicacionact/";
 
 }
 

@@ -97,6 +97,7 @@ import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicio
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazo.FragmentInicioRechazadas;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPredial;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosSitio;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.GeneralidadesSitio;
@@ -110,6 +111,7 @@ import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderConsul
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosConstruccion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosGeneralidadesSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPeatonal;
+import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPredial;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPropietario;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSuperficie;
@@ -120,6 +122,7 @@ import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolderPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaCompetencia;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradores;
 import expansion.neto.com.mx.gerenteapp.ui.agenda.ActivityNotificaciones;
+import expansion.neto.com.mx.gerenteapp.utils.CustomTextWatcher;
 
 
 public class FragmentDetalle extends Fragment implements
@@ -135,6 +138,7 @@ public class FragmentDetalle extends Fragment implements
     String urlFrente = "";
     String urlLateral1 = "";
     String urlLateral2 = "";
+    String urlPredial = "";
     String mensaje = null;
 
     private final int BACK_EN_PROCESO = 1;
@@ -482,6 +486,34 @@ public class FragmentDetalle extends Fragment implements
             binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza_2,container,false);
             view = binding.getRoot();
 
+            binding.frente.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
+            binding.profundidad.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
+
+
+            ProviderDatosPredial.getInstance(getContext()).obtenerDatosPredial(mdId, usuarioId, new ProviderDatosPredial.ConsultaDatosPredial() {
+                @Override
+                public void resolve(DatosPredial datosPredial) {
+                    if(datosPredial!=null){
+                        if(datosPredial.getCodigo().equals("200")){
+                            if(datosPredial.getAplicaPredial().equals("1")){
+                                binding.predial.setVisibility(View.VISIBLE);
+                            }else{
+                                binding.predial.setVisibility(View.GONE);
+                                urlPredial = " ";
+                            }
+                        }
+                    }else{
+                        binding.predial.setVisibility(View.GONE);
+                        urlPredial = " ";
+                    }
+                }
+                @Override
+                public void reject(Exception e) {
+                    binding.predial.setVisibility(View.GONE);
+                    urlPredial = " ";
+                }
+            });
+
             binding.toolbar.nombreTitulo.setText(getString(R.string.datossuperficie));
             binding.escogeEsquina.setEnabled(false);
             ProviderDatosSuperficie.getInstance(getContext())
@@ -513,7 +545,7 @@ public class FragmentDetalle extends Fragment implements
                                     }
                                 }
 
-                                int esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
+                                Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
 
                                 if(esquina==1){
                                     binding.escogeEsquina.setChecked(true);
@@ -527,16 +559,17 @@ public class FragmentDetalle extends Fragment implements
                                 String fondoS = String.valueOf(superficie.getNiveles().get(valorFondo).getFondo());
                                 fondoS = fondoS.replace(" ", "");
 
-                                binding.frente.setText("  "+superficieS);
-                                binding.profundidad.setText("  "+fondoS);
+                                binding.frente.setText(""+superficieS);
+                                binding.profundidad.setText(""+fondoS);
 
-                                String total = String.valueOf((Integer.valueOf(superficieS)
-                                        *(Integer.valueOf(fondoS))));
-                                binding.total.setText("  "+total+"mts2");
+                                String total = String.valueOf((Double.valueOf(superficieS)
+                                        *(Double.valueOf(fondoS))));
+                                binding.total.setText(""+total+"");
 
                                 binding.frontal.setAlpha(1.0f);
                                 binding.lateral1.setAlpha(0.35f);
                                 binding.lateral2.setAlpha(0.35f);
+                                binding.predial.setAlpha(0.35f);
                                 binding.robotoTextView2.setText(nombreSitio);
 
                                 final int finalValorFoto = valorFoto;
@@ -553,6 +586,7 @@ public class FragmentDetalle extends Fragment implements
                                         binding.frontal.setAlpha(1.0f);
                                         binding.lateral1.setAlpha(0.35f);
                                         binding.lateral2.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
                                         if(superficie.getNiveles().get(finalValorFoto).getImgFrenteId().length()>0){
                                             if(urlFrente.length()>0){
                                                 Picasso.get().load(urlFrente).into(binding.imagen);
@@ -573,6 +607,7 @@ public class FragmentDetalle extends Fragment implements
                                         binding.lateral1.setAlpha(1.0f);
                                         binding.frontal.setAlpha(0.35f);
                                         binding.lateral2.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
                                         if(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id().length()>0){
                                             if(urlLateral1.length()>0){
                                                 Picasso.get().load(urlLateral1).into(binding.imagen);
@@ -589,6 +624,7 @@ public class FragmentDetalle extends Fragment implements
                                 urlFrente = superficie.getNiveles().get(finalValorFoto).getImgFrenteId();
                                 urlLateral1 = superficie.getNiveles().get(finalValorFoto).getImgLateral1Id();
                                 urlLateral2 = superficie.getNiveles().get(finalValorFoto).getImgLateral2Id();
+                                urlPredial = superficie.getNiveles().get(finalValorFoto).getImgPredial();
 
                                 binding.lateral2.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -596,6 +632,7 @@ public class FragmentDetalle extends Fragment implements
                                         binding.lateral2.setAlpha(1.0f);
                                         binding.frontal.setAlpha(0.35f);
                                         binding.lateral1.setAlpha(0.35f);
+                                        binding.predial.setAlpha(0.35f);
                                         if(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id().length()>0){
                                             if(urlLateral2.length()>0){
                                                 Picasso.get().load(urlLateral2).into(binding.imagen);
@@ -608,6 +645,29 @@ public class FragmentDetalle extends Fragment implements
                                     }
                                 });
 
+
+                                binding.predial.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View view) {
+                                        if(!superficie.getNiveles().get(finalValorFoto).getImgPredial().equals("")){
+                                            Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
+                                            binding.lateral1.setAlpha(0.35f);
+                                            binding.frontal.setAlpha(0.35f);
+                                            binding.lateral2.setAlpha(0.35f);
+                                            binding.predial.setAlpha(1.0f);
+
+                                            if(superficie.getNiveles().get(finalValorFoto).getImgPredial().length()>0){
+                                                if(urlPredial.length()>0){
+                                                    Picasso.get().load(urlPredial).into(binding.imagen);
+                                                } else {
+                                                    Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
+                                                }
+                                            }else{
+
+                                            }
+                                        }
+                                    }
+                                });
 
 
                             }else{

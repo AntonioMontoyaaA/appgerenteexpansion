@@ -12,13 +12,13 @@ public class Superficie {
     private String imgFrenteId;
     @SerializedName("frente")
     @Expose
-    private Integer frente;
+    private Double frente;
     @SerializedName("fondo")
     @Expose
-    private Integer fondo;
+    private Double fondo;
     @SerializedName("puntuacion")
     @Expose
-    private Integer puntuacion;
+    private Double puntuacion;
     @SerializedName("codigo")
     @Expose
     private Integer codigo;
@@ -63,27 +63,27 @@ public class Superficie {
         this.imgFrenteId = imgFrenteId;
     }
 
-    public Integer getFrente() {
+    public Double getFrente() {
         return frente;
     }
 
-    public void setFrente(Integer frente) {
+    public void setFrente(Double frente) {
         this.frente = frente;
     }
 
-    public Integer getFondo() {
+    public Double getFondo() {
         return fondo;
     }
 
-    public void setFondo(Integer fondo) {
+    public void setFondo(Double fondo) {
         this.fondo = fondo;
     }
 
-    public Integer getPuntuacion() {
+    public Double getPuntuacion() {
         return puntuacion;
     }
 
-    public void setPuntuacion(Integer puntuacion) {
+    public void setPuntuacion(Double puntuacion) {
         this.puntuacion = puntuacion;
     }
 
@@ -178,19 +178,31 @@ public class Superficie {
         private String imgFrenteId;
         @SerializedName("fondo")
         @Expose
-        private Integer fondo;
+        private Double fondo;
         @SerializedName("puntuacion")
         @Expose
         private Double puntuacion;
         @SerializedName("valorreal")
         @Expose
-        private Integer valorreal;
+        private Double valorreal;
         @SerializedName("imgLateral2Id")
         @Expose
         private String imgLateral2Id;
         @SerializedName("imgLateral1Id")
         @Expose
         private String imgLateral1Id;
+        @SerializedName("imgPredial")
+        @Expose
+        private String imgPredial;
+
+        public String getImgPredial() {
+            return imgPredial;
+        }
+
+        public void setImgPredial(String imgPredial) {
+            this.imgPredial = imgPredial;
+        }
+
 
         public Integer getNivel() {
             return nivel;
@@ -216,11 +228,11 @@ public class Superficie {
             this.imgFrenteId = imgFrenteId;
         }
 
-        public Integer getFondo() {
+        public Double getFondo() {
             return fondo;
         }
 
-        public void setFondo(Integer fondo) {
+        public void setFondo(Double fondo) {
             this.fondo = fondo;
         }
 
@@ -232,11 +244,11 @@ public class Superficie {
             this.puntuacion = puntuacion;
         }
 
-        public Integer getValorreal() {
+        public Double getValorreal() {
             return valorreal;
         }
 
-        public void setValorreal(Integer valorreal) {
+        public void setValorreal(Double valorreal) {
             this.valorreal = valorreal;
         }
 
