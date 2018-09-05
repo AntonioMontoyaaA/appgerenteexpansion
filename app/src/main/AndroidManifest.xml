@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <protected-broadcast android:name="android.intent.action.MEDIA_MOUNTED" />
 
@@ -70,6 +71,10 @@
         <activity android:name=".fragment.fragmentProceso.FragmentInicioProceso" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentRechazo.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentAutorizadas.FragmentInicioAutorizadas" android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.fragmentDocumentos.FragmentInicioDocumentos" android:screenOrientation="portrait"/>
+
+        <activity android:name=".ui.documentos.ActivityDocumentos" android:screenOrientation="portrait"/>
+
         <activity android:name=".fragment.fragmentAgenda.FragmentInicioAgenda" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityNotificaciones" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityDetalleNotificaciones" android:screenOrientation="portrait"/>
@@ -79,8 +84,20 @@
             android:value="14ffbeefd4223817d96c8d7a06cb75e87b0075c1" />
 
         <service
+            android:name=".cron.CronJob"
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
+
+        <service
             android:name=".cron.Cron"
-            android:exported="false" />
+            android:permission="android.permission.BIND_JOB_SERVICE" >
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+            </intent-filter>
+        </service>
 
         <provider
             android:name=".sqlite.GerenteProvider"
@@ -94,6 +111,16 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+        <provider
+            android:name="android.support.v4.content.FileProvider"
+            android:authorities="@string/file_provider_authority"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"></meta-data>
+        </provider>
 
     </application>
 

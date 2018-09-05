@@ -36,10 +36,12 @@ import java.util.Locale;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.cron.ReminderUtilities;
+import expansion.neto.com.mx.gerenteapp.cron.ReminderUtilitiesJob;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentDashboardBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAgenda.FragmentInicioAgenda;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicioAutoriza;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutorizadas.FragmentInicioAutorizadas;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentDocumentos.FragmentInicioDocumentos;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazo.FragmentInicioRechazadas;
 import expansion.neto.com.mx.gerenteapp.modelView.dashboardModel.Dashboard;
@@ -80,7 +82,6 @@ public class FragmentDashboard extends Fragment {
         editorDashboard.putString("mesConsulta", String.valueOf(meses));
         editorDashboard.putString("semanaConsulta", "0");
         editorDashboard.apply();
-        ReminderUtilities.scheduleCronReminder(getContext());
         binding.nombreJefe.setVisibility(View.GONE);
 
         getMesSemana();
@@ -132,6 +133,16 @@ public class FragmentDashboard extends Fragment {
             public void onClick(View view) {
 
                 Intent main = new Intent(getContext(), FragmentInicioAgenda.class);
+                startActivity(main);
+
+            }
+        });
+
+        binding.documentos.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Intent main = new Intent(getContext(), FragmentInicioDocumentos.class);
                 startActivity(main);
 
             }
@@ -284,6 +295,9 @@ public class FragmentDashboard extends Fragment {
             }
         });
 
+        ReminderUtilities.scheduleCronReminder(getContext());
+        ReminderUtilitiesJob.scheduleCronReminder(getContext());
+
         return v;
     }
 
@@ -386,7 +400,7 @@ public class FragmentDashboard extends Fragment {
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String usuarioId = preferences.getString("usuario","");
         String area = preferences.getString("areaxpuesto","");
-        blockUI();
+        //blockUI();
 
         Gson gson = new Gson();
         String json = preferences.getString("permisos", null);
@@ -424,6 +438,10 @@ public class FragmentDashboard extends Fragment {
 
                             if(dashboard.getTotales().get(i).getEstatusid()==4){
                                 binding.totalAutorizadas.setText(dashboard.getTotales().get(i).getTotal()+"");
+                            }
+
+                            if(dashboard.getTotales().get(i).getEstatusid()==5){
+                                binding.totalDocumentos.setText(dashboard.getTotales().get(i).getTotal()+"");
                             }
 
                         }
@@ -501,7 +519,7 @@ public class FragmentDashboard extends Fragment {
                         binding.nombreJefe.setVisibility(View.GONE);
 
                     }
-                    unblockUI();
+                    //unblockUI();
                 }else{
                     Toast.makeText(getContext(), "Error al cargar los datos", Toast.LENGTH_SHORT).show();
                 }

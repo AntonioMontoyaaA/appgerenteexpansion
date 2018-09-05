@@ -86,7 +86,10 @@ public class ActivityLogin extends AppCompatActivity {
                 PackageManager.PERMISSION_GRANTED &&
 
                 ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED
+                        PackageManager.PERMISSION_GRANTED &&
+
+        ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
+                PackageManager.PERMISSION_GRANTED
 
 
                 ){
@@ -94,6 +97,8 @@ public class ActivityLogin extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.READ_PHONE_STATE,
                     Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.CAMERA,
+
             }, REQUEST_PERMISSION_ACCESS_NETO);
 
         }
@@ -106,7 +111,8 @@ public class ActivityLogin extends AppCompatActivity {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED
                         && grantResults[1] == PackageManager.PERMISSION_GRANTED
-                        && grantResults[2] == PackageManager.PERMISSION_GRANTED){
+                        && grantResults[2] == PackageManager.PERMISSION_GRANTED
+                        && grantResults[3] == PackageManager.PERMISSION_GRANTED){
 
                 } else {
                     Toast.makeText(this, "Permisos no completados", Toast.LENGTH_SHORT).show();

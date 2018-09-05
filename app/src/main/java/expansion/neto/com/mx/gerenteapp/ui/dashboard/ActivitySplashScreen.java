@@ -66,7 +66,7 @@ public class ActivitySplashScreen extends AppCompatActivity {
 		contra = preferences.getString("contra","");
 
 		Usuario usuarios = new Usuario(usuario, contra, this, null);
-		ReminderUtilities.scheduleCronReminder(this);
+
 
 		if(usuario!=null && !usuario.equals("")){//condición para saber si usuario esta logueado o no, traer variable de sesión de shared preference u sqlite, comprobar también si la constraseña no ha caducado
 			compruebaUsuario(usuarios);

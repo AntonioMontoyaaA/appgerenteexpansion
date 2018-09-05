@@ -24,6 +24,7 @@ import com.firebase.jobdispatcher.FirebaseJobDispatcher;
 import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Lifetime;
+import com.firebase.jobdispatcher.RetryStrategy;
 import com.firebase.jobdispatcher.Trigger;
 
 import java.util.concurrent.TimeUnit;
@@ -46,18 +47,18 @@ public class ReminderUtilities {
         Job constraintReminderJob = dispatcher.newJobBuilder()
                 .setService(Cron.class)
                 .setTag(REMINDER_ID)
+                .setRecurring(false)
                 .setLifetime(Lifetime.FOREVER)
                 .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(
-                        testSecondsA,
-                        testSecondsB))
-                .setReplaceCurrent(true)
+                .setTrigger(Trigger.executionWindow(testSecondsA, testSecondsB))
+                .setRetryStrategy(RetryStrategy.DEFAULT_EXPONENTIAL)
+                .setReplaceCurrent(false)
                 .build();
 
         int cancel = dispatcher.cancel(REMINDER_ID);
         if(cancel==0){
             dispatcher.schedule(constraintReminderJob);
-            Log.w(ReminderUtilities.class.getName(), Cron.class.toString() + " iniciado");
+            Log.w(ReminderUtilities.class.getName(), Cron.class.toString() + "Cron Job iniciado");
         }
     }
 

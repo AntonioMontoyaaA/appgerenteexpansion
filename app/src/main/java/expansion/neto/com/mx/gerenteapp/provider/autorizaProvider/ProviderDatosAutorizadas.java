@@ -18,6 +18,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static expansion.neto.com.mx.gerenteapp.provider.dashboardProvider.ProviderDatosDashboard.TIPO_APP;
+
 /**
  * Clase singleton que regresa la validación del usuario así como también regresa el modelo de la persona
  * Created by marcosmarroquin on 21/03/18.
@@ -64,6 +66,7 @@ public class ProviderDatosAutorizadas {
                             .add("mes", String.valueOf(mes))
                             .add("semana", String.valueOf(semana))
                             .add("anio", String.valueOf(anio))
+                            .add("tipoapp", TIPO_APP)
                             .add("tipoconsulta", TIPO_CONSULTA_MD_POR_AUTORIZAR)
                             .add("usuarioId", Usuario.sharedGet(context).getUsuario());
 

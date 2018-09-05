@@ -23,6 +23,10 @@ public class ProviderObtieneNotificaciones {
     String respuesta;
     Notificaciones usuarioCallback = null;
 
+    private static String ESTATUS_NOTIFICACION = "0";
+    private static String NUM_REGISTROS = "50";
+    private static String TIPO_NOTIFICACION = "1";
+
     public ProviderObtieneNotificaciones() {}
 
     public static ProviderObtieneNotificaciones getInstance(Context context) {
@@ -42,8 +46,10 @@ public class ProviderObtieneNotificaciones {
                 try {
 
                     FormBody.Builder formBuilder = new FormBody.Builder()
-                            .add("usuarioId", usuarioId)
-                            .add("tipoNotificacion", tipoNotificacion);
+                            .add("tipoNotificacion", TIPO_NOTIFICACION)
+                            .add("estatusNotificacion", ESTATUS_NOTIFICACION)
+                            .add("numRegistros", NUM_REGISTROS)
+                            .add("usuarioId", usuarioId);
 
                     RequestBody formBody = formBuilder.build();
                     Request request = new Request.Builder()

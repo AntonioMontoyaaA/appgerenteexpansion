@@ -30,6 +30,7 @@ public class ProviderDatosDashboard {
     Dashboard callback = null;
     private final String ESTATUS_DASHBOARD_APP_GERENTE  =   "1";
     private final String TIPO_CONSULTA_DASHBOARD_APP_GERENTE = "1";
+    public static String TIPO_APP = "2";
 
     public ProviderDatosDashboard() {}
 
@@ -67,6 +68,7 @@ public class ProviderDatosDashboard {
                             .add("mes", mes)
                             .add("semana", semana)
                             .add("anio", String.valueOf(anio))
+                            .add("tipoapp", TIPO_APP)
                             .add("tipoconsulta", TIPO_CONSULTA_DASHBOARD_APP_GERENTE)
                             .add("usuarioId", usuarioId);
 

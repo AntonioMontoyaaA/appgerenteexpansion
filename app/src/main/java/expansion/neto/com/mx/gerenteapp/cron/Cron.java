@@ -28,16 +28,10 @@ import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_NOTIFICAC
 public class Cron extends JobService {
 
     @Override
-    public boolean onStartJob(final JobParameters jobParameters) {
-        call(this);
-        jobFinished(jobParameters, false);
-        return true;
-    }
-
-
-    public void call(Context context) {
-        //TODO MAKE NOTIFICATIONS UPDATE!
-         getNotificaciones();
+    public boolean onStartJob(JobParameters job) {
+        getNotificaciones();
+        //Log.e("Service ejecutado!","Cron NOTIFICACIONS");
+        return false;
     }
 
     public void getNotificaciones(){
@@ -47,33 +41,31 @@ public class Cron extends JobService {
 
         ProviderObtieneNotificaciones.getInstance(getApplicationContext()).obtenerNotificaciones(usuarioId, TIPO_NOTIFICACION, new
                 ProviderObtieneNotificaciones.InterfaceObtieneNotificaciones() {
-            @Override
-            public void resolve(Notificaciones eventos) {
-                if(eventos!=null ){
-                        if (eventos.getCodigo()==200 && eventos.getTotalNotificaciones()>0){
-                        int noti = preferences.getInt("notificaciones", 0);
+                    @Override
+                    public void resolve(Notificaciones eventos) {
 
-                        if(noti == eventos.getTotalNotificaciones()){
+                        if(eventos!=null ){
 
-                        }else{
-                            //sendNotification("Notificación", eventos.getNotificaciones().get(0).getMensaje());
-                            createNotification("Notificación", eventos.getNotificaciones().get(0).getMensaje());
-                            editor.putInt("notificaciones", eventos.getTotalNotificaciones());
-                            editor.apply();
+                            if (eventos.getCodigo()==200 && eventos.getTotalNotificaciones()>0){
+                                int noti = preferences.getInt("notificaciones", 0);
+                                if(noti == eventos.getTotalNotificaciones()){
+
+                                }else{
+                                    createNotification("Notificación", eventos.getNotificaciones().get(0).getMensaje());
+                                    editor.putInt("notificaciones", eventos.getTotalNotificaciones());
+                                    editor.apply();
+                                }
+                            }
                         }
+                    }
 
+                    @Override
+                    public void reject(Exception e) {
 
                     }
-                }
-            }
+                });
 
-            @Override
-            public void reject(Exception e) {
-
-            }
-        });
     }
-
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
@@ -98,7 +90,8 @@ public class Cron extends JobService {
 
         mNotificationManager = (NotificationManager) getApplicationContext().getSystemService(Context.NOTIFICATION_SERVICE);
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
+        {
             int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID, "NOTIFICATION_CHANNEL_NAME", importance);
             notificationChannel.enableLights(true);
@@ -113,9 +106,8 @@ public class Cron extends JobService {
         mNotificationManager.notify(0 /* Request Code */, mBuilder.build());
     }
 
-
     @Override
-    public boolean onStopJob(JobParameters jobParameters) {
-        return true;
+    public boolean onStopJob(JobParameters job) {
+        return false;
     }
 }

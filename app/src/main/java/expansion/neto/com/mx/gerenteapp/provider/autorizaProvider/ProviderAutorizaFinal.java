@@ -32,7 +32,9 @@ public class ProviderAutorizaFinal {
         return instance;
     }
 
-    public void autorizaFinal(final String mdId, final String usuarioId, final int estatusValidacion, final int motivoRechazo, final String comentarios, final AutorizaFinal promise) {
+    public void autorizaFinal(final String mdId, final String usuarioId,
+                              final int estatusValidacion, final int motivoRechazo,
+                              final String comentarios, final AutorizaFinal promise) {
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, AutorizaResponse>() {
             @Override

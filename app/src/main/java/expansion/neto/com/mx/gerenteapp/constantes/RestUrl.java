@@ -27,6 +27,8 @@ public class RestUrl {
 
     public static String TIPO_SERVICIO = "1";
 
+    public static String TIPO_SERVICIO_DOC = "9";
+
     public static String TIPO_NOTIFICACION = "3";
 
     public static String REST_ACTION_CONSULTAR_AGENDA = "http://"+ ip +"/"+ dominio +"/agenda";
@@ -54,6 +56,10 @@ public class RestUrl {
     public static String REST_ACTION_CONSULTAR_DASHBOARD = "http://"+ ip +"/"+ dominio +"/consultamdxestatus/";
 
     public static String REST_ACTION_CONSULTAR_AUTORIZADAS_LISTA = "http://"+ ip +"/"+ dominio +"/consultamdxestatus/";
+
+    public static String FORMATO_FOTO = "png";
+
+    public static String REST_ACTION_CONSULTAR_DATOS_COMPETENCIA_CLOUDINARY = "http://"+ ip +"/"+ dominio +"/cloudinaryset/";
 
     public static String REST_ACTION_CONSULTA_HORAS_PEATONAL = "http://"+ ip +"/"+ dominio +"/obtienedetallefactor/";
 
@@ -86,6 +92,11 @@ public class RestUrl {
     public static String REST_ACTION_GUARDAR_NOTIFICACION = "http://"+ ip +"/"+ dominio +"/validaNotificacion/";
 
     public static String REST_ACTION_GUARDAR_UBICACION = "http://"+ ip +"/"+ dominio +"/guardaubicacionact/";
+
+    public static String REST_ACTION_CONSULTAR_DOCUMENTOS = "http://"+ ip +"/"+ dominio +"/obtienelistadoctos/";
+
+    public static String REST_ACTION_GUARDAR_DOCUMENTOS = "http://"+ ip +"/"+ dominio +"/guardadocsmontos/";
+
 
 }
 

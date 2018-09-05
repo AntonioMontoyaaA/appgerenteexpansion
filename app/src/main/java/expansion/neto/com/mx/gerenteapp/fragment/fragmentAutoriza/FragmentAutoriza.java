@@ -2195,7 +2195,8 @@ public class FragmentAutoriza extends Fragment implements
                     int motivoId = preferences.getInt("MODULO_GENERAL_TIPO_AUTORIZACION_MOTIVO",0);
                     String comentarios = preferences.getString("MODULO_GENERAL_COMENTARIO","");
 
-                    ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId, tipoAccion, motivoId, comentarios, new ProviderAutorizaFinal.AutorizaFinal() {
+                    ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId,
+                            tipoAccion, motivoId, comentarios, new ProviderAutorizaFinal.AutorizaFinal() {
                         @Override
                         public void resolve(AutorizaResponse autorizaResponse) {
                             if(autorizaResponse.getCodigo() == 200) {
