@@ -42,7 +42,7 @@ import expansion.neto.com.mx.gerenteapp.fragment.fragmentAgenda.FragmentInicioAg
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicioAutoriza;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDashboard;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazo.FragmentInicioRechazadas;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentInicioRechazadas;
 import expansion.neto.com.mx.gerenteapp.modelView.agendaModel.Notificaciones;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Permiso;
 import expansion.neto.com.mx.gerenteapp.provider.agendaProvider.ProviderObtieneNotificaciones;

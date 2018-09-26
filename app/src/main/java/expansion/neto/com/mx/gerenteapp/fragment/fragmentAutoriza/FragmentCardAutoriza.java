@@ -72,9 +72,9 @@ public class FragmentCardAutoriza extends Fragment implements AutorizaHolder.Lis
 		binding.recyclerAutoriza.setLayoutManager(new LinearLayoutManager(getContext()));
 		binding.recyclerAutoriza.setAdapter(adapter);
 
-		RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+		RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
 		binding.recyclerAutoriza.setLayoutManager(mLayoutManager);
-		binding.recyclerAutoriza.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
+		binding.recyclerAutoriza.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(1), true));
 		binding.recyclerAutoriza.setItemAnimator(new DefaultItemAnimator());
 
 		binding.buscar.setOnClickListener(new View.OnClickListener() {
@@ -185,8 +185,15 @@ public class FragmentCardAutoriza extends Fragment implements AutorizaHolder.Lis
 
 		SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
 		SharedPreferences.Editor editor = preferences.edit();
+		editor.putInt("atrasa", model.getAtrasada());
 		editor.putString("mdId", model.getMemoriaid());
-		editor.apply();
+        editor.putInt("estatusId", model.getEstatusid());
+        editor.putString("nombreEstatus", model.getEstatus());
+        editor.putString("urlLayout", model.getUrllayout());
+		editor.putString("monto1", model.getPptoauditoria());
+		editor.putString("monto2", model.getPptoobra());
+
+        editor.apply();
 
 		Intent main = new Intent(getContext(), ActivityAutorizar.class);
 		getContext().startActivity(main);

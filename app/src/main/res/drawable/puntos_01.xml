@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="180dp"
+    android:height="10dp"
+    android:viewportWidth="180"
+    android:viewportHeight="10">
+
+    <path
+        android:fillColor="#fff"
+        android:pathData="M171,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M37,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M63,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M90,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M117,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M144,1a4,4,0,1,1-4,4,4,4,0,0,1,4-4m0-1a5,5,0,1,0,5,5,5,5,0,0,0-5-5Z" />
+    <path
+        android:fillColor="#fff"
+        android:pathData="M 10 0 C 12.7614237492 0 15 2.23857625085 15 5 C 15 7.76142374915 12.7614237492 10 10 10 C 7.23857625085 10 5 7.76142374915 5 5 C 5 2.23857625085 7.23857625085 0 10 0 Z" />
+</vector>

@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import expansion.neto.com.mx.gerenteapp.constantes.RestUrl;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosSitio;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 import okhttp3.FormBody;
@@ -24,7 +25,7 @@ public class ProviderDatosConstruccion {
     private static ProviderDatosConstruccion instance;
     Context context;
     String respuesta;
-    DatosConstruccion callback = null;
+    DatosConstruccions callback = null;
     private final String FACTOR_ID_CONSTRUCCION = "5";
 
     public ProviderDatosConstruccion() {}
@@ -39,9 +40,9 @@ public class ProviderDatosConstruccion {
 
     public void obtenerDatosConstruccion(final String mdId, final String usuarioId, final ConsultaDatosConstruccion promise){
         final OkHttpClient client = new OkHttpClient();
-        (new AsyncTask<Void, Void, DatosConstruccion>() {
+        (new AsyncTask<Void, Void, DatosConstruccions>() {
             @Override
-            protected DatosConstruccion doInBackground(Void... voids) {
+            protected DatosConstruccions doInBackground(Void... voids) {
                 //TODO CONNECT AND GET DATA
                 try {
 
@@ -60,33 +61,31 @@ public class ProviderDatosConstruccion {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
-                    callback = gson.fromJson(jsonInString, DatosConstruccion.class);
-                    if(callback.getCodigo() == 404) {
-                        Util.cerrarSesion(context);
-                        return null;
-                    }
-                    return callback;
+
+                    return callback = gson.fromJson(jsonInString, DatosConstruccions.class);
+
                 }catch (Exception e){
+                    e.printStackTrace();
                     if(e.getMessage().contains("Failed to connect to")){
-                        callback = new DatosConstruccion();
+                        callback = new DatosConstruccions();
                         callback.setCodigo(1);
                         return callback;
                     }else{
-                        callback = new DatosConstruccion();
-                        callback.setCodigo(403);
+                        callback = new DatosConstruccions();
+                        callback.setCodigo(404);
                         return callback;
                     }
                 }
             }
             @Override
-            protected void onPostExecute(DatosConstruccion datosSitio){
+            protected void onPostExecute(DatosConstruccions datosSitio){
                 promise.resolve(datosSitio);
             }
         }).execute();
     }
 
     public interface ConsultaDatosConstruccion {
-        void resolve(DatosConstruccion datosSitio);
+        void resolve(DatosConstruccions datosSitio);
         void reject(Exception e);
     }
 

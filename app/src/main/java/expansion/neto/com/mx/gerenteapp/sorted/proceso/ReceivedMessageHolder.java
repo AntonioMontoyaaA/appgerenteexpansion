@@ -2,7 +2,11 @@ package expansion.neto.com.mx.gerenteapp.sorted.proceso;
 
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.RelativeSizeSpan;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,15 +37,35 @@ public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
     }
 
     public void bind(ChatProceso.MensajeChat message, Context context, int tipoComentario) {
-        if(tipoComentario == TIPO_COMENTARIO_EVALUACIONES) {
-            if(message.getNombrefactor() != null) {
-                messageText.setText("En " + message.getNombrefactor() + ". " + message.getComentario());
-            } else {
-                messageText.setText(message.getComentario());
-            }
-        } else if(tipoComentario == TIPO_COMENTARIO_GENERAL || tipoComentario == TIPO_COMENTARIO_AREA)  {
-            messageText.setText(message.getComentario());
+
+        if(message.getNombrearea()==null){
+            message.setNombrefactor(context.getString(R.string.general));
         }
+
+        if(tipoComentario == TIPO_COMENTARIO_EVALUACIONES) {
+
+            String nombreArea = message.getNombrearea();
+            nombreArea = nombreArea.substring(0,1).toUpperCase() + nombreArea.substring(1).toLowerCase();
+            nombreArea = nombreArea+": "+" \n"+message.getComentario();
+            SpannableString ss1 =  new SpannableString(nombreArea);
+            String[] nombreAreaSplit = nombreArea.split(": ");
+            ss1.setSpan(new RelativeSizeSpan(.8f), 0, nombreAreaSplit[0].length()+1, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.colorazul))), 0, nombreAreaSplit[0].length()+1, 0);// set color
+            messageText.setText(ss1);
+
+        } else if(tipoComentario == TIPO_COMENTARIO_GENERAL || tipoComentario == TIPO_COMENTARIO_AREA)  {
+
+            String nombreArea = message.getNombrearea();
+            nombreArea = nombreArea.substring(0,1).toUpperCase() + nombreArea.substring(1).toLowerCase();
+            nombreArea = nombreArea+": "+" \n"+message.getComentario();
+            SpannableString ss1 =  new SpannableString(nombreArea);
+            String[] nombreAreaSplit = nombreArea.split(": ");
+            ss1.setSpan(new RelativeSizeSpan(.8f), 0, nombreAreaSplit[0].length()+1, 0); // set size
+            ss1.setSpan(new ForegroundColorSpan(Color.parseColor(context.getString(R.string.colorazul))), 0, nombreAreaSplit[0].length()+1, 0);// set color
+            messageText.setText(ss1);
+
+        }
+
         timeText.setText(message.getFecharegistro());
         nameText.setText(message.getNombrearea());
 

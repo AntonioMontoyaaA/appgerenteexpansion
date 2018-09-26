@@ -4,6 +4,7 @@
     <color name="colorPrimaryGerente">#363C4A</color>
     <color name="colorPrimaryDark">#363C4A</color>
     <color name="colorAccent">#363C4A</color>
+    <color name="colorPrimaryLight">#363C4A</color>
 
     <color name="blanco">#ffffff</color>
     <color name="azul">#254581</color>
@@ -21,6 +22,7 @@
 
     <color name="editText">#8cffdea3</color>
 
+    <color name="gris_borde">#D1D5DE</color>
 
     <color name="mdMes">#e7c1b5</color>
     <color name="mdSemana">#91f5a5</color>
@@ -51,9 +53,16 @@
     <color name="event_color_04">#f8b552</color>
 
     <color name="back_atrasada">#B54A2D</color>
+    <color name="blancos">#ffffff</color>
 
     <color name="colorBotonGenerico">#213054</color>
+    <color name="dimBg">#bf000000</color>
 
     <color name="my_spinner_text_color">#213054</color>
+    <color name="rojo">#B54A2D</color>
 
+    <color name="texto_gris">#ACACAC</color>
+    <color name="grisetxt">#a9a9a9</color>
+
+    <color name="atrasadas">#E4B163</color>
 </resources>

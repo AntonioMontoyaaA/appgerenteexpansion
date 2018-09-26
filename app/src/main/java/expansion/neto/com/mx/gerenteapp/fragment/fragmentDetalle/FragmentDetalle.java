@@ -1,6 +1,7 @@
 package expansion.neto.com.mx.gerenteapp.fragment.fragmentDetalle;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +9,7 @@ import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.VectorDrawable;
 import android.location.Address;
@@ -15,19 +17,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.telephony.PhoneNumberUtils;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.TextWatcher;
-import android.util.Base64;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -36,13 +30,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.ScrollView;
-import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -61,15 +48,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
-import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mancj.slideup.SlideUp;
 import com.mancj.slideup.SlideUpBuilder;
-import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -79,171 +62,293 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import expansion.neto.com.mx.gerenteapp.R;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza1Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza2Binding;
+import expansion.neto.com.mx.gerenteapp.databinding.ActivityFinalizaBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza3Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza4Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza5Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza6Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza7Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaBinding;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentAutoriza;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentDialogAceptar;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentDialogCancelar;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicioAutoriza;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazo.FragmentInicioRechazadas;
-import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
-import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPredial;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza4DetalleBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetalleGenBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetallePropietarioBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetalleSitioBinding;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
+import expansion.neto.com.mx.gerenteapp.modelView.Ubicacion;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosSitio;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.GeneralidadesSitio;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Peatonal;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Peatonales;
-import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Points;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Propietario;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Superficie;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Zonificacion;
+import expansion.neto.com.mx.gerenteapp.modelView.crearModel.CompetenciasGeneradoresV2;
+import expansion.neto.com.mx.gerenteapp.modelView.crearModel.CrearZonificacion;
+import expansion.neto.com.mx.gerenteapp.modelView.crearModel.FactoresConstruccion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderConsultaFinaliza;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosConstruccion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosGeneralidadesSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPeatonal;
-import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPredial;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosPropietario;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSitio;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSuperficie;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosZonificacion;
+import expansion.neto.com.mx.gerenteapp.provider.crearProvider.ProviderDatosCompetencias;
+import expansion.neto.com.mx.gerenteapp.provider.crearProvider.ProviderDatosFactoresConstruccion;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterAutorizaPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterListaHoras;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolderPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaCompetencia;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradores;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradoresMercadoPublico;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradoresNegocios;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradoresNegociosComida;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradoresTianguis;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradoresTransporte;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaTiendaNeto;
 import expansion.neto.com.mx.gerenteapp.ui.agenda.ActivityNotificaciones;
-import expansion.neto.com.mx.gerenteapp.utils.CustomTextWatcher;
+import expansion.neto.com.mx.gerenteapp.utils.ServicioGPS;
+import expansion.neto.com.mx.gerenteapp.utils.Util;
+import expansion.neto.com.mx.gerenteapp.utils.desing.MainSliderAdapter;
+import expansion.neto.com.mx.gerenteapp.utils.desing.PicassoImageLoadingService;
+import ss.com.bannerslider.Slider;
+
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
 
 
 public class FragmentDetalle extends Fragment implements
-        AutorizaHolderPeatonal.Listener {
+        AutorizaHolderPeatonal.Listener, com.google.android.gms.location.LocationListener {
 
     private View view;
     private static final String ARG_POSITION = "position";
     private int position;
     AdapterListaCompetencia adapter;
     AdapterListaGeneradores adapter2;
-    SharedPreferences preferences;
     AutorizaHolderPeatonal.Listener n;
-    String urlFrente = "";
-    String urlLateral1 = "";
-    String urlLateral2 = "";
-    String urlPredial = "";
-    String mensaje = null;
+    List<CompetenciasGeneradoresV2.Competencia> listCompetencia = new ArrayList<>();
+    List<CompetenciasGeneradoresV2.OtrosGeneradore> listGeneradores = new ArrayList<>();
+    CrearZonificacion zonificacion = null;
 
-    private final int BACK_EN_PROCESO = 1;
-    private final int BACK_RECHAZO = 2;
+    int valor;
+    String nombreGenerador;
+    String nombreCompetencia;
 
-    List<Zonificacion.Detalle> list = new ArrayList<>();
-    List<Zonificacion.Detalle> listGeneradores = new ArrayList<>();
+    String nombreSitio;
+
+    AdapterListaGeneradoresNegocios adapterNegocios;
+    AdapterListaGeneradoresTransporte adapterTransporte;
+    AdapterListaTiendaNeto adapterTiendaNeto;
+    AdapterListaGeneradoresNegociosComida adapterListaGeneradoresNegociosComida;
+    AdapterListaGeneradoresMercadoPublico adapterListaGeneradoresMercadoPublico;
+    AdapterListaGeneradoresTianguis adapterListaGeneradoresTianguis;
+
+    public static void loadingProgress(ProgressDialog progressDialog, int i){
+        if(i == 0){
+            progressDialog.setTitle("Enviando...");
+            progressDialog.setMessage("Espera mientras se carga tu informacion...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }else{
+            progressDialog.dismiss();
+        }
+    }
+
+    List<CompetenciasGeneradoresV2.TiendaNeto> listCompetenciaTiendaNeto = new ArrayList<>();
+    List<CompetenciasGeneradoresV2.Negocio> listGeneradoresNegocios = new ArrayList<>();
+    List<CompetenciasGeneradoresV2.TransportePublico> listGeneradoresTransporte = new ArrayList<>();
+
+    List<CompetenciasGeneradoresV2.NegociosDeComida> negociosDeComidaArrayList = new ArrayList<>();
+    List<CompetenciasGeneradoresV2.MercadoPublico> mercadoPublicoArrayList = new ArrayList<>();
+    List<CompetenciasGeneradoresV2.Tiangui> tianguiArrayList = new ArrayList<>();
+    int nivel;
+
+    private AdapterListaCompetencia.OnItemClick click = new AdapterListaCompetencia.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreCompetencia = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaTiendaNeto.OnItemClick clickTiendaNeto = new AdapterListaTiendaNeto.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreCompetencia = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradores.OnItemClick clicks = new AdapterListaGeneradores.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradoresNegocios.OnItemClick clickNegocio = new AdapterListaGeneradoresNegocios.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradoresTransporte.OnItemClick clickTransporte = new AdapterListaGeneradoresTransporte.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradoresMercadoPublico.OnItemClick clickMercadoPublico = new AdapterListaGeneradoresMercadoPublico.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradoresNegociosComida.OnItemClick clickNegociosComida = new AdapterListaGeneradoresNegociosComida.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
+
+    private AdapterListaGeneradoresTianguis.OnItemClick clickTiaguis = new AdapterListaGeneradoresTianguis.OnItemClick() {
+        @Override
+        public void onClick(int value, String nombre, int nivelId) {
+            valor = value;
+            nombreGenerador = nombre;
+            nivel = nivelId;
+        }
+    };
 
     private LatLng mCenterLatLong;
 
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
-            if(lat!=null){
+        public void onMapReady(final GoogleMap googleMap) {
+            mMap = googleMap;
+            final SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            mdLat = preferences.getFloat("latMd", 0);
+            mdLot = preferences.getFloat("lotMd", 0);
 
-                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putFloat("latMd", Float.valueOf(String.valueOf(lat)));
-                editor.putFloat("lotMd", Float.valueOf(String.valueOf(lot)));
-                editor.apply();
-                icon = getBitmapDescriptor(R.drawable.home);
 
-                LatLng md = new LatLng(lat, lot);
-                googleMap.addMarker(new MarkerOptions().position(md)
-                        .title("")
-                        .icon(icon));
+            LatLng mds = new LatLng(mdLat, mdLot);
+            icon = getBitmapDescriptor(R.drawable.home);
+            googleMap.addMarker(new MarkerOptions().position(mds)
+                    .title("")
+                    .icon(icon)
+            );
 
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(md));
-                googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(md, 15));
-                googleMap.animateCamera(CameraUpdateFactory.zoomIn());
-                googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
+            mCenterLatLong = new LatLng(mdLat, mdLot);
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(mCenterLatLong));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mCenterLatLong, 15));
+            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(8), 1000, null);
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
-                        .target(md)
-                        .zoom(14)
-                        .bearing(0)
-                        .tilt(0)
-                        .build();
-                googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }else{
-                //  Toast.makeText(getContext(), "Error al cargar los datos",
-                //        Toast.LENGTH_SHORT).show();
-            }
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(mCenterLatLong)
+                    .zoom(14)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+
+            googleMap.getUiSettings().setScrollGesturesEnabled(false);
+            googleMap.getUiSettings().setZoomGesturesEnabled(false);
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         }
     };
 
+    private GoogleApiClient mGoogleApiClient;
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try {
+            if (location != null)
+                changeMap(location);
+            LocationServices.FusedLocationApi.removeLocationUpdates(
+                    mGoogleApiClient, this);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    private GoogleMap mMap;
+    private GoogleMap mMapZona;
+
+    @SuppressLint("MissingPermission")
+    private void changeMap(Location location) {
+        if (mMap != null) {
+            mMap.getUiSettings().setZoomControlsEnabled(false);
+            LatLng latLong;
+
+
+            latLong = new LatLng(location.getLatitude(), location.getLongitude());
+
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(latLong).zoom(19f).tilt(70).build();
+
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(true);
+            mMap.animateCamera(CameraUpdateFactory
+                    .newCameraPosition(cameraPosition));
+        } else {
+
+        }
+    }
+
     BitmapDescriptor icon;
+    Float mdLat;
+    Float mdLot;
+    ArrayList<Zonificacion.Detalle> detallesGen;
+    ArrayList<Zonificacion.Detalle> detallesCom;
+
     private OnMapReadyCallback onMapReadyCallbackZonificacion = new OnMapReadyCallback() {
         @Override
-        public void onMapReady(GoogleMap googleMap) {
-            if(puntosCompentencias!=null){
+        public void onMapReady(final GoogleMap googleMap) {
 
-                for(int i = 0;i<puntosCompentencias.size();i++){
+            mMapZona = googleMap;
 
-                    if(puntosCompentencias.get(i).getIcono()==1){
-                        icon = getBitmapDescriptor(R.drawable.bbb);
-                    }else if(puntosCompentencias.get(i).getIcono()==2){
-                        icon = getBitmapDescriptor(R.drawable.oxxo);
-                    }else if(puntosCompentencias.get(i).getIcono()==3){
-                        icon = getBitmapDescriptor(R.drawable.bodegaa);
-                    }else if(puntosCompentencias.get(i).getIcono()==4){
-                        icon = getBitmapDescriptor(R.drawable.abarrotes);
-                    }else if(puntosCompentencias.get(i).getIcono()==5){
-                        icon = getBitmapDescriptor(R.drawable.g_iglesia);
-                    }else if(puntosCompentencias.get(i).getIcono()==6){
-                        icon = getBitmapDescriptor(R.drawable.g_mercado);
-                    }else if(puntosCompentencias.get(i).getIcono()==7){
-                        icon = getBitmapDescriptor(R.drawable.escuela);
-                    }else if(puntosCompentencias.get(i).getIcono()==8){
-                        icon = getBitmapDescriptor(R.drawable.g_busstop);
-                    }else if(puntosCompentencias.get(i).getIcono()==9){
-                        icon = getBitmapDescriptor(R.drawable.otros);
-                    }else if(puntosCompentencias.get(i).getIcono()==10){
-                        icon = getBitmapDescriptor(R.drawable.neto);
-                    }else if(puntosCompentencias.get(i).getIcono()==11){
-                        icon = getBitmapDescriptor(R.drawable.g_recauderia);
-                    }else if(puntosCompentencias.get(i).getIcono()==12){
-                        icon = getBitmapDescriptor(R.drawable.g_comida);
-                    }else if(puntosCompentencias.get(i).getIcono()==13){
-                        icon = getBitmapDescriptor(R.drawable.g_mercado);
-                    }else if(puntosCompentencias.get(i).getIcono()==14){
-                        icon = getBitmapDescriptor(R.drawable.g_tianguis);
-                    }else if(puntosCompentencias.get(i).getIcono()==15){
-                        icon = getBitmapDescriptor(R.drawable.g_tortilleria);
-                    }else if(puntosCompentencias.get(i).getIcono()==16){
-                        icon = getBitmapDescriptor(R.drawable.g_carniceria);
-                    }else if(puntosCompentencias.get(i).getIcono()==17){
-                        icon = getBitmapDescriptor(R.drawable.metro);
-                    }
+            SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            mdLat = preferences.getFloat("latMd", 0);
+            mdLot = preferences.getFloat("lotMd", 0);
+            final Float mdLat = preferences.getFloat("latMd", 0);
+            final Float mdLot = preferences.getFloat("lotMd", 0);
 
-                    LatLng md = new LatLng(puntosCompentencias.get(i).getLat(), puntosCompentencias.get(i).getLot());
+            LatLng mds = new LatLng(mdLat, mdLot);
+            icon = getBitmapDescriptor(R.drawable.home);
+            googleMap.addMarker(new MarkerOptions().position(mds)
+                    .title("")
+                    .icon(icon)
+            );
 
-                    googleMap.addMarker(new MarkerOptions().position(md)
-                            .title(puntosCompentencias.get(i).getNombre())
-                            .icon(icon)
-                    );
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(mds));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mds, 15));
+            googleMap.animateCamera(CameraUpdateFactory.zoomIn());
+            googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
-                }
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(mds)
+                    .zoom(14)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+            googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-                SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                Float mdLat = preferences.getFloat("latMd", 0);
-                Float mdLot = preferences.getFloat("lotMd", 0);
-
-                LatLng mds = new LatLng(mdLat, mdLot);
+            if(mdLat!=null || mdLot!=null){
+                mds = new LatLng(mdLat, mdLot);
                 icon = getBitmapDescriptor(R.drawable.home);
                 googleMap.addMarker(new MarkerOptions().position(mds)
                         .title("")
@@ -255,25 +360,43 @@ public class FragmentDetalle extends Fragment implements
                 googleMap.animateCamera(CameraUpdateFactory.zoomIn());
                 googleMap.animateCamera(CameraUpdateFactory.zoomTo(10), 2000, null);
 
-                CameraPosition cameraPosition = new CameraPosition.Builder()
+                cameraPosition = new CameraPosition.Builder()
                         .target(mds)
                         .zoom(14)
                         .bearing(0)
                         .tilt(0)
                         .build();
+
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            }else{
-                // Toast.makeText(getContext(), "Error al cargar los datos",
-                //       Toast.LENGTH_SHORT).show();
+
+                bindingZonificacion.aceptar.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        CameraUpdate center=
+                                CameraUpdateFactory.newLatLng(new LatLng(mdLat, mdLot));
+                        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+                        googleMap.moveCamera(center);
+                        googleMap.animateCamera(zoom);
+
+                    }
+                });
+
+
+                googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+                    @Override
+                    public void onMapLongClick(LatLng arg0) {
+                        // TODO Auto-generated method stub
+                    }
+                });
             }
 
         }
     };
 
-
     private static boolean noti = false;
-
     public static FragmentDetalle newInstance(int position, boolean notificacion) {
         FragmentDetalle f = new FragmentDetalle();
         Bundle b = new Bundle();
@@ -289,250 +412,198 @@ public class FragmentDetalle extends Fragment implements
         position = getArguments().getInt(ARG_POSITION);
     }
 
+    private Slider slider;
     private SlideUp slideCompetencia;
     private SlideUp slideGenerador;
-    FragmentAutorizaBinding binding;
+    FragmentDetalleSitioBinding binding;
     FragmentAutoriza3Binding bindingZonificacion;
-    FragmentAutoriza2Binding bindingSuperficie;
-    FragmentAutoriza1Binding bindingPropietario;
-    private Double lat, lot;
-    ArrayList<Points> puntosCompentencias;
 
+    Float lat, lot;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
-        final Resources resource = getContext().getResources();
         if (position == 0) {
 
             mensaje = "fragment 1";
-            final FragmentAutorizaBinding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza,container,false);
+            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_detalle_sitio,container,false);
             view = binding.getRoot();
 
-            binding.toolbar.nombreTitulo.setText(getString(R.string.datossitio));
+            binding.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+            binding.toolbar.guardar.setVisibility(View.INVISIBLE);
 
-            //binding.help.setVisibility(View.VISIBLE);
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            binding.escogeSitio.setEnabled(false);
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(onMapReadyCallback);
 
-            ProviderDatosSitio.getInstance(getContext()).obtenerDatosSitio(mdId, usuarioId, new ProviderDatosSitio.ConsultaDatosSitio() {
+            final SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            final String usuario = preferences.getString("usuario", "");
+            final String mdIdterminar = preferences.getString("mdIdterminar", "");
+            int atrasa = preferences.getInt("atrasa",0);
+
+
+            if(atrasa==1){
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            }else{
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(noti){
+                        Intent main = new Intent(getContext(), ActivityNotificaciones.class);
+                        startActivity(main);
+                    }else{
+                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        a.show(getChildFragmentManager(),"child");
+                    }
+
+                }
+            });
+
+            binding.nombresitio.setEnabled(false);
+            binding.direccionsitio.setEnabled(false);
+            binding.toolbar.guardar.setVisibility(View.INVISIBLE);
+            final SharedPreferences.Editor editorPre = preferences.edit();
+
+            ProviderDatosSitio.getInstance(getContext()).obtenerDatosSitio(mdIdterminar, usuario, new ProviderDatosSitio.ConsultaDatosSitio() {
                 @Override
                 public void resolve(DatosSitio datosSitio) {
-
                     if(datosSitio.getDatossitio()!= null && datosSitio.getCodigo()==200){
-                        binding.nombreSitioTitulo.setText(datosSitio.getDatossitio().get(0).getNombreSitio());
+                        if(datosSitio.getDatossitio().get(0).getTipoUbicacionMD()!=null){
+                            if(datosSitio.getDatossitio().get(0).getTipoUbicacionMD().equals("RURAL")){
+                                binding.setRural("Rural");
+                                editorPre.putString("tipoSitio" ,"2");
+                                editorPre.apply();
+                            }else{
+                                binding.setRural("Ciudad");
+                                editorPre.putString("tipoSitio" ,"1");
+                                editorPre.apply();
+                            }
+                        }
 
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putString("nombreSitio", datosSitio.getDatossitio().get(0).getNombreSitio().toString());
-                        editor.apply();
+                        nombreSitio = datosSitio.getDatossitio().get(0).getNombreSitio();
 
+                        binding.nombresitio.setEnabled(false);
+                        binding.nombresitio.setText(datosSitio.getDatossitio().get(0).getNombreSitio());
+                        binding.fechaCreacion.setText(datosSitio.getDatossitio().get(0).getFechaCreacion()+"");
+                        binding.direccionsitio.setText(datosSitio.getDatossitio().get(0).getDireccion()+"");
+                        binding.puntos.setText(datosSitio.getDatossitio().get(0).getTotalmd()+"");
+                        binding.setCategoria(datosSitio.getDatossitio().get(0).getCategoria()+"");
                         binding.categoria.setText(datosSitio.getDatossitio().get(0).getCategoria()+"");
-                        binding.puntuacion.setText(datosSitio.getDatossitio().get(0).getTotalMdId()+"");
-                        binding.direccion.setText(datosSitio.getDatossitio().get(0).getDireccion()+"");
-                        binding.estado.setText(datosSitio.getDatossitio().get(0).getEstado()+"");
-                        lat = Double.valueOf(datosSitio.getDatossitio().get(0).getLatitud());
-                        lot = Double.valueOf(datosSitio.getDatossitio().get(0).getLongitud());
-                        if(datosSitio.getDatossitio().get(0).getTipoUbicacionMD().equals("RURAL")){
-                            binding.escogeSitio.setChecked(true);
-                            binding.rural.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.azul));
-                        }else{
-                            binding.escogeSitio.setChecked(false);
-                            binding.ciudad.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.azul));
-                        }
-                        if(datosSitio.getDatossitio().get(0).getCategoria().equals("A")) {
-                            binding.estrella1.setVisibility(View.VISIBLE);
-                            binding.estrella2.setVisibility(View.VISIBLE);
-                            binding.estrella3.setVisibility(View.VISIBLE);
-                        } else if(datosSitio.getDatossitio().get(0).getCategoria().equals("B")) {
-                            binding.estrella1.setVisibility(View.VISIBLE);
-                            binding.estrella2.setVisibility(View.VISIBLE);
-                            binding.estrella3.setVisibility(View.GONE);
-                        } else if(datosSitio.getDatossitio().get(0).getCategoria().equals("C")) {
-                            binding.estrella1.setVisibility(View.VISIBLE);
-                            binding.estrella2.setVisibility(View.GONE);
-                            binding.estrella3.setVisibility(View.GONE);
-                        }
+
+
+
+                        lat = Float.valueOf(datosSitio.getDatossitio().get(0).getLatitud());
+                        lot = Float.valueOf(datosSitio.getDatossitio().get(0).getLongitud());
+
+                        SharedPreferences.Editor editorDatos = preferences.edit();
+
+                        editorDatos.putString("cate", datosSitio.getDatossitio().get(0).getCategoria()+"");
+                        editorDatos.putString("punto", datosSitio.getDatossitio().get(0).getTotalmd()+"");
+                        editorDatos.putString("fechaCreacion", datosSitio.getDatossitio().get(0).getFechaCreacion()+"");
+                        editorDatos.putString("nombreSitio", nombreSitio);
+
+                        editorDatos.putFloat("latMd", lat);
+                        editorDatos.putFloat("lotMd", lot);
+                        editorDatos.apply();
 
                         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                                 .findFragmentById(R.id.map);
-
                         mapFragment.getMapAsync(onMapReadyCallback);
 
-                    }else{
-                        Toast.makeText(getContext(), "Error al cargar los datos",
-                                Toast.LENGTH_LONG).show();
-                    }
 
+                        ProviderDatosPropietario.getInstance(getContext()).obtenerDatosPropietario(mdIdterminar, usuario, new ProviderDatosPropietario.ConsultaDatosPropietario() {
+                            @Override
+                            public void resolve(Propietario propietario) {
+                                if(propietario.getCodigo()==200 && propietario.getAMaternoPropietario()!=null){
+
+                                    if(propietario.getRentaMasLocales() > 0) {
+                                        // binding.robotoTextView11.setText("YA RENTA A NETO");
+                                    } else {
+                                        //binding.robotoTextView11.setText("NO RENTA A NETO");
+                                    }
+
+                                    if(propietario.getMail().equals("null")){
+                                        propietario.setMail("");
+                                    }
+
+                                    binding.nombre.setText(propietario.getNombrePropietario()+ " " +
+                                    propietario.getAPaternoPropietario()+" "+propietario.getAMaternoPropietario());
+                                    binding.telefono.setText(propietario.getTelefono());
+                                    binding.email.setText(propietario.getMail());
+
+                                }
+                            }
+                            @Override
+                            public void reject(Exception e) {
+                            }
+                        });
+
+                        binding.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+                        binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(noti){
+                                    Intent main = new Intent(getContext(), ActivityNotificaciones.class);
+                                    startActivity(main);
+                                }else{
+                                    FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                                    a.show(getChildFragmentManager(),"child");
+                                }
+                            }
+                        });
+                    }
                 }
 
                 @Override
                 public void reject(Exception e) { }
             });
 
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
-                    if(noti){
-                        Intent main = new Intent(getContext(), ActivityNotificaciones.class);
-                        startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
-                    }
-                }
-            });
-
         } else if (position == 1) {
 
-            final FragmentAutoriza1Binding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza_1,container,false);
-            view = binding.getRoot();
+            final FragmentDetallePropietarioBinding bindingSuperficie = DataBindingUtil.inflate(inflater, R.layout.fragment_detalle_propietario,container,false);
+            view = bindingSuperficie.getRoot();
+            bindingSuperficie.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+            bindingSuperficie.toolbar.guardar.setVisibility(View.INVISIBLE);
 
-            binding.toolbar.nombreTitulo.setText(getString(R.string.datospropietario));
-
-
-
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-
-            ProviderDatosPropietario.getInstance(getContext())
-                    .obtenerDatosPropietario(mdId, usuarioId, new ProviderDatosPropietario.ConsultaDatosPropietario() {
-                        @Override
-                        public void resolve(Propietario propietario) {
-
-                            if(propietario.getCodigo()==200){
-                                binding.nombrepropietario.setText(propietario.getNombrePropietario()+ " "+
-                                        propietario.getAPaternoPropietario()+ " "+ propietario.getAMaternoPropietario());
-                                binding.telefono.setText(PhoneNumberUtils.formatNumber(propietario.getTelefono(), Locale.getDefault().getCountry()));
-                                binding.email.setText(propietario.getMail());
-                                if(propietario.getRentaMasLocales() > 0) {
-                                    binding.robotoTextView11.setText("YA RENTA A NETO");
-                                } else {
-                                    binding.robotoTextView11.setText("NO RENTA A NETO");
-                                }
-
-                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editorPropietario = preferences.edit();
-                                if(propietario.getTip() != null && propietario.getTip().size() > 0) {
-                                    StringBuffer tipMod2 = new StringBuffer("");
-                                    for(Propietario.Tip tip : propietario.getTip()) {
-                                        tipMod2.append(tip.getDetalle() + "\n");
-                                    }
-                                    editorPropietario.putString("tip_modulo_2", tipMod2.toString());
-                                } else {
-                                    editorPropietario.putString("tip_modulo_2", "Agrega un tip a esta pantalla");
-                                }
-                                editorPropietario.apply();
-                            }else{
-                                Toast.makeText(getContext(), "Error al cargar los datos",
-                                        Toast.LENGTH_LONG).show();
-                            }
-
-                        }
-
-                        @Override
-                        public void reject(Exception e) {
-
-                        }
-                    });
-
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
+            final SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            final String usuario = preferences.getString("usuario", "");
+            final String md = preferences.getString("mdIdterminar", "");
+            final String nombre = preferences.getString("nombreSitio", "");
+            int atrasa = preferences.getInt("atrasa",0);
 
 
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
+            if(atrasa==1){
+                bindingSuperficie.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            }else{
+                bindingSuperficie.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
 
-                    if(noti){
-                        Intent main = new Intent(getContext(), ActivityNotificaciones.class);
-                        startActivity(main);
-                    }else
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            loadingProgress(progressDialog, 0);
 
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
-                    }
-                }
-            });
-
-
-        }else if (position == 2) {
-
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
-
-            final FragmentAutoriza2Binding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza_2,container,false);
-            view = binding.getRoot();
-
-            binding.frente.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
-            binding.profundidad.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
-
-
-            ProviderDatosPredial.getInstance(getContext()).obtenerDatosPredial(mdId, usuarioId, new ProviderDatosPredial.ConsultaDatosPredial() {
-                @Override
-                public void resolve(DatosPredial datosPredial) {
-                    if(datosPredial!=null){
-                        if(datosPredial.getCodigo().equals("200")){
-                            if(datosPredial.getAplicaPredial().equals("1")){
-                                binding.predial.setVisibility(View.VISIBLE);
-                            }else{
-                                binding.predial.setVisibility(View.GONE);
-                                urlPredial = " ";
-                            }
-                        }
-                    }else{
-                        binding.predial.setVisibility(View.GONE);
-                        urlPredial = " ";
-                    }
-                }
-                @Override
-                public void reject(Exception e) {
-                    binding.predial.setVisibility(View.GONE);
-                    urlPredial = " ";
-                }
-            });
-
-            binding.toolbar.nombreTitulo.setText(getString(R.string.datossuperficie));
-            binding.escogeEsquina.setEnabled(false);
             ProviderDatosSuperficie.getInstance(getContext())
-                    .obtenerDatosSuperficie(mdId, usuarioId, new ProviderDatosSuperficie.ConsultaDatosSuperficie() {
+                    .obtenerDatosSuperficie(md, usuario, new ProviderDatosSuperficie.ConsultaDatosSuperficie() {
                         @Override
                         public void resolve(final Superficie superficie) {
-
                             if(superficie.getCodigo()==200){
-                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                loadingProgress(progressDialog, 1);
+
+                                bindingSuperficie.nombresitio.setText(nombre+"");
+
                                 int valorFoto = 0;
                                 int valorFrente = 0;
                                 int valorFondo = 0;
                                 int valorEsquina = 0;
+
                                 for(int i = 0;i<superficie.getNiveles().size();i++){
                                     if(superficie.getNiveles().get(i).getNivel()==4 ||
                                             superficie.getNiveles().get(i).getNivel()==5){
-                                        Picasso.get().load(superficie.getNiveles().get(i).getImgFrenteId()).into(binding.imagen);
-                                        valorFoto = i;
-                                        valorFondo = i;
+                                        if(!superficie.getNiveles().get(i).getImgFrenteId().isEmpty()){
+                                            valorFoto = i;
+                                            valorFondo = i;
+                                        }
                                     }
 
                                     if(superficie.getNiveles().get(i).getNivel()==6 ||
@@ -548,741 +619,806 @@ public class FragmentDetalle extends Fragment implements
                                 Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
 
                                 if(esquina==1){
-                                    binding.escogeEsquina.setChecked(true);
+
                                 }else{
-                                    binding.escogeEsquina.setChecked(false);
+
                                 }
-                                getContext().getSharedPreferences("datosSuperficie", 0).edit().clear().apply();
+
                                 String superficieS = String.valueOf(superficie.getNiveles().get(valorFrente).getValorreal());
                                 superficieS = superficieS.replace(" ", "");
-
                                 String fondoS = String.valueOf(superficie.getNiveles().get(valorFondo).getFondo());
                                 fondoS = fondoS.replace(" ", "");
 
-                                binding.frente.setText(""+superficieS);
-                                binding.profundidad.setText(""+fondoS);
-
                                 String total = String.valueOf((Double.valueOf(superficieS)
                                         *(Double.valueOf(fondoS))));
-                                binding.total.setText(""+total+"");
+                                bindingSuperficie.areaterreno.setText(total+" MTS2");
+                                bindingSuperficie.frente.setText(superficieS+" MTS");
+                                bindingSuperficie.profundidad.setText(fondoS+" MTS");
 
-                                binding.frontal.setAlpha(1.0f);
-                                binding.lateral1.setAlpha(0.35f);
-                                binding.lateral2.setAlpha(0.35f);
-                                binding.predial.setAlpha(0.35f);
-                                binding.robotoTextView2.setText(nombreSitio);
+                                Slider.init(new PicassoImageLoadingService());
+                                slider = bindingSuperficie.map;
+                                final int finalValorFoto1 = valorFoto;
 
-                                final int finalValorFoto = valorFoto;
-
-                                if(!superficie.getNiveles().get(finalValorFoto).getImgFrenteId().equals("")){
-                                    Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
-                                }
-
-                                binding.frontal.setOnClickListener(new View.OnClickListener() {
+                                slider.postDelayed(new Runnable() {
                                     @Override
-                                    public void onClick(View view) {
+                                    public void run() {
+                                        slider.setAdapter(new MainSliderAdapter(
+                                                superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
+                                        ));
+                                        slider.setSelectedSlide(0);
+                                    }
+                                }, 1500);
 
-                                        Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
-                                        binding.frontal.setAlpha(1.0f);
-                                        binding.lateral1.setAlpha(0.35f);
-                                        binding.lateral2.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgFrenteId().length()>0){
-                                            if(urlFrente.length()>0){
-                                                Picasso.get().load(urlFrente).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
+                                final int[] local = {0};
+                                final int[] acceso = {0};
+                                final int[] grietas = {0};
+                                final int[] goteras = {0};
+
+                                ProviderDatosFactoresConstruccion.getInstance(getContext()).obtenerDatosContruccion(md, new ProviderDatosFactoresConstruccion.ConsultaFactoresConstruccion() {
+                                    @Override
+                                    public void resolve(final FactoresConstruccion factoresConstruccion) {
+                                        if(factoresConstruccion.getCodigo()==200){
+                                            if(factoresConstruccion.getCatalogo()!=null) {
+                                                ProviderDatosConstruccion.getInstance(getContext()).obtenerDatosConstruccion(md, usuario, new ProviderDatosConstruccion.ConsultaDatosConstruccion() {
+                                                    @Override
+                                                    public void resolve(DatosConstruccions datosSitio) {
+                                                        datosSitios = datosSitio;
+                                                        if(datosSitio!=null){
+                                                            if(datosSitio.getCodigo()==200 && datosSitio.getConstruccion().size() > 0) {
+                                                                for(int i=0; i<datosSitio.getConstruccion().size(); i++){
+                                                                    if(datosSitio.getConstruccion().get(i).getNivelid()==1
+                                                                            || datosSitio.getConstruccion().get(i).getNivelid()==2){
+                                                                        String sitio = datosSitio.getConstruccion().get(i).getNombrenivel();
+                                                                        if(sitio.contains("LOCAL")){
+
+                                                                            bindingSuperficie.setTerreno(1);
+                                                                            for (int j = 0; j < datosSitio.getConstruccion().get(i).getDetalles().size(); j++) {
+                                                                                if(datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid()==1){
+                                                                                    local[0] = 1;
+                                                                                    bindingSuperficie.setLocal(local[0]);
+                                                                                }
+
+                                                                                if(datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid()==2){
+                                                                                    acceso[0] = 1;
+                                                                                    bindingSuperficie.setAcceso(acceso[0]);
+                                                                                }
+
+                                                                                if(datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid()==3){
+                                                                                    grietas[0] = 1;
+                                                                                    bindingSuperficie.setTechos(grietas[0]);
+                                                                                }
+
+                                                                                if(datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid()==4){
+                                                                                    goteras[0] = 1;
+                                                                                    bindingSuperficie.setPisos(goteras[0]);
+                                                                                }
+                                                                            }
+                                                                        }else{
+                                                                            bindingSuperficie.setTerreno(0);
+                                                                        }
+                                                                        bindingSuperficie.construccion.setText(sitio+"");
+                                                                    }
+
+                                                                    if(datosSitio.getConstruccion().get(i).getNivelid()==3
+                                                                            || datosSitio.getConstruccion().get(i).getNivelid()==4
+                                                                            || datosSitio.getConstruccion().get(i).getNivelid()==5){
+
+                                                                        String condicion = datosSitio.getConstruccion().get(i).getNombrenivel();
+                                                                        bindingSuperficie.setCondiciones(condicion+"");
+
+                                                                    }
+
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+
+                                                    @Override
+                                                    public void reject(Exception e) {
+
+                                                    }
+                                                });
                                             }
-
                                         }else{
-
+                                            Toast.makeText(getContext(), "Error al consultar factores de construcción", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-                                });
-
-                                binding.lateral1.setOnClickListener(new View.OnClickListener() {
                                     @Override
-                                    public void onClick(View view) {
-                                        Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id()).into(binding.imagen);
-                                        binding.lateral1.setAlpha(1.0f);
-                                        binding.frontal.setAlpha(0.35f);
-                                        binding.lateral2.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id().length()>0){
-                                            if(urlLateral1.length()>0){
-                                                Picasso.get().load(urlLateral1).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id()).into(binding.imagen);
-                                            }
-                                        }else{
+                                    public void reject(Exception e) {
 
-                                        }
                                     }
                                 });
 
-
-                                urlFrente = superficie.getNiveles().get(finalValorFoto).getImgFrenteId();
-                                urlLateral1 = superficie.getNiveles().get(finalValorFoto).getImgLateral1Id();
-                                urlLateral2 = superficie.getNiveles().get(finalValorFoto).getImgLateral2Id();
-                                urlPredial = superficie.getNiveles().get(finalValorFoto).getImgPredial();
-
-                                binding.lateral2.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        binding.lateral2.setAlpha(1.0f);
-                                        binding.frontal.setAlpha(0.35f);
-                                        binding.lateral1.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id().length()>0){
-                                            if(urlLateral2.length()>0){
-                                                Picasso.get().load(urlLateral2).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id()).into(binding.imagen);
-                                            }
-                                        }else{
-
-                                        }
-                                    }
-                                });
-
-
-                                binding.predial.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if(!superficie.getNiveles().get(finalValorFoto).getImgPredial().equals("")){
-                                            Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
-                                            binding.lateral1.setAlpha(0.35f);
-                                            binding.frontal.setAlpha(0.35f);
-                                            binding.lateral2.setAlpha(0.35f);
-                                            binding.predial.setAlpha(1.0f);
-
-                                            if(superficie.getNiveles().get(finalValorFoto).getImgPredial().length()>0){
-                                                if(urlPredial.length()>0){
-                                                    Picasso.get().load(urlPredial).into(binding.imagen);
-                                                } else {
-                                                    Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
-                                                }
-                                            }else{
-
-                                            }
-                                        }
-                                    }
-                                });
 
 
                             }else{
-                                Toast.makeText(getContext(), superficie.getMensaje()+"",
-                                        Toast.LENGTH_LONG).show();
+                                loadingProgress(progressDialog, 1);
                             }
-
                         }
-
                         @Override
-                        public void reject(Exception e) {
-
-                        }
+                        public void reject(Exception e) { }
                     });
 
-
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
+            bindingSuperficie.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
                     if(noti){
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
+                    }else{
+                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        a.show(getChildFragmentManager(),"child");
                     }
                 }
             });
 
 
-        }else if (position == 3) {
+
+        }else if (position == 2) {
 
             mensaje = "fragment 2";
-            final FragmentAutoriza3Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_3,container,false);
-            view = binding.getRoot();
+            bindingZonificacion = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_3,container,false);
+            view = bindingZonificacion.getRoot();
 
-            binding.toolbar.nombreTitulo.setText(getString(R.string.zonifica));
 
-            slideUX(binding);
+            bindingZonificacion.ciudad.setVisibility(View.GONE);
+            bindingZonificacion.toolbar.guardar.setVisibility(View.INVISIBLE);
 
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                    .findFragmentById(R.id.map);
 
-            ProviderDatosZonificacion.getInstance(getContext())
-                    .obtenerDatosConstruccion(mdId, usuarioId, new ProviderDatosZonificacion.ConsultaDatosZonificacion() {
+            mapFragment.getMapAsync(onMapReadyCallbackZonificacion);
+
+            bindingZonificacion.toolbar.guardar.setVisibility(View.INVISIBLE);
+            bindingZonificacion.cancelar.setVisibility(View.INVISIBLE);
+
+            final SharedPreferences[] preferences = {getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE)};
+            final String mdIdterminar = preferences[0].getString("mdIdterminar", "");
+            mdLat = preferences[0].getFloat("latMd", 0);
+            mdLot = preferences[0].getFloat("lotMd", 0);
+            final String usuario = preferences[0].getString("usuario", "");
+
+            String nombreMd = preferences[0].getString("nombreSitio", "");
+            bindingZonificacion.robotoTextView2.setText(nombreMd);
+            bindingZonificacion.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+
+            int atrasa = preferences[0].getInt("atrasa",0);
+
+
+            if(true){
+                preferences[0] = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                ProviderDatosZonificacion.getInstance(getContext())
+                        .obtenerDatosZonificacion(mdIdterminar, usuario, new ProviderDatosZonificacion.ConsultaDatosZonificacion() {
+                            @Override
+                            public void resolve(Zonificacion creaZonificacion) {
+                                if(creaZonificacion.getCodigo()==200){
+
+
+                                    LatLng mds = new LatLng(mdLat, mdLot);
+                                    LatLng mdsNuevos = null;
+
+                                    detallesCom = new ArrayList<>();
+                                    detallesGen = new ArrayList<>();
+
+                                    for(int i=0;i<creaZonificacion.getCompetencia().size();i++){
+                                        for(int j=0;j<creaZonificacion.getCompetencia().get(i).getDetalle().size();j++){
+                                            detallesCom.add(creaZonificacion.getCompetencia().get(i).getDetalle().get(j));
+                                        }
+                                    }
+
+                                    for(int i=0;i<creaZonificacion.getGeneradores().size();i++){
+                                        for(int j=0;j<creaZonificacion.getGeneradores().get(i).getDetalle().size();j++){
+                                            detallesGen.add(creaZonificacion.getGeneradores().get(i).getDetalle().get(j));
+                                        }
+                                    }
+
+
+                                    if(detallesGen.size()==0){
+                                        // mdsNuevos = new LatLng(0.0, 0.0);
+                                        // colocarMarcador(mdsNuevos, mMapZona, 1,
+                                        //  usuario, mds, String.valueOf(mdIdterminar), detallesGen, detallesCom);
+                                    }else{
+                                        for(int j=0;j<detallesGen.size();j++){
+                                            mdsNuevos = new LatLng(Double.valueOf(detallesGen.get(j).getLatitud()),
+                                                    Double.valueOf(detallesGen.get(j).getLongitud()));
+
+                                            colocarMarcador(mdsNuevos, mMapZona, detallesGen.get(j).getGeneradorId(),
+                                                    usuario, mds, String.valueOf(mdIdterminar), detallesGen, detallesCom);
+                                        }
+                                    }
+
+                                    if(detallesCom.size()==0){
+                                        mdsNuevos = new LatLng(0.0, 0.0);
+                                        colocarMarcador(mdsNuevos, mMapZona, 1,
+                                                usuario, mds, String.valueOf(mdIdterminar), detallesGen, detallesCom);
+                                    }else{
+                                        for(int j=0;j<detallesCom.size();j++){
+                                            mdsNuevos = new LatLng(Double.valueOf(detallesCom.get(j).getLatitud()),
+                                                    Double.valueOf(detallesCom.get(j).getLongitud()));
+                                            colocarMarcador(mdsNuevos, mMapZona, detallesCom.get(j).getGeneradorId(),
+                                                    usuario, mds, String.valueOf(mdIdterminar), detallesGen, detallesCom);
+                                        }
+                                    }
+
+                                    listGeneradores = new ArrayList<>();
+
+                                }else{
+                                    Toast.makeText(getContext(), "Error al obtener los datos",
+                                            Toast.LENGTH_LONG).show();
+                                }
+                            }
+
+                            @Override
+                            public void reject(Exception e) { }
+                        });
+
+
+                slideUX(bindingZonificacion);
+
+                ProviderDatosCompetencias.getInstance(getContext()).obtenerDatosCompetencias(usuario, mdIdterminar, new ProviderDatosCompetencias.ConsultaDatosCompetencia() {
+                    @Override
+                    public void resolve(CompetenciasGeneradoresV2 competenciasGeneradores) {
+
+                        if(competenciasGeneradores!=null && competenciasGeneradores.getCodigo()==200){
+                            listCompetencia = new ArrayList<>();
+                            listGeneradores = new ArrayList<>();
+                            listCompetenciaTiendaNeto = new ArrayList<>();
+                            listGeneradoresNegocios = new ArrayList<>();
+                            listGeneradoresTransporte= new ArrayList<>();
+
+                            negociosDeComidaArrayList = new ArrayList<>();
+                            mercadoPublicoArrayList = new ArrayList<>();
+                            tianguiArrayList = new ArrayList<>();
+
+                            for(int i=0;i<competenciasGeneradores.getCompetencias().getCompetencias().size();i++){
+                                listCompetencia.add(competenciasGeneradores.getCompetencias().getCompetencias().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getCompetencias().getTiendaNeto().size();i++){
+                                listCompetenciaTiendaNeto.add(competenciasGeneradores.getCompetencias().getTiendaNeto().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getOtrosGeneradores().size();i++){
+                                listGeneradores.add(competenciasGeneradores.getGeneradores().getOtrosGeneradores().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getNegocios().size();i++){
+                                listGeneradoresNegocios.add(competenciasGeneradores.getGeneradores().getNegocios().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getTransportePublico().size();i++){
+                                listGeneradoresTransporte.add(competenciasGeneradores.getGeneradores().getTransportePublico().get(i));
+                            }
+                            ///////
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getNegociosDeComida().size();i++){
+                                negociosDeComidaArrayList.add(competenciasGeneradores.getGeneradores().getNegociosDeComida().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getMercadoPublico().size();i++){
+                                mercadoPublicoArrayList.add(competenciasGeneradores.getGeneradores().getMercadoPublico().get(i));
+                            }
+
+                            for(int i=0;i<competenciasGeneradores.getGeneradores().getTianguis().size();i++){
+                                tianguiArrayList.add(competenciasGeneradores.getGeneradores().getTianguis().get(i));
+                            }
+
+
+                            /****** transporte negocio comida *******/
+
+                            adapterListaGeneradoresNegociosComida = new AdapterListaGeneradoresNegociosComida(negociosDeComidaArrayList, getContext(), clickNegociosComida);
+                            bindingZonificacion.content2.contentListaComida.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentListaComida.setAdapter(adapterListaGeneradoresNegociosComida);
+                            RecyclerView.LayoutManager mLayoutManagerNegociosComida = new GridLayoutManager(getContext(), 4);
+
+                            bindingZonificacion.content2.contentListaComida.setLayoutManager(mLayoutManagerNegociosComida);
+                            bindingZonificacion.content2.contentListaComida.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentListaComida.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** mercado publico *******/
+                            adapterListaGeneradoresMercadoPublico = new AdapterListaGeneradoresMercadoPublico(mercadoPublicoArrayList, getContext(), clickMercadoPublico);
+                            bindingZonificacion.content2.contentListaMercado.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentListaMercado.setAdapter(adapterListaGeneradoresMercadoPublico);
+                            RecyclerView.LayoutManager mLayoutManagerMercado = new GridLayoutManager(getContext(), 4);
+
+                            bindingZonificacion.content2.contentListaMercado.setLayoutManager(mLayoutManagerMercado);
+                            bindingZonificacion.content2.contentListaMercado.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentListaMercado.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** tianguis *******/
+                            adapterListaGeneradoresTianguis = new AdapterListaGeneradoresTianguis(tianguiArrayList, getContext(), clickTiaguis);
+                            bindingZonificacion.content2.contentListaTianguis.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentListaTianguis.setAdapter(adapterListaGeneradoresTianguis);
+
+
+                            RecyclerView.LayoutManager mLayoutManagerTianguis = new GridLayoutManager(getContext(), 4);
+
+                            bindingZonificacion.content2.contentListaTianguis.setLayoutManager(mLayoutManagerTianguis);
+                            bindingZonificacion.content2.contentListaTianguis.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentListaTianguis.setItemAnimator(new DefaultItemAnimator());
+
+
+                            /****** transporte publico *******/
+                            adapterTransporte = new AdapterListaGeneradoresTransporte(listGeneradoresTransporte, getContext(), clickTransporte);
+                            bindingZonificacion.content2.contentListaTransporte.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentListaTransporte.setAdapter(adapterTransporte);
+
+                            RecyclerView.LayoutManager mLayoutManagerTransporte = new GridLayoutManager(getContext(), 4);
+
+                            bindingZonificacion.content2.contentListaTransporte.setLayoutManager(mLayoutManagerTransporte);
+                            bindingZonificacion.content2.contentListaTransporte.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentListaTransporte.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** otros generadores *******/
+                            adapterNegocios = new AdapterListaGeneradoresNegocios(listGeneradoresNegocios, getContext(), clickNegocio);
+                            bindingZonificacion.content2.contentListaNegocios.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentListaNegocios.setAdapter(adapterNegocios);
+
+                            RecyclerView.LayoutManager mLayoutManagerNegocios = new GridLayoutManager(getContext(), 4);
+                            bindingZonificacion.content2.contentListaNegocios.setLayoutManager(mLayoutManagerNegocios);
+                            bindingZonificacion.content2.contentListaNegocios.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentListaNegocios.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** otros generadores *******/
+                            adapter2 = new AdapterListaGeneradores(listGeneradores, getContext(), clicks);
+                            bindingZonificacion.content2.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.content2.contentLista.setAdapter(adapter2);
+
+                            RecyclerView.LayoutManager mLayoutManager2 = new GridLayoutManager(getContext(), 4);
+                            bindingZonificacion.content2.contentLista.setLayoutManager(mLayoutManager2);
+                            bindingZonificacion.content2.contentLista.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
+                            bindingZonificacion.content2.contentLista.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** competencias *******/
+                            adapter = new AdapterListaCompetencia(listCompetencia, getContext(), click);
+                            bindingZonificacion.contenido.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.contenido.contentLista.setAdapter(adapter);
+
+                            RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+                            bindingZonificacion.contenido.contentLista.setLayoutManager(mLayoutManager);
+                            bindingZonificacion.contenido.contentLista.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(3, dpToPx(4), true));
+                            bindingZonificacion.contenido.contentLista.setItemAnimator(new DefaultItemAnimator());
+
+                            /****** tiendas neto *******/
+                            adapterTiendaNeto = new AdapterListaTiendaNeto(listCompetenciaTiendaNeto, getContext(), clickTiendaNeto);
+                            bindingZonificacion.contenido.contentListaTienda.setLayoutManager(new LinearLayoutManager(getContext()));
+                            bindingZonificacion.contenido.contentListaTienda.setAdapter(adapterTiendaNeto);
+
+                            RecyclerView.LayoutManager mLayoutManagerTienda = new GridLayoutManager(getContext(), 3);
+                            bindingZonificacion.contenido.contentListaTienda.setLayoutManager(mLayoutManagerTienda);
+                            bindingZonificacion.contenido.contentListaTienda.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(3, dpToPx(4), true));
+                            bindingZonificacion.contenido.contentListaTienda.setItemAnimator(new DefaultItemAnimator());
+
+                        }
+
+                        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                                .findFragmentById(R.id.map);
+                        mapFragment.getMapAsync(onMapReadyCallbackZonificacion);
+                    }
+
+                    @Override
+                    public void reject(Exception e) {
+
+                    }
+                });
+
+                bindingZonificacion.competencia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideCompetencia.show();
+                        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("zonificacion", 0);
+                        editor.apply();
+                    }
+                });
+
+                bindingZonificacion.generador.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.show();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.VISIBLE);
+                        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putInt("zonificacion", 1);
+                        editor.apply();
+                    }
+                });
+
+                bindingZonificacion.toolbar.back.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        if(noti){
+                            Intent main = new Intent(getContext(), ActivityNotificaciones.class);
+                            startActivity(main);
+                        }else{
+                            FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                            a.show(getChildFragmentManager(),"child");
+                        }
+                    }
+                });
+
+                bindingZonificacion.contenido.competencias.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideCompetencia.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                bindingZonificacion.content2.generadores.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                bindingZonificacion.contenido.neto.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideCompetencia.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                ///////////////////////////////
+
+                bindingZonificacion.content2.transporte.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                bindingZonificacion.content2.negC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                bindingZonificacion.content2.merP.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+
+                bindingZonificacion.content2.tiand.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        slideGenerador.hide();
+                        bindingZonificacion.content2.contentSlideUpView.setVisibility(View.GONE);
+                    }
+                });
+            }
+
+            /*************************************** terminar zonificacion **************************************************/
+        }else if (position == 3) {
+
+            final FragmentDetalleGenBinding bindingSuperficie = DataBindingUtil.inflate(inflater,R.layout.fragment_detalle_gen,container,false);
+            view = bindingSuperficie.getRoot();
+
+            bindingSuperficie.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+            bindingSuperficie.toolbar.guardar.setVisibility(View.INVISIBLE);
+
+            final SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            final String usuario = preferences.getString("usuario", "");
+            final String md = preferences.getString("mdIdterminar", "");
+            final String nombre = preferences.getString("nombreSitio", "");
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
+            loadingProgress(progressDialog, 0);
+
+            int atrasa = preferences.getInt("atrasa",0);
+
+
+            if(atrasa==1){
+                bindingSuperficie.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            }else{
+                bindingSuperficie.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+            ProviderDatosSuperficie.getInstance(getContext())
+                    .obtenerDatosSuperficie(md, usuario, new ProviderDatosSuperficie.ConsultaDatosSuperficie() {
                         @Override
-                        public void resolve(Zonificacion zonificacion) {
-                            if(zonificacion.getCodigo()==200){
-                                list = new ArrayList<>();
-                                listGeneradores = new ArrayList<>();
-                                puntosCompentencias = new ArrayList<>();
-                                int puntuacionCompetencia = 0;
-                                int puntuacionGeneradores = 0;
+                        public void resolve(final Superficie superficie) {
+                            if(superficie.getCodigo()==200){
+                                loadingProgress(progressDialog, 1);
+                                bindingSuperficie.nombresitio.setText(nombre+"");
+                                int valorFoto = 0;
+                                int valorFrente = 0;
+                                int valorFondo = 0;
+                                int valorEsquina = 0;
 
-                                for (int i = 0; i < zonificacion.getCompetencia().size(); i++) {
+                                for(int i = 0;i<superficie.getNiveles().size();i++){
+                                    if(superficie.getNiveles().get(i).getNivel()==4 ||
+                                            superficie.getNiveles().get(i).getNivel()==5){
+                                        if(!superficie.getNiveles().get(i).getImgFrenteId().isEmpty()){
+                                            valorFoto = i;
+                                            valorFondo = i;
+                                        }
+                                    }
 
-                                    for(int j=0;j<zonificacion.getCompetencia().get(i).getDetalle().size();j++){
-                                        list.add(zonificacion.getCompetencia().get(i).getDetalle().get(j));
-                                        Double compentenciaLatitud =  Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLatitud());
-                                        Double compentenciaLongitud =  Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLongitud());
+                                    if(superficie.getNiveles().get(i).getNivel()==6 ||
+                                            superficie.getNiveles().get(i).getNivel()==7){
+                                        valorFrente = i;
+                                    }
 
-                                        int idIcono = zonificacion.getCompetencia().get(i).getDetalle().get(j).getGeneradorId();
-                                        String nombre = zonificacion.getCompetencia().get(i).getDetalle().get(j).getNombreGenerador();
-
-                                        puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre,null));
-
-
+                                    if(superficie.getNiveles().get(i).getNivel()==8){
+                                        valorEsquina = i;
                                     }
                                 }
 
-                                for (int i = 0; i < zonificacion.getGeneradores().size(); i++) {
-                                    for(int n=0;n<zonificacion.getGeneradores().get(i).getDetalle().size();n++){
+                                Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
 
-                                        listGeneradores.add(zonificacion.getGeneradores().get(i).getDetalle().get(n));
+                                if(esquina==1){ }else{ }
 
-                                        Double compentenciaLatitud =  Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLatitud());
-                                        Double compentenciaLongitud =  Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLongitud());
+                                Slider.init(new PicassoImageLoadingService());
+                                slider = bindingSuperficie.map;
+                                final int finalValorFoto1 = valorFoto;
 
-                                        int idIcono = zonificacion.getGeneradores().get(i).getDetalle().get(n).getGeneradorId();
-                                        String nombre = zonificacion.getGeneradores().get(i).getDetalle().get(n).getNombreGenerador();
-
-                                        puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre,null));
+                                slider.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        slider.setAdapter(new MainSliderAdapter(
+                                                superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
+                                        ));
+                                        slider.setSelectedSlide(0);
                                     }
-                                }
+                                }, 1500);
 
-//                                if(zonificacion.getCompetencia() != null && zonificacion.getCompetencia().size() > 0) {
-//                                    puntuacionCompetencia = Integer.parseInt(zonificacion.getCompetencia().get(0).getPuntuacion());
-//                                }
-//                                if(zonificacion.getGeneradores() != null && zonificacion.getGeneradores().size() > 0) {
-//                                    puntuacionGeneradores = Integer.parseInt(zonificacion.getGeneradores().get(0).getPuntuacion());
-//                                }
+                                final DecimalFormat formatters = new DecimalFormat("#,###,###");
 
-                                binding.robotoTextView2.setText("MD " + nombreSitio);
+                                ProviderDatosGeneralidadesSitio.getInstance(getContext())
+                                        .obtenerDatosGeneralidades(md, usuario, new ProviderDatosGeneralidadesSitio.ConsultaGeneralidadesSitio() {
+                                            @Override
+                                            public void resolve(GeneralidadesSitio datosSitio) {
+                                                if(datosSitio!=null && datosSitio.getCodigo()==200) {
+                                                    if(datosSitio.getGeneralidades().size()>0){
+                                                        String fecha = datosSitio.getGeneralidades().get(0).getFechadisponible();
 
-                                adapter = new AdapterListaCompetencia(list, getContext());
-                                binding.contenido.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
-                                binding.contenido.contentLista.setAdapter(adapter);
+                                                        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
+                                                        Date d = null;
+                                                        try {
+                                                            d = formatter.parse(fecha);
+                                                        } catch (ParseException e) {
+                                                            e.printStackTrace();
+                                                        }
 
-                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 4);
-                                binding.contenido.contentLista.setLayoutManager(mLayoutManager);
-                                binding.contenido.contentLista.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(3, dpToPx(4), true));
-                                binding.contenido.contentLista.setItemAnimator(new DefaultItemAnimator());
+                                                        Calendar thatDay = Calendar.getInstance();
+                                                        thatDay.setTime(d);
+
+                                                        int year = thatDay.get(Calendar.YEAR);
+                                                        int month = thatDay.get(Calendar.MONTH);
+                                                        int day = thatDay.get(Calendar.DAY_OF_MONTH);
+
+                                                        for(int i = 0; i < datosSitio.getGeneralidades().size(); i++) {
+
+                                                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 7 ||
+                                                                    datosSitio.getGeneralidades().get(i).getNivelid() == 8 ||
+                                                                    datosSitio.getGeneralidades().get(i).getNivelid() == 9){
+
+                                                                bindingSuperficie.periodoamotizacion.setText(
+                                                                        datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor()+""
+                                                                );
+
+                                                                bindingSuperficie.amortizaciontotal.setText(
+                                                                        "$"+formatters.format(datosSitio.getGeneralidades().get(i).getValor())+".00"
+                                                                );
+
+                                                            }
+
+                                                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 4 || datosSitio.getGeneralidades().get(i).getNivelid() == 5 || datosSitio.getGeneralidades().get(i).getNivelid() == 6){
+
+                                                                if(datosSitio.getGeneralidades().get(i).getNivelid() == 4){
+                                                                    bindingSuperficie.apartirde.setText(getString(R.string.disponible)+"");
+                                                                }
+
+                                                                if(datosSitio.getGeneralidades().get(i).getNivelid() == 5){
+                                                                    bindingSuperficie.apartirde.setText(getString(R.string.apartir)+" "+datosSitio.getGeneralidades().get(i).getFechadisponible()+"");
+                                                                }
+
+                                                                if(datosSitio.getGeneralidades().get(i).getNivelid() == 6){
+                                                                    bindingSuperficie.apartirde.setText(R.string.ocupados);
+                                                                }
+
+                                                            }
+
+                                                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 1 ||
+                                                                    datosSitio.getGeneralidades().get(i).getNivelid() == 2 ||
+                                                                    datosSitio.getGeneralidades().get(i).getNivelid() == 3){
+
+                                                                bindingSuperficie.renta.setText("$"+formatters.format(datosSitio.getGeneralidades().get(i).getValor())+".00");
+                                                                bindingSuperficie.periodogracia.setText(
+                                                                        datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor()+ ""
+                                                                );
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            @Override
+                                            public void reject(Exception e) {
+
+                                            }
+                                        });
 
 
-                                adapter2 = new AdapterListaGeneradores(listGeneradores, getContext());
-                                binding.content2.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
-                                binding.content2.contentLista.setAdapter(adapter2);
-
-                                RecyclerView.LayoutManager mLayoutManager2 = new GridLayoutManager(getContext(), 4);
-                                binding.content2.contentLista.setLayoutManager(mLayoutManager2);
-                                binding.content2.contentLista.addItemDecoration(new FragmentDetalle.GridSpacingItemDecoration(4, dpToPx(5), true));
-                                binding.content2.contentLista.setItemAnimator(new DefaultItemAnimator());
-
-                                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                                        .findFragmentById(R.id.map);
-
-                                mapFragment.getMapAsync(onMapReadyCallbackZonificacion);
 
                             }else{
-                                Toast.makeText(getContext(), "Error al obtener los datos",
-                                        Toast.LENGTH_LONG).show();
+                                loadingProgress(progressDialog, 1);
                             }
                         }
-
                         @Override
-                        public void reject(Exception e) {
-
-                        }
+                        public void reject(Exception e) { }
                     });
 
-            binding.competencia.setOnClickListener(new View.OnClickListener() {
+            bindingSuperficie.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    slideCompetencia.show();
-                }
-            });
-
-            binding.generador.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    slideGenerador.show();
-                }
-            });
-
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
-
                     if(noti){
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
-                    }else
-
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
+                    }else{
+                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        a.show(getChildFragmentManager(),"child");
                     }
                 }
             });
-
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
 
 
         }else if (position == 4) {
 
-            final FragmentAutoriza4Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_4,container,false);
-            view = binding.getRoot();
+            bindingConstruccion = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_4_detalle,container,false);
+            view = bindingConstruccion.getRoot();
 
-            binding.toolbar.nombreTitulo.setText(getString(R.string.construccion));
+            bindingConstruccion.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+            bindingConstruccion.toolbar.guardar.setVisibility(View.INVISIBLE);
+
+            final SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            final String usuario = preferences.getString("usuario", "");
+            final String md = preferences.getString("mdIdterminar", "");
+            final String nombre = preferences.getString("nombreSitio", "");
+
+            final String punto = preferences.getString("punto", "");
+            final String cate = preferences.getString("cate", "");
+            final String fecha = preferences.getString("fechaCreacion", "");
+
+            bindingConstruccion.puntos.setText(punto+"");
+            bindingConstruccion.categoria.setText(cate+"");
+            bindingConstruccion.fechaCreacion.setText(fecha+"");
+            int atrasa = preferences.getInt("atrasa",0);
 
 
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            if(atrasa==1){
+                bindingConstruccion.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            }else{
+                bindingConstruccion.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+            bindingConstruccion.setCategoria(cate);
+            bindingConstruccion.toolbar.nombreTitulo.setText(getString(R.string.detalles));
+            final ProgressDialog progressDialog = new ProgressDialog(getContext());
 
+            loadingProgress(progressDialog, 0);
 
-            ProviderDatosConstruccion.getInstance(getContext())
-                    .obtenerDatosConstruccion(mdId, usuarioId, new ProviderDatosConstruccion.ConsultaDatosConstruccion() {
+            ProviderDatosSuperficie.getInstance(getContext())
+                    .obtenerDatosSuperficie(md, usuario, new ProviderDatosSuperficie.ConsultaDatosSuperficie() {
                         @Override
-                        public void resolve(DatosConstruccion datosSitio) {
-                            if(datosSitio.getCodigo()==200 &&  datosSitio.getConstruccion().size() > 0) {
-                                int sumaPuntuacion = 0;
+                        public void resolve(final Superficie superficie) {
+                            if(superficie.getCodigo()==200){
 
-                                for(int i = 0;i < datosSitio.getConstruccion().size(); i++) {
-                                    if(datosSitio.getConstruccion().get(i).getNivelid() < 3) {
-                                        binding.robotoTextView5.setText(datosSitio.getConstruccion().get(i).getNombrenivel());
-                                        creaTablaSubfactores(binding, datosSitio.getConstruccion().get(i).getDetalles());
+                                loadingProgress(progressDialog, 1);
+                                bindingConstruccion.nombresitio.setText(nombre+"");
+                                int valorFoto = 0;
+                                int valorEsquina = 0;
+
+                                for(int i = 0;i<superficie.getNiveles().size();i++){
+                                    if(superficie.getNiveles().get(i).getNivel()==4 ||
+                                            superficie.getNiveles().get(i).getNivel()==5){
+                                        if(!superficie.getNiveles().get(i).getImgFrenteId().isEmpty()){
+                                            valorFoto = i;
+                                        }
                                     }
-                                    if(datosSitio.getConstruccion().get(i).getNivelid() == 3 || datosSitio.getConstruccion().get(i).getNivelid() == 4 || datosSitio.getConstruccion().get(i).getNivelid() == 5) {
-                                        binding.condicion.setText(datosSitio.getConstruccion().get(i).getNombrenivel());
-                                    }
-                                   // sumaPuntuacion += Integer.parseInt(datosSitio.getConstruccion().get(i).getPuntuacion());
                                 }
 
-                                binding.titulo.setText("MD " + nombreSitio);
+                                Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
 
-                            } else{
-                                Toast.makeText(getContext(), "Error al cargar los datos",
-                                        Toast.LENGTH_LONG).show();
+                                if(esquina==1){ }else{ }
+
+                                Slider.init(new PicassoImageLoadingService());
+                                slider = bindingConstruccion.map;
+                                final int finalValorFoto1 = valorFoto;
+
+                                slider.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        slider.setAdapter(new MainSliderAdapter(
+                                                superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
+                                        ));
+                                        slider.setSelectedSlide(0);
+                                    }
+                                }, 1500);
+
+                                listaPeatonal(bindingConstruccion);
+
+                            }else{
+                                loadingProgress(progressDialog, 1);
                             }
                         }
-
                         @Override
-                        public void reject(Exception e) {
-
-                        }
+                        public void reject(Exception e) { }
                     });
 
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
+            bindingConstruccion.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
                     if(noti){
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
+                    }else{
+                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        a.show(getChildFragmentManager(),"child");
                     }
                 }
             });
 
-        } else if (position == 5) {
-
-            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
-
-            final FragmentAutoriza5Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_5,container,false);
+        }else {
+            final ActivityFinalizaBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.activity_finaliza,container,false);
             view = binding.getRoot();
-            binding.toolbar.nombreTitulo.setText(getString(R.string.generalidades));
-
-            ProviderDatosGeneralidadesSitio.getInstance(getContext())
-                    .obtenerDatosGeneralidades(mdId, usuarioId, new ProviderDatosGeneralidadesSitio.ConsultaGeneralidadesSitio() {
-                        @Override
-                        public void resolve(GeneralidadesSitio datosSitio) {
-                            DecimalFormat formatter = new DecimalFormat("#,###");
-                            if(datosSitio!=null && datosSitio.getCodigo()==200) {
-
-                                int sumaPuntuacion = 0;
-                                for(int i = 0; i < datosSitio.getGeneralidades().size(); i++) {
-
-                                    if(datosSitio.getGeneralidades().get(i).getNivelid() == 1 || datosSitio.getGeneralidades().get(i).getNivelid() == 2 || datosSitio.getGeneralidades().get(i).getNivelid() == 3){
-                                        binding.renta.setText("$" + formatter.format(datosSitio.getGeneralidades().get(i).getValor()) +" al mes");
-
-                                        if(datosSitio.getGeneralidades().get(i).getDetalles() != null && datosSitio.getGeneralidades().get(i).getDetalles().size() > 0) {
-                                            binding.periodogracia.setText(datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + " " + datosSitio.getGeneralidades().get(i).getDetalles().get(0).getUnidadmedicion());
-                                        }
-                                    }
-
-                                    if(datosSitio.getGeneralidades().get(i).getNivelid() == 4 || datosSitio.getGeneralidades().get(i).getNivelid() == 5 || datosSitio.getGeneralidades().get(i).getNivelid() == 6){
-                                        if(datosSitio.getGeneralidades().get(i).getNivelid() == 5) {
-                                            binding.disponibilidad.setText(getString(R.string.bien) + " " + datosSitio.getGeneralidades().get(i).getNombrenivel() + " " + datosSitio.getGeneralidades().get(i).getFechadisponible());
-                                        } else {
-                                            binding.disponibilidad.setText(getString(R.string.bien) + " " + datosSitio.getGeneralidades().get(i).getNombrenivel());
-                                        }
-                                    }
-
-                                    if(datosSitio.getGeneralidades().get(i).getNivelid() == 7 || datosSitio.getGeneralidades().get(i).getNivelid() == 8 || datosSitio.getGeneralidades().get(i).getNivelid() == 9){
-                                        binding.amortizacion.setText(datosSitio.getGeneralidades().get(i).getValor() + "%");
-
-                                        if(datosSitio.getGeneralidades().get(i).getDetalles() != null && datosSitio.getGeneralidades().get(i).getDetalles().size() > 0) {
-                                            binding.tiempoamortizacion.setText(datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + " " + datosSitio.getGeneralidades().get(i).getDetalles().get(0).getUnidadmedicion());
-                                        }
-                                    }
-                                    //sumaPuntuacion += datosSitio.getGeneralidades().get(i).getPuntuacion();
-
-                                }
-
-                                binding.robotoTextView2.setText("MD " + nombreSitio);
-
-                            }
-                        }
-
-                        @Override
-                        public void reject(Exception e) {
-
-                        }
-                    });
-
-
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
-                    if(noti){
-                        Intent main = new Intent(getContext(), ActivityNotificaciones.class);
-                        startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
-                    }
-                }
-            });
-
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
-
-        }else if (position == 6) {
-            final FragmentAutoriza6Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_6,container,false);
-            view = binding.getRoot();
-
-            listaPeatonal(binding);
-
-            binding.toolbar.nombreTitulo.setText(getString(R.string.flujopeatonal));
-
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
-                    if(noti){
-                        Intent main = new Intent(getContext(), ActivityNotificaciones.class);
-                        startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
-                    }
-                }
-            });
-
-            binding.aceptar.setVisibility(View.GONE);
-            binding.cancelar.setVisibility(View.GONE);
-
-        } else if (position == 7) {
-            FragmentAutoriza7Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_7,container,false);
-            view = binding.getRoot();
-
-            binding.toolbar.nombreTitulo.setText(getString(R.string.resumenpuntuacion));
-
-
             getDatos(binding);
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
+            binding.btnFinalizar.setVisibility(View.INVISIBLE);
+            binding.btnGuardar.setVisibility(View.INVISIBLE);
+            binding.atras.setVisibility(View.INVISIBLE);
+            binding.btnAtras.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Intent main = new Intent(getContext(), FragmentInicioAutoriza.class);
-                    getContext().startActivity(main);
-                }
-            });
-
-            binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int tipoBack = preferences.getInt("TIPO_BACK",0);
                     if(noti){
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
-                    }else
-                    if(tipoBack == BACK_EN_PROCESO) {
-                        Intent main = new Intent(getContext(), FragmentInicioProceso.class);
-                        getContext().startActivity(main);
-                    } else if(tipoBack == BACK_RECHAZO) {
-                        Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
-                        getContext().startActivity(main);
+                    }else{
+                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        a.show(getChildFragmentManager(),"child");
                     }
+
                 }
             });
         }
         return view;
     }
 
-    public void creaTablaSubfactores(FragmentAutoriza4Binding binding, List<DatosConstruccion.Detalle> listaSubfactores) {
-        limpiaTabla(binding);
-        Resources resource = getContext().getResources();
-
-        if(listaSubfactores != null && listaSubfactores.size() > 0) {
-            TableLayout ll = binding.tablaSubfactores;
-            TableRow row = new TableRow(getContext());
-            row.setGravity(Gravity.LEFT);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-            row.setLayoutParams(lp);
-
-            int widthCeldaImg = (int) (ll.getWidth() * 0.2);
-            int widthCeldaDescripcion = (int) (ll.getWidth() * 0.8);
-
-            for (int i = 0; i < listaSubfactores.size(); i++) {
-                row = new TableRow(getContext());
-                row.setGravity(Gravity.CENTER_HORIZONTAL);
-                row.setPadding(0,10,0,0);
-                lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                lp.height = 85;
-                row.setLayoutParams(lp);
-
-                ImageView imgSubfactor = new ImageView(getContext());
-                imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.ic_btn_select));
-                imgSubfactor.setMaxWidth(14);
-                imgSubfactor.setPadding(0, 0, 5, 1);
-                imgSubfactor.setLayoutParams(lp);
-
-                TextView descripcionText = new TextView(getContext());
-                descripcionText.setText(listaSubfactores.get(i).getNombredetalle());
-                descripcionText.setWidth(widthCeldaDescripcion);
-                descripcionText.setTextColor(resource.getColor(R.color.azul));
-                descripcionText.setPadding(0, 5, 5, 1);
-                descripcionText.setLayoutParams(lp);
-                descripcionText.setGravity(Gravity.LEFT);
-
-
-                row.addView(imgSubfactor);
-                row.addView(descripcionText);
-                ll.addView(row, i);
-
-            }
-        }
-    }
-
-    public void limpiaTabla(FragmentAutoriza4Binding binding) {
-
-        ScrollView sv = binding.containerScrollView;
-        sv.scrollTo(0, 0);
-        sv.computeScroll();
-        TableLayout ll = binding.tablaSubfactores;
-
-        int count = ll.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = ll.getChildAt(i);
-            if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
-        }
-    }
-
-    ArrayList<Peatonal> peatonales;
-    AdapterListaHoras adapterHoras;
-    public void listaPeatonal(final FragmentAutoriza6Binding binding){
-        final Resources resource = getContext().getResources();
-        final ArrayList<String> horarios = new ArrayList<>();
-        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        String mdId = preferences.getString("mdId","");
-        String usuarioId = preferences.getString("usuario","");
-        final String nombreSitio = preferences.getString("nombreSitio","");
-
-        ProviderDatosPeatonal.getInstance(getContext()).obtenerDatosPeatonal(mdId, usuarioId, new ProviderDatosPeatonal.ConsultaPeatonal() {
-            @Override
-            public void resolve(Peatonales peatonal) {
-
-                peatonales = new ArrayList<>();
-
-                if(peatonal!=null && peatonal.getCodigo()==200){
-                    int sumaPuntuacion = 0;
-
-                    for(int i = 0; i < peatonal.getConteos().size(); i++){
-                        for(int j=0;j<peatonal.getConteos().get(i).getDetalle().size();j++){
-
-                            peatonales.add(new Peatonal(j,
-                                    peatonal.getConteos().get(i).getDetalle().get(j).getFecha(),
-                                    Integer.valueOf(peatonal.getConteos().get(i).getDetalle().get(j).getValor()),
-                                    0.0,0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
-                        }
-                        sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
-                    }
-
-                    binding.robotoTextView2.setText("MD " + nombreSitio);
-                    if(peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
-                        binding.promedioPeatonal.setText("Promedio: " + peatonal.getConteos().get(0).getPromedioPeatonal());
-                    } else {
-                        binding.promedioPeatonal.setText("Promedio: 0");
-                    }
-                    binding.recyclerPeatonal.setHasFixedSize(true);
-                    AdapterAutorizaPeatonal adapter = new AdapterAutorizaPeatonal(getContext(), ALPHABETICAL_COMPARATOR, n);
-                    binding.recyclerPeatonal.setLayoutManager(new LinearLayoutManager(getContext()));
-                    binding.recyclerPeatonal.setAdapter(adapter);
-                    adapter.edit().replaceAll(peatonales).commit();
-                    adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
-
-                }else{
-                    Toast.makeText(getContext(), "Error al obtener los datos",
-                            Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void reject(Exception e) {
-
-            }
-        });
-
-
-    }
-
-    private static final Comparator<Peatonal> ALPHABETICAL_COMPARATOR = new Comparator<Peatonal>() {
-        @Override
-        public int compare(Peatonal a, Peatonal b) {
-            return a.getNumConteo().compareTo(b.getNumConteo());
-        }
-    };
-
-    @Override
-    public void onAutorizaSelect(Peatonal model) {
-
-    }
-
-    private BitmapDescriptor getBitmapDescriptor(int id) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            VectorDrawable vectorDrawable = (VectorDrawable) getContext().getDrawable(id);
-
-            int h = vectorDrawable.getIntrinsicHeight();
-            int w = vectorDrawable.getIntrinsicWidth();
-
-            vectorDrawable.setBounds(0, 0, w, h);
-
-            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bm);
-            vectorDrawable.draw(canvas);
-
-            return BitmapDescriptorFactory.fromBitmap(bm);
-
-        } else {
-            return BitmapDescriptorFactory.fromResource(id);
-        }
-    }
-
-    public void slideUX(final FragmentAutoriza3Binding binding){
-        slideGenerador = new SlideUpBuilder(binding.content2.slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        binding.dim.setAlpha(1 - (percent / 100));
-                        //if (binding.fab.isShown() && percent < 100) {
-                        // binding.fab.hide();
-                        // }
-                    }
-
-                    @Override
-                    public void onVisibilityChanged(int visibility) {
-                        if (visibility == View.GONE){
-                            //fab.show();
-                        }
-                    }
-                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(true).withGesturesEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView)
-                .withTouchableAreaPx(100)
-                .withTouchableAreaDp(100)
-                .build();
-
-        slideCompetencia = new SlideUpBuilder(binding.contenido.slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        binding.dim2.setAlpha(1 - (percent / 100));
-                    }
-
-                    @Override
-                    public void onVisibilityChanged(int visibility) {
-                        if (visibility == View.GONE){
-                            //fab.show();
-                        }
-                    }
-                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(true).withGesturesEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView2)
-                .withTouchableAreaPx(100)
-                .withTouchableAreaDp(100)
-                .build();
-
-    }
     String puntuacion, categoria;
     ArrayList<DatosPuntuacion.Factore> factoresMacro;
     ArrayList<DatosPuntuacion.Factore> factoresMicro;
-    public void getDatos(final FragmentAutoriza7Binding binding){
+    public void getDatos(final ActivityFinalizaBinding binding){
 
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        String mdid = preferences.getString("mdId", "");
+        String mdid = preferences.getString("mdIdterminar", "");
         String usuario = preferences.getString("usuario", "");
 
         ProviderConsultaFinaliza.getInstance(getContext()).obtenerPuntos(mdid, usuario, new ProviderConsultaFinaliza.ConsultaPuntos() {
             @Override
             public void resolve(DatosPuntuacion datosPuntuacion) {
-                if(datosPuntuacion.getCodigo()==200){
+                if(datosPuntuacion.getCodigo()==200) {
 
                     factoresMacro = new ArrayList<>();
                     factoresMicro = new ArrayList<>();
 
                     SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
 
+                    binding.textoTipo.setText(datosPuntuacion.getUbicacionMD()+"");
                     categoria = datosPuntuacion.getNomcategoria();
                     for (int i = 0; i < datosPuntuacion.getFactores().size(); i++) {
                         if (datosPuntuacion.getFactores().get(i).getNombrenivel().equals("TOTAL")) {
@@ -1313,30 +1449,25 @@ public class FragmentDetalle extends Fragment implements
                     generarDetallesMicro(binding, factoresMicro);
                     generarDetallesMacro(binding, factoresMacro);
 
-
                     final SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("categoria", categoria);
                     editor.putString("puntuacion", puntuacion);
                     editor.apply();
+
                 }
 
             }
 
             @Override
-            public void reject(Exception e) { }
+            public void reject(Exception e) {
+
+            }
         });
     }
 
 
-    /**
-     * Converting dp to pixel
-     */
-    private int dpToPx(int dp) {
-        Resources r = getResources();
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
-    }
+    public void generarDetallesMacro(ActivityFinalizaBinding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
 
-    public void generarDetallesMacro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
         Resources resource = this.getResources();
         binding.factores.removeAllViews();
         TableRow rowPlomo = new TableRow(getContext());
@@ -1353,8 +1484,8 @@ public class FragmentDetalle extends Fragment implements
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
             t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-            t1v1.setTextColor(resource.getColor(R.color.azul));
-            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t1v1.setPadding(0, paddingPixel,0,5);
             t1v1.setGravity(Gravity.START);
 
             t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
@@ -1363,14 +1494,13 @@ public class FragmentDetalle extends Fragment implements
 
             TextView t3v1 = new TextView(getContext());
             t3v1.setTextSize(12);
-
             t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-
-            t3v1.setTextColor(resource.getColor(R.color.azul));
-            t3v1.setGravity(Gravity.END);
+            t3v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t3v1.setGravity(Gravity.RIGHT);
             t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v1);
+
 
             TextView t3v2 = new TextView(getContext());
             t3v2.setTextSize(12);
@@ -1380,17 +1510,18 @@ public class FragmentDetalle extends Fragment implements
                 binding.tituloMacro.setVisibility(View.GONE);
                 binding.tituloMicro.setVisibility(View.GONE);
             }
-            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v2);
 
+
             binding.factores.addView(tbrow);
         }
     }
 
-    public void generarDetallesMicro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
+    public void generarDetallesMicro(ActivityFinalizaBinding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
 
         Resources resource = this.getResources();
         binding.factoresMicro.removeAllViews();
@@ -1408,8 +1539,8 @@ public class FragmentDetalle extends Fragment implements
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
             t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-            t1v1.setTextColor(resource.getColor(R.color.azul));
-            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t1v1.setPadding(0, paddingPixel,0,5);
             t1v1.setGravity(Gravity.START);
 
             t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
@@ -1419,8 +1550,8 @@ public class FragmentDetalle extends Fragment implements
             TextView t3v1 = new TextView(getContext());
             t3v1.setTextSize(12);
             t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-            t3v1.setTextColor(resource.getColor(R.color.azul));
-            t3v1.setGravity(Gravity.END);
+            t3v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t3v1.setGravity(Gravity.RIGHT);
             t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v1);
@@ -1433,7 +1564,7 @@ public class FragmentDetalle extends Fragment implements
                 binding.tituloMacro.setVisibility(View.GONE);
                 binding.tituloMicro.setVisibility(View.GONE);
             }
-            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
@@ -1441,6 +1572,142 @@ public class FragmentDetalle extends Fragment implements
 
             binding.factoresMicro.addView(tbrow);
         }
+    }
+
+
+
+
+
+    HashMap<Integer, String> checks;
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_usuario, menu);
+        menu.add(0,1,1, Util.menuIcon(getResources().getDrawable(R.drawable.ic_vpn_key_black_24dp),
+                getResources().getString(R.string.cambiarContra)));
+        menu.add(0, 2, 2, Util.menuIcon(getResources().getDrawable(R.drawable.ic_exit_to_app_black_24dp),
+                getResources().getString(R.string.salir)));
+    }
+    public static boolean isHourInInterval(String target, String start, String end) {
+        return ((target.compareTo(start) >= 0)&& (target.compareTo(end) <= 0));
+    }
+    /**
+     * Método que tiene la acción del menu posterior derecha
+     * @param item
+     * @return
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id){
+            case 1:
+                // Log.e("contra", "contra");
+
+                return true;
+            case 2:
+                Util.cerrarSesion(getActivity());
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    String mensaje = null;
+
+    public void slideUX(final FragmentAutoriza3Binding binding){
+        slideGenerador = new SlideUpBuilder(binding.content2.slideView)
+                .withListeners(new SlideUp.Listener.Events() {
+                    @Override
+                    public void onSlide(float percent) {
+                        binding.dim.setAlpha(1 - (percent / 100));
+                    }
+
+                    @Override
+                    public void onVisibilityChanged(int visibility) {
+                        if (visibility == 0){
+
+                        }
+                    }
+                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(false).withGesturesEnabled(false)
+                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView)
+                .withTouchableAreaPx(100)
+                .withTouchableAreaDp(100)
+                .build();
+
+        slideCompetencia = new SlideUpBuilder(binding.contenido.slideView)
+                .withListeners(new SlideUp.Listener.Events() {
+                    @Override
+                    public void onSlide(float percent) {
+                        binding.dim2.setAlpha(1 - (percent / 100));
+                    }
+
+                    @Override
+                    public void onVisibilityChanged(int visibility) {
+                        if (visibility == View.GONE){
+                            if (visibility == 0){
+
+                            }
+                        }
+                    }
+                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(false).withGesturesEnabled(false)
+                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView2)
+                .withTouchableAreaPx(100)
+                .withTouchableAreaDp(100)
+                .build();
+
+    }
+
+    ArrayList<Peatonal> peatonales;
+    public void listaPeatonal(final FragmentAutoriza4DetalleBinding binding){
+        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+        String mdid = preferences.getString("mdIdterminar", "");
+        String usuario = preferences.getString("usuario", "");
+        ProviderDatosPeatonal.getInstance(getContext()).obtenerDatosPeatonal(mdid, usuario,new ProviderDatosPeatonal.ConsultaPeatonal() {
+            @Override
+            public void resolve(Peatonales peatonal) {
+                peatonales = new ArrayList<>();
+                if(peatonal!=null && peatonal.getCodigo()==200){
+
+                    if(peatonal.getConteos().size()>0){
+                        for(int i=0;i<peatonal.getConteos().size();i++){
+                            for(int j=0;j<peatonal.getConteos().get(i).getDetalle().size();j++){
+                                peatonales.add(new Peatonal(j,
+                                        peatonal.getConteos().get(i).getDetalle().get(j).getFecha(),
+                                        Integer.valueOf(peatonal.getConteos().get(i).getDetalle().get(j).getValor()),
+                                        0.0,0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
+                            }
+                        }
+
+                        binding.promedio.setText(peatonal.getConteos().get(0).getPromedioPeatonal()+"");
+                        binding.recyclerPeatonal.setHasFixedSize(true);
+                        AdapterAutorizaPeatonal adapter = new AdapterAutorizaPeatonal(getContext(), ALPHABETICAL_COMPARATOR, n);
+
+                        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false);
+
+                        binding.recyclerPeatonal.setLayoutManager(layoutManager);
+                        binding.recyclerPeatonal.setAdapter(adapter);
+                        adapter.edit().replaceAll(peatonales).commit();
+                        adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
+                    }else{
+
+                    }
+                }else{ }
+            }
+            @Override
+            public void reject(Exception e) { }
+        });
+    }
+
+    private static final Comparator<Peatonal> ALPHABETICAL_COMPARATOR = new Comparator<Peatonal>() {
+        @Override
+        public int compare(Peatonal a, Peatonal b) {
+            return a.getNumConteo().compareTo(b.getNumConteo());
+        }
+    };
+
+    @Override
+    public void onAutorizaSelect(Peatonal model) {
+
     }
 
     /**
@@ -1479,5 +1746,290 @@ public class FragmentDetalle extends Fragment implements
                 }
             }
         }
+    }
+
+    /**
+     * Converting dp to pixel
+     */
+    private int dpToPx(int dp) {
+        Resources r = getResources();
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
+    }
+
+    private BitmapDescriptor getBitmapDescriptor(int id) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            VectorDrawable vectorDrawable = (VectorDrawable) getContext().getDrawable(id);
+
+            int h = vectorDrawable.getIntrinsicHeight();
+            int w = vectorDrawable.getIntrinsicWidth();
+
+            vectorDrawable.setBounds(0, 0, w, h);
+
+            Bitmap bm = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bm);
+            vectorDrawable.draw(canvas);
+
+            return BitmapDescriptorFactory.fromBitmap(bm);
+
+        } else {
+            return BitmapDescriptorFactory.fromResource(id);
+        }
+    }
+
+    /******** gps **************/
+    ServicioGPS gpsUbicas;
+
+    Double latitude, longitude, latitudeLast = 0.0, longitudeLast = 0.0;
+
+    public Ubicacion gps() {
+        Ubicacion ubicacion;
+        latitudeLast = latitude;
+        longitudeLast = longitude;
+        gpsUbicas = new ServicioGPS(getContext());
+        if (gpsUbicas.canGetLocation()) {
+            latitude = gpsUbicas.getLatitude();
+            longitude = gpsUbicas.getLongitude();
+            ubicacion = new Ubicacion(latitude, longitude, true);
+        } else {
+            if(latitudeLast!=null){
+                ubicacion = new Ubicacion(latitudeLast, longitudeLast, false);
+            }else{
+                ubicacion = new Ubicacion(0.0, 0.0, false);
+            }
+        }
+        return ubicacion;
+    }
+
+    public void setDireccion(FragmentDetalleSitioBinding binding, Double lat, Double lng){
+        Geocoder geocoder;
+        List<Address> addresses = null;
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
+        try {
+            if(mCenterLatLong!=null){
+                addresses = geocoder.getFromLocation(lat, lng, 1);
+                String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+
+                binding.direccionsitio.setText(address);
+
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    FragmentAutoriza4DetalleBinding bindingConstruccion;
+
+    Marker market;
+
+    ArrayList<Marker> markers = new ArrayList<>();
+    ArrayList<CrearZonificacion.Zonificacion> competencia;
+    ArrayList<CrearZonificacion.Zonificacion> generadores;
+    ArrayList<CrearZonificacion.Detalle> detallesC = new ArrayList<>();;
+    ArrayList<CrearZonificacion.Detalle> detallesG = new ArrayList<>();;
+
+    CrearZonificacion.Detalle detalleC;
+    CrearZonificacion.Detalle detalleG;
+
+    CrearZonificacion.Zonificacion zonificacionC = new CrearZonificacion.Zonificacion();
+    CrearZonificacion.Zonificacion zonificacionG = new CrearZonificacion.Zonificacion();
+
+    public void colocarMarcador(LatLng latLng, GoogleMap mMap, int valor,
+                                String usuario, LatLng mds, String mdIdZ,
+                                ArrayList<Zonificacion.Detalle> detallesGene, ArrayList<Zonificacion.Detalle> detallesCompe){
+
+        if(valor==1){
+            icon = getBitmapDescriptor(R.drawable.bbb);
+        }else if(valor==2){
+            icon = getBitmapDescriptor(R.drawable.oxxo);
+        }else if(valor==3){
+            icon = getBitmapDescriptor(R.drawable.bodegaa);
+        }else if(valor==4){
+            icon = getBitmapDescriptor(R.drawable.abarrotes);
+        }else if(valor==5){
+            icon = getBitmapDescriptor(R.drawable.g_iglesia);
+        }else if(valor==6){
+            icon = getBitmapDescriptor(R.drawable.g_mercado);
+        }else if(valor==7){
+            icon = getBitmapDescriptor(R.drawable.escuela);
+        }else if(valor==8){
+            icon = getBitmapDescriptor(R.drawable.g_busstop);
+        }else if(valor==9){
+            icon = getBitmapDescriptor(R.drawable.otros);
+        }else if(valor==10){
+            icon = getBitmapDescriptor(R.drawable.netos);
+        }else if(valor==11){
+            icon = getBitmapDescriptor(R.drawable.g_recauderia);
+        }else if(valor==12){
+            icon = getBitmapDescriptor(R.drawable.g_comida);
+        }else if(valor==13){
+            icon = getBitmapDescriptor(R.drawable.g_mercado);
+        }else if(valor==14){
+            icon = getBitmapDescriptor(R.drawable.g_tianguis);
+        }else if(valor==15){
+            icon = getBitmapDescriptor(R.drawable.g_tortilleria);
+        }else if(valor==16){
+            icon = getBitmapDescriptor(R.drawable.g_carniceria);
+        }else if(valor==17){
+            icon = getBitmapDescriptor(R.drawable.metro);
+        }
+
+        String nivel = "";
+
+        if(mMap!=null){
+
+
+            market = mMap.addMarker(new
+                    MarkerOptions().
+                    position(latLng).
+                    title("").snippet("")
+                    .icon(icon));
+
+            markers.add(market);
+
+            if(valor == 1 || valor == 2 || valor == 3
+                    || valor == 4){
+
+                nivel = distancia(latLng, mds, "competencia");
+
+                detalleC = new CrearZonificacion.Detalle(
+                        String.valueOf(valor),
+                        String.valueOf(market.getPosition().latitude),
+                        String.valueOf(market.getPosition().longitude),
+                        nivel
+                );
+
+                detallesC.add(detalleC);
+
+
+                zonificacionC.setDetalles(detallesC);
+                competencia = new ArrayList<>();
+                competencia.add(zonificacionC);
+
+            }else if(valor == 5 || valor == 6 || valor == 7 ||
+                    valor == 8 || valor == 9 || valor == 10 ||
+                    valor == 11 || valor == 12){
+
+                nivel = distancia(latLng, mds, "generadores");
+
+                detalleG = new CrearZonificacion.Detalle(
+                        String.valueOf(valor),
+                        String.valueOf(market.getPosition().latitude),
+                        String.valueOf(market.getPosition().longitude),
+                        nivel
+                );
+
+
+                detallesG.add(detalleG);
+
+                zonificacionG.setDetalles(detallesG);
+                generadores = new ArrayList<>();
+                generadores.add(zonificacionG);
+            }
+
+            if(generadores==null){
+
+            }
+
+            if(competencia==null){
+
+            }
+
+            if(detallesGene!=null){
+                if(detallesGene.size()==0){
+                    detallesG = new ArrayList<>();;
+
+                    detalleG = new CrearZonificacion.Detalle(
+                            "6"
+                    );
+
+                    detallesG.add(detalleG);
+                    zonificacionG.setDetalles(detallesG);
+
+                    generadores = new ArrayList<>();
+                    generadores.add(zonificacionG);
+                }
+            }
+
+            if(detallesCompe!=null){
+                if(detallesCompe.size()==0){
+                    detallesC = new ArrayList<>();
+                    detalleC = new CrearZonificacion.Detalle(
+                            "1"
+                    );
+
+                    detallesC.add(detalleC);
+                    zonificacionC.setDetalles(detallesC);
+
+
+                    competencia = new ArrayList<>();
+                    competencia.add(zonificacionC);
+                }
+            }
+
+
+            zonificacion = new CrearZonificacion(
+                    usuario,
+                    mdIdZ,
+                    competencia,
+                    generadores,
+                    String.valueOf(mdLat),
+                    String.valueOf(mdLot),
+                    "5555555555",
+                    VERSION_APP
+            );
+
+            zonificacionJson = getJsonString(zonificacion);
+        }
+
+    }
+
+    DatosConstruccions datosSitios;
+
+    public String distancia(LatLng latLng, LatLng mdId, String tipo){
+        Location loc1 = new Location("");
+        loc1.setLatitude(latLng.latitude);
+        loc1.setLongitude(latLng.longitude);
+
+        Location loc2 = new Location("");
+        loc2.setLatitude(mdId.latitude);
+        loc2.setLongitude(mdId.longitude);
+
+        float distanciaMetros = loc1.distanceTo(loc2);
+
+        if(tipo.equals("competencia")){
+            if(distanciaMetros <= 500){
+                return "2";
+            }else if(distanciaMetros>=500 && distanciaMetros<=1500){
+                return "3";
+            }else{
+                return "1";
+            }
+        }else{
+            if(distanciaMetros <= 500){
+                return "4";
+            }else if(distanciaMetros>=500 && distanciaMetros<=1500){
+                return "5";
+            }else{
+                return "6";
+            }
+        }
+    }
+
+    String zonificacionJson = "";
+
+    private String getJsonString(CrearZonificacion zonificacion) {
+        Gson gson = new Gson();
+        String json = gson.toJson(zonificacion);
+        return json;
+    }
+
+    public String getFechaHora(){
+        long timeInMillis = System.currentTimeMillis();
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTimeInMillis(timeInMillis);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd hh:mm:ss");
+        String dateforrow = dateFormat.format(cal1.getTime());
+        return dateforrow;
     }
 }

@@ -7,11 +7,13 @@
 
     </data>
 
-    <LinearLayout
+    <ScrollView
+        android:visibility="gone"
         android:id="@+id/content_slide_up_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="350dp"
         android:gravity="bottom"
+        android:scrollbars="none"
         android:paddingLeft="18dp"
         android:paddingRight="@dimen/activity_horizontal_margin"
         android:paddingTop="@dimen/activity_vertical_margin"
@@ -25,15 +27,16 @@
             android:id="@+id/slideView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp">
+            >
 
 
             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                android:id="@+id/imagen"
+                android:layout_marginTop="4dp"
+                android:id="@+id/generadores"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Generadores de tráfico"
+                android:text="Otros generadores"
                 android:textColor="@color/azultaco"
                 android:textSize="14sp"
                 app:typeface="robotoBold" />
@@ -41,11 +44,88 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/content_lista"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"/>
 
-            </android.support.v7.widget.RecyclerView>
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/negocios"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Negocios"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_negocios"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/transporte"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Transporte público"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_transporte"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/negC"
+                android:text="Negocios de comida"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_comida"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/merP"
+                android:text="Mercado público"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_mercado"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:id="@+id/tiand"
+                android:text="Tianguis"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_tianguis"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
+
 
         </LinearLayout>
 
-    </LinearLayout>
+    </ScrollView>
 </layout>

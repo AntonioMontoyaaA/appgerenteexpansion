@@ -81,42 +81,39 @@ public class DatosSitio {
         @SerializedName("localidad")
         @Expose
         private String localidad;
-        @SerializedName("totalmd")
+        @SerializedName("detallesValidacion")
         @Expose
-        private String totalMdId;
+        private List<DetallesValidacion> detallesValidacion = null;
+        @SerializedName("fechaCreacion")
+        @Expose
+        private String fechaCreacion;
+        @SerializedName("puntajeTotal")
+        @Expose
+        private String puntajeTotal;
         @SerializedName("categoria")
         @Expose
         private String categoria;
-        @SerializedName("puntoFac")
+        @SerializedName("totalmd")
         @Expose
-        private String puntoFac;
-        @SerializedName("tip")
-        @Expose
-        private List<Tip> tip;
+        private String totalmd;
         @SerializedName("validado")
         @Expose
         private int validado;
-        @SerializedName("detallesValidacion")
-        @Expose
-        private List<DetallesValidacion> detallesValidacion;
-        @SerializedName("nombreUsuario")
-        @Expose
-        private String nombreUsuario;
 
-        public String getTipoUbicacionMD() {
-            return tipoUbicacionMD;
+        public int getValidado() {
+            return validado;
         }
 
-        public void setTipoUbicacionMD(String tipoUbicacionMD) {
-            this.tipoUbicacionMD = tipoUbicacionMD;
+        public void setValidado(int validado) {
+            this.validado = validado;
         }
 
-        public String getTotalMdId() {
-            return totalMdId;
+        public String getTotalmd() {
+            return totalmd;
         }
 
-        public void setTotalMdId(String totalMdId) {
-            this.totalMdId = totalMdId;
+        public void setTotalmd(String totalmd) {
+            this.totalmd = totalmd;
         }
 
         public String getCategoria() {
@@ -125,6 +122,43 @@ public class DatosSitio {
 
         public void setCategoria(String categoria) {
             this.categoria = categoria;
+        }
+
+        public String getPuntajeTotal() {
+            return puntajeTotal;
+        }
+
+        public void setPuntajeTotal(String puntajeTotal) {
+            this.puntajeTotal = puntajeTotal;
+        }
+
+        public String getFechaCreacion() {
+
+            if(fechaCreacion!=null){
+                fechaCreacion = fechaCreacion.substring(0,10);
+            }
+
+            return fechaCreacion;
+        }
+
+        public void setFechaCreacion(String fechaCreacion) {
+            this.fechaCreacion = fechaCreacion;
+        }
+
+        public List<DetallesValidacion> getDetallesValidacion() {
+            return detallesValidacion;
+        }
+
+        public void setDetallesValidacion(List<DetallesValidacion> detallesValidacion) {
+            this.detallesValidacion = detallesValidacion;
+        }
+
+        public String getTipoUbicacionMD() {
+            return tipoUbicacionMD;
+        }
+
+        public void setTipoUbicacionMD(String tipoUbicacionMD) {
+            this.tipoUbicacionMD = tipoUbicacionMD;
         }
 
         public String getMdId() {
@@ -215,46 +249,8 @@ public class DatosSitio {
             this.localidad = localidad;
         }
 
-        public String getPuntoFac() {
-            return puntoFac;
-        }
-
-        public void setPuntoFac(String puntoFac) {
-            this.puntoFac = puntoFac;
-        }
-
-        public List<Tip> getTip() {
-            return tip;
-        }
-
-        public void setTip(List<Tip> tip) {
-            this.tip = tip;
-        }
-
-        public int getValidado() {
-            return validado;
-        }
-
-        public void setValidado(int validado) {
-            this.validado = validado;
-        }
-
-        public List<DetallesValidacion> getDetallesValidacion() {
-            return detallesValidacion;
-        }
-
-        public void setDetallesValidacion(List<DetallesValidacion> detallesValidacion) {
-            this.detallesValidacion = detallesValidacion;
-        }
-
-        public String getNombreUsuario() {
-            return nombreUsuario;
-        }
-
-        public void setNombreUsuario(String nombreUsuario) {
-            this.nombreUsuario = nombreUsuario;
-        }
     }
+
 
     public class Tip {
         @SerializedName("detalle")

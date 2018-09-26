@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/estilo_boton_blanco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/salirr"
+            android:textColor="@color/azultaco"
+            android:textSize="14sp"
+            app:typeface="robotoRegular" />
+
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:layout_weight="1"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/estilo_boton_azul_claro"
+                android:id="@+id/cancelar"
+                android:layout_width="120dp"
+                android:layout_height="32dp"
+                android:textSize="12sp"
+                android:textAllCaps="false"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/blanco"
+                android:text="@string/cancelar"
+                android:layout_margin="10dp" />
+
+            <Button
+                android:layout_weight="1"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/estilo_boton_azul_claro"
+                android:id="@+id/salir"
+                android:layout_width="120dp"
+                android:layout_height="32dp"
+                android:textSize="12sp"
+                android:textAllCaps="false"
+                android:textColor="@color/blanco"
+                android:text="@string/salir"
+                android:layout_margin="10dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

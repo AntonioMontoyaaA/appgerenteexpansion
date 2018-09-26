@@ -78,6 +78,7 @@
     <string name="autorizado">Se autorizará este punto</string>
 
     <string name="rechazado">Se rechazará este punto</string>
+    <string name="rechazar">Rechazar</string>
 
     <string name="disponibilidad">Disponibilidad</string>
     <string name="inmediata">\u2022 Inmediata</string>
@@ -99,6 +100,7 @@
     <string name="conteo">Conteo\u0020</string>
 
     <string name="aceptar">Aceptar</string>
+    <string name="autorizar">Autorizar</string>
 
     <string name="datossitio">1. Datos del sitio</string>
     <string name="datospropietario">2. Datos del propietario</string>
@@ -126,7 +128,7 @@
     <string name="micro_ub">MACRO UBICACION</string>
 
     <string name="accion_hoy">Hoy</string>
-    <string name="accion_ver">Ver 1.1.4</string>
+    <string name="accion_ver">Ver 1.2.1</string>
     <string name="accion_tres">Ver 3 días</string>
     <string name="accion_semana">Ver la semana</string>
     <string name="calendario">Calendario</string>
@@ -188,17 +190,17 @@
     <string name="verdetalle">Ver detalle</string>
 
     <!-- agenda -->
-
+    <string name="competencia">Competencia</string>
     <string name="pendientes">Pendientes</string>
-
     <string name="notificaciones">Notificaciones</string>
-
+    <string name="pais">País</string>
     <string name="porvencer">Por vencer</string>
     <string name="hoy_24_de_abril_2018">Hoy 24 de Abril 2018</string>
     <string name="plan">Plan</string>
     <string name="real">Real</string>
     <string name="creada">Creada el:</string>
-
+    <string name="comercios">Número de comercios con un radio de 400 mts</string>
+    <string name="alimentos">Número de comercios de alimentos con un radio de 2 km</string>
     <string name="modificar">Modificar</string>
     <string name="valida">R</string>
     <string name="aceptado">A</string>
@@ -214,6 +216,9 @@
     <string name="puntuaci_n">Puntuación</string>
     <string name="guion">-</string>
     <string name="categor_a">Categoría</string>
+    <string name="rural">Rural</string>
+    <string name="autorizadas">Autorizadas</string>
+
     <string name="escribir">Escribir mensaje</string>
     <string name="escribir_e">Escribir mensaje a expansión</string>
     <string name="escribir_g">Escribir mensaje a gestoría</string>
@@ -230,6 +235,63 @@
     <string name="faltan">Faltan fotos obligatorias</string>
     <string name="finalizar">Finalizar</string>
     <string name="salirproceso">Deseas salir de la carga de Documentos de esta MD?</string>
+    <string name="salirr">Deseas salir del detalle de esta MD</string>
+
     <string name="cancelar">Cancelar\u0020</string>
+    <string name="aceptardo">Esta MD autorizo correctamente la documentación</string>
+    <string name="competencia_neto">Competencia Neto</string>
+    <string name="superficie">3. Superficie</string>
+    <string name="mensaje_fotos">Para mandar la superficie es necesario las fotografías y el area del terreno</string>
+    <string name="horarios">Revisa el total de peatones u el horario</string>
+    <string name="mandar">Para mandar la superficie es necesario las fotografías y el area del terreno</string>
+    <string name="captura">Captura las siguientes imágenes</string>
+    <string name="autorizo">FECHA DE CREACIÓN</string>
+    <string name="rechazo">RECHAZÓ</string>
+
+    <string name="status">STATUS</string>
+
+    <string name="atras">Atrasada</string>
+    <string name="entiempo">En tiempo</string>
+    <string name="atrasmayus">ATRASADAS</string>
+    <string name="vermas">Ver más</string>
+    <string name="err_foto">Error al subir fotografia intenta nuevamente</string>
+    <string name="vencimiento">FECHA DE VENCIMIENTO</string>
+    <string name="creacion">FECHA DE CREACIÓN</string>
+    <string name="general">GENERAL</string>
+    <string name="colorazul">#162341</string>
+    <string name="creadael">Creada el </string>
+    <string name="seguimiento_de_autorizacion">Seguimiento de Autorización</string>
+    <string name="fecha_l_mite">FECHA LÍMITE</string>
+    <string name="atrasa">Atrasada</string>
+    <string name="sinMDre">No existen MDs en rechazo</string>
+
+
+    <string name="expansion">EXPANSION</string>
+    <string name="operacione">OPERACIONES</string>
+    <string name="auditoria">AUDITORIA</string>
+    <string name="constru">CONSTRUCCION</string>
+    <string name="gestoria">GESTORIA</string>
+    <string name="finanza">FINANZAS</string>
+    <string name="propietario">PROPIETARIO</string>
+    <string name="detalles">Detalle</string>
+    <string name="condiciones_del_sitio">CONDICIONES DEL SITIO</string>
+    <string name="terreno">TERRENO</string>
+    <string name="frentemay">FRENTE</string>
+    <string name="profundidadm">PROFUNDIDAD</string>
+
+    <string name="bueno">BUENO</string>
+    <string name="regulars">REGULAR</string>
+    <string name="malos">MALO</string>
+    <string name="meses">MESES</string>
+    <string name="apartir">A partir de: </string>
+    <string name="ocupados">Ocupado</string>
+    <string name="disponible">Disponible de inmediato</string>
+    <string name="flujo">FLUJO PEATONAL</string>
+    <string name="personas">PERSONAS</string>
+    <string name="fecha_de_autorizacion">FECHA DE AUTORIZACIÓN:</string>
+    <string name="zero">0</string>
+    <string name="one">1</string>
+    <string name="no_esquina">NO ES ESQUINA</string>
+    <string name="esquina">ES ESQUINA</string>
 
 </resources>

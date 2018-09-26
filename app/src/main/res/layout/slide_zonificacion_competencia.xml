@@ -9,8 +9,8 @@
 
     <LinearLayout
         android:id="@+id/content_slide_up_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="bottom"
         android:paddingLeft="18dp"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -29,11 +29,11 @@
 
 
             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                android:id="@+id/imagen"
+                android:id="@+id/competencias"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:gravity="center"
-                android:text="Competencia"
+                android:text="@string/competencia"
                 android:textColor="@color/azultaco"
                 android:textSize="14sp"
                 app:typeface="robotoBold" />
@@ -41,9 +41,24 @@
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/content_lista"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"/>
 
-            </android.support.v7.widget.RecyclerView>
+            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                android:id="@+id/neto"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:gravity="center"
+                android:text="@string/competencia_neto"
+                android:textColor="@color/azultaco"
+                android:textSize="14sp"
+                app:typeface="robotoBold" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/content_lista_tienda"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+
 
         </LinearLayout>
 

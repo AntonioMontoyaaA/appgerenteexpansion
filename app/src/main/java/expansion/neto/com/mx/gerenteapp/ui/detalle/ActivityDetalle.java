@@ -22,9 +22,12 @@ import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityAutorizaBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentDialogMostrarTip;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDetalle.FragmentDetalle;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
 import expansion.neto.com.mx.gerenteapp.modelView.Tips;
 import expansion.neto.com.mx.gerenteapp.provider.procesoProvider.ProviderConsultaTip;
 import expansion.neto.com.mx.gerenteapp.ui.autoriza.ActivityAutorizar;
+
+import static expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso.cleanShared;
 
 public class ActivityDetalle extends AppCompatActivity{
 
@@ -34,11 +37,12 @@ public class ActivityDetalle extends AppCompatActivity{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         initDataBinding();
-        //cleanShared(ActivityDetalle.this);
+        cleanShared(ActivityDetalle.this);
         currentItem = 0;
 
         binding.anterior.setVisibility(View.INVISIBLE);
@@ -48,90 +52,13 @@ public class ActivityDetalle extends AppCompatActivity{
         binding.pager.setCurrentItem(currentItem);
         setNavigator();
 
-        binding.help.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mostrarTip("1");
-            }
-        });
+        binding.help.setVisibility(View.INVISIBLE);
 
         binding.pager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 
             @Override
             public void onPageSelected(int position) {
 
-                if(position==0) {
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("1");
-                        }
-                    });
-                }
-
-
-                if(position==1) {
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("2");
-                        }
-                    });
-                }
-
-                if(position==2){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("3");
-                        }
-                    });
-                }
-
-                if(position==3){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("4");
-                        }
-                    });
-                }
-
-                if(position==4){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("5");
-                        }
-                    });
-                }
-
-                if(position==5){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("6");
-                        }
-                    });
-                }
-
-                if(position==6){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("7");
-                        }
-                    });
-                }
-
-                if(position==7){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                }
             }
 
             @Override
@@ -208,10 +135,10 @@ public class ActivityDetalle extends AppCompatActivity{
         for (int i = 0; i < adapter.getCount(); i++) {
             if (i == binding.pager.getCurrentItem()) {
                 navigation += getString(R.string.material_icon_point_full)
-                        + "  ";
+                        + "      ";
             } else {
                 navigation += getString(R.string.material_icon_point_empty)
-                        + "  ";
+                        + "      ";
             }
         }
         binding.circuloPosicion.setText(navigation);
@@ -249,7 +176,7 @@ public class ActivityDetalle extends AppCompatActivity{
 
         @Override
         public int getCount() {
-            return 8;
+            return 6;
         }
 
         @Override
@@ -258,9 +185,9 @@ public class ActivityDetalle extends AppCompatActivity{
             if (position == 0) {
                 return FragmentDetalle.newInstance(position, false);
             } else if (position == 1) {
-                return FragmentDetalle.newInstance(position, false);
+                return FragmentDetalle.newInstance(position,false);
             } else {
-                return FragmentDetalle.newInstance(position, false);
+                return FragmentDetalle.newInstance(position,false);
             }
         }
     }
@@ -278,103 +205,12 @@ public class ActivityDetalle extends AppCompatActivity{
             getSupportFragmentManager().popBackStack();
         } else {
 
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentDialogCancelarMdProceso dFragment = new FragmentDialogCancelarMdProceso();
+            dFragment.show(fm, "Dialog Fragment");
+
         }
     }
 
-    public static void cleanShared(Context context){
-        SharedPreferences preferencesConstruccion = context.getApplicationContext().getSharedPreferences("datosConstruccion", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferencesConstruccion.edit();
-        editor.clear();
-        editor.apply();
-        context.getSharedPreferences("datosConstruccion", 0).edit().clear().apply();
-
-
-        SharedPreferences preferencesGeneralidades = context.getApplicationContext().getSharedPreferences("datosGeneralidades", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorGeneralidades = preferencesGeneralidades.edit();
-        editorGeneralidades.clear();
-        editorGeneralidades.apply();
-        context.getSharedPreferences("datosGeneralidades", 0).edit().clear().apply();
-
-
-
-        SharedPreferences preferencesPropietario = context.getApplicationContext().getSharedPreferences("datosPropietario", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorPropietario = preferencesPropietario.edit();
-        editorPropietario.clear();
-        editorPropietario.apply();
-        context.getSharedPreferences("datosPropietario", 0).edit().clear().apply();
-
-
-        SharedPreferences preferencesSuperficie = context.getApplicationContext().getSharedPreferences("datosSuperficie", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorSuperficie = preferencesSuperficie.edit();
-        editorSuperficie.clear();
-        editorSuperficie.apply();
-        context.getSharedPreferences("datosSuperficie", 0).edit().clear().apply();
-
-
-        SharedPreferences preferencesZonificacion = context.getApplicationContext().getSharedPreferences("datosZonificacion", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorZonificacion = preferencesZonificacion.edit();
-        editorZonificacion.clear();
-        editorZonificacion.apply();
-        context.getSharedPreferences("datosZonificacion", 0).edit().clear().apply();
-
-
-        SharedPreferences preferencesSitio = context.getApplicationContext().getSharedPreferences("datosSitio", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorSitio = preferencesSitio.edit();
-        editorSitio.clear();
-        editorSitio.apply();
-        context.getSharedPreferences("datosSitio", 0).edit().clear().apply();
-
-
-        SharedPreferences preferences = context.getApplicationContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editorExpansion = preferences.edit();
-        editorExpansion.putLong("mdId", 0);
-        editorExpansion.putString("nombreSitio", "");
-        editorExpansion.putFloat("latMd", 0);
-        editorExpansion.putFloat("lotMd", 0);
-        editorExpansion.apply();
-    }
-
-
-    ArrayList<Tips.Tip> tips;
-    public void mostrarTip(String pantalla){
-        ProviderConsultaTip.getInstance(ActivityDetalle.this).obtenerTips(pantalla, new ProviderConsultaTip.ConsultaTips() {
-            @Override
-            public void resolve(Tips tip) {
-                if(tip.getCodigo()==200){
-                    tips = new ArrayList<>();
-
-                    if(tip.getTips().size()>0){
-                        for(int i=0;i<tip.getTips().size();i++){
-                            tips.add(tip.getTips().get(i));
-                        }
-
-                        SharedPreferences preferences;
-                        preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editor = preferences.edit();
-                        Gson gson = new Gson();
-                        String json = gson.toJson(tips);
-                        editor.putString("tips", json);
-                        editor.apply();
-
-                        FragmentManager fm = getSupportFragmentManager();
-                        FragmentDialogMostrarTip dFragment = new FragmentDialogMostrarTip();
-                        dFragment.show(fm, "Dialog Fragment");
-
-                    }else{
-                        Toast.makeText(ActivityDetalle.this, "Aún no se agrega tip para esta opción",
-                                Toast.LENGTH_SHORT).show();
-                    }
-                }else{
-                    Toast.makeText(ActivityDetalle.this, tip.getMensaje(),
-                            Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void reject(Exception e) {
-
-            }
-        });
-    }
 
 }

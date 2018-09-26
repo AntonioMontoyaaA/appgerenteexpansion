@@ -63,6 +63,9 @@ public class Autorizadas implements SortedListAdapter.ViewModel {
     }
 
     public class Memoria implements SortedListAdapter.ViewModel {
+        @SerializedName("puntuacion")
+        @Expose
+        private Integer puntuacion;
         @SerializedName("categoria")
         @Expose
         private String categoria;
@@ -108,6 +111,48 @@ public class Autorizadas implements SortedListAdapter.ViewModel {
         @SerializedName("nombresitio")
         @Expose
         private String nombresitio;
+        @SerializedName("urllayout")
+        @Expose
+        private String urllayout;
+
+        @SerializedName("pptoauditoria")
+        @Expose
+        private String pptoauditoria;
+        @SerializedName("pptoobra")
+        @Expose
+        private String pptoobra;
+
+        public String getPptoauditoria() {
+            return pptoauditoria;
+        }
+
+        public void setPptoauditoria(String pptoauditoria) {
+            this.pptoauditoria = pptoauditoria;
+        }
+
+        public String getPptoobra() {
+            return pptoobra;
+        }
+
+        public void setPptoobra(String pptoobra) {
+            this.pptoobra = pptoobra;
+        }
+
+        public String getUrllayout() {
+            return urllayout;
+        }
+
+        public void setUrllayout(String urllayout) {
+            this.urllayout = urllayout;
+        }
+
+        public Integer getPuntuacion() {
+            return puntuacion;
+        }
+
+        public void setPuntuacion(Integer puntuacion) {
+            this.puntuacion = puntuacion;
+        }
 
         public String getCategoria() {
             return categoria;
@@ -230,7 +275,7 @@ public class Autorizadas implements SortedListAdapter.ViewModel {
         }
     }
 
-    public class Autorizada {
+    public class Autorizada implements SortedListAdapter.ViewModel {
 
         @SerializedName("memoriaid")
         @Expose
@@ -247,6 +292,17 @@ public class Autorizadas implements SortedListAdapter.ViewModel {
         @SerializedName("nombresitio")
         @Expose
         private String nombresitio;
+        @SerializedName("estatus")
+        @Expose
+        private Integer atrasada;
+
+        public Integer getAtrasada() {
+            return atrasada;
+        }
+
+        public void setAtrasada(Integer atrasada) {
+            this.atrasada = atrasada;
+        }
 
         public String getMemoriaid() {
             return memoriaid;

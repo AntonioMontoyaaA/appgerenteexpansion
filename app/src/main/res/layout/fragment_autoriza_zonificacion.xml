@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="validacion"
+            type="String"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorPrimary">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <include
+                android:id="@+id/toolbar"
+                layout="@layout/toolbar_autoriza"
+                />
+
+            <ScrollView
+                android:background="@drawable/background"
+                android:id="@+id/scroll_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:background="@drawable/background"
+                        android:layout_marginTop="4dp"
+                        android:padding="18dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="608dp"
+                        android:orientation="vertical">
+                        <!--android:background="@{String.valueOf(validacion).equals(@string/valida) ? @drawable/estilo_boton_blanco : @drawable/estilo_boton_borde_rojo}"-->
+                        <android.support.constraint.ConstraintLayout
+                            android:orientation="horizontal"
+                            android:background="@drawable/background"
+                            android:layout_width="match_parent"
+                            android:layout_height="541dp">
+
+
+                            <android.support.v7.widget.CardView
+                                android:orientation="vertical"
+                                android:id="@+id/ciudad"
+                                android:layout_width="match_parent"
+                                android:layout_height="10dp"
+                                android:layout_gravity="center"
+                                android:background="@drawable/estilo_boton_blanco_borde">
+
+                                <LinearLayout
+                                    android:id="@+id/view3"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="10dp"
+                                    android:layout_gravity="top"
+                                    android:background="@drawable/estilo_boton_blanco_up_celeste"
+                                    android:orientation="vertical">
+
+                                </LinearLayout>
+
+                            </android.support.v7.widget.CardView>
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:visibility="gone"
+                                android:id="@+id/robotoTextView2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:background="@android:color/transparent"
+                                android:text="MD Oaxaca"
+                                android:layout_marginTop="8dp"
+                                android:textColor="@color/azultaco"
+                                android:textSize="14sp"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:typeface="robotoRegular" />
+
+
+                            <fragment
+                                android:id="@+id/map"
+                                android:name="com.google.android.gms.maps.SupportMapFragment"
+                                android:layout_width="match_parent"
+                                android:layout_height="541dp"
+                                android:layout_marginTop="0dp"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/robotoTextView2"
+                                app:layout_constraintVertical_bias="0.0" />
+
+                            <LinearLayout
+                                android:visibility="gone"
+                                android:layout_width="match_parent"
+                                android:layout_height="34dp"
+                                android:layout_marginEnd="16dp"
+                                android:layout_marginStart="16dp"
+                                android:background="@drawable/estilo_boton_blanco_up"
+                                android:orientation="horizontal"
+                                app:layout_constraintBottom_toBottomOf="parent"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent">
+
+                                <LinearLayout
+                                    android:id="@+id/competencia"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Competencia"
+                                        android:textAllCaps="true"
+                                        android:textColor="@color/texto_gris"
+                                        android:textSize="12sp"
+                                        app:typeface="robotoBold" />
+
+                                </LinearLayout>
+
+
+                                <LinearLayout
+                                    android:id="@+id/generador"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center"
+                                        android:text="Generadores de tráfico"
+                                        android:textColor="@color/texto_gris"
+                                        android:textSize="12sp"
+                                        android:textAllCaps="true"
+                                        app:typeface="robotoBold" />
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/fab"
+                                android:visibility="gone"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:layout_gravity="bottom|end"
+                                android:layout_margin="@dimen/fab_margin"
+                                android:layout_marginBottom="12dp"
+                                android:layout_marginEnd="16dp"
+                                app:fabSize="normal"
+                                app:layout_constraintBottom_toBottomOf="@+id/map"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:srcCompat="@drawable/ic_helps"
+                                />
+                            <LinearLayout
+                                android:visibility="gone"
+                                android:layout_marginTop="0dp"
+                                android:layout_marginStart="0dp"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+                                <include
+                                    android:id="@+id/slide_rural_start"
+                                    layout="@layout/slide_rural" />
+                            </LinearLayout>
+
+
+
+
+
+                        </android.support.constraint.ConstraintLayout>
+                        <LinearLayout
+                            android:id="@+id/autorizalayout"
+                            android:layout_marginTop="10dp"
+                            android:layout_gravity="center"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+
+                            <ImageView
+                                android:id="@+id/cancelar"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="0dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:typeface="robotoBold" />
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_marginStart="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:textSize="18sp"
+                                app:typeface="robotoRegular"
+                                android:text="@string/rechazar"  />
+
+
+                            <ImageView
+                                android:layout_marginStart="50dp"
+                                android:id="@+id/aceptar"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginTop="0dp"
+                                android:textColor="@color/letra"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:typeface="robotoBold" />
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:textSize="18sp"
+                                app:typeface="robotoRegular"
+                                android:text="@string/autorizar" />
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+        <FrameLayout
+            android:visibility="gone"
+            android:alpha="0"
+            android:id="@+id/dime"
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/dimBg" />
+
+        <LinearLayout
+            android:visibility="gone"
+
+            android:id="@+id/dim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:background="@color/azultaco"
+            android:fitsSystemWindows="true"
+            android:foregroundGravity="bottom"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/rootView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginStart="7dp"
+            android:gravity="bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+            <include
+                android:id="@+id/contenido"
+                layout="@layout/slide_zonificacion_competencia"
+                tools:visibility="gone" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/dim2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:alpha="0"
+            android:background="@color/azultaco"
+            android:fitsSystemWindows="true"
+            android:foregroundGravity="bottom"
+            android:gravity="bottom"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/rootView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginStart="7dp"
+            android:gravity="bottom"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+
+
+            <include
+                android:id="@+id/content2"
+                layout="@layout/slide_zonificacion_generadores"
+                tools:visibility="gone" />
+
+
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+
+</layout>

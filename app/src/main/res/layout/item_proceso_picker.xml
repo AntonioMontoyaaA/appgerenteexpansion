@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
-
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
         <import type="android.view.View" />
@@ -13,9 +13,15 @@
         <variable
             name="procesoModel"
             type="expansion.neto.com.mx.gerenteapp.modelView.procesoModel.Proceso.Memoria"/>
+
+        <variable
+            name="tipoCard"
+            type="Integer"/>
+
     </data>
 
     <LinearLayout
+        android:layout_marginBottom="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -31,71 +37,322 @@
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="90dp"
                 android:onClick="@{view -> listener.onProcesoSelect(procesoModel)}">
-
+                <!--android:background="@{procesoModel.atrasada == 0 ? @drawable/estilo_boton_blanco : @drawable/estilo_boton_borde_rojo_item}"-->
                 <LinearLayout
-                    android:background="@drawable/estilo_boton_blanco"
-                    android:orientation="vertical"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_width="match_parent"
+                    android:layout_height="90dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="0dp"
+                    android:gravity="left"
+                    android:orientation="horizontal">
 
                     <LinearLayout
+                        android:id="@+id/colorStatus"
+                        android:layout_width="10dp"
+                        android:layout_height="90dp"
+                        android:background="@{procesoModel.atrasada == 0 ? @color/gris_borde : @color/atrasadas}"
+                        android:orientation="vertical"/>
+
+                    <LinearLayout
+                        android:background="@color/blanco"
+                        android:layout_width="50dp"
+                        android:layout_height="90dp"
+                        android:orientation="vertical">
+
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:layout_marginTop="4dp"
+                            android:layout_gravity="center"
+                            android:id="@+id/categoria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@{String.valueOf(procesoModel.categoria)}"
+                            android:textColor="@{procesoModel.atrasada == 0 ? @color/texto_gris : @color/atrasadas}"
+                            android:textSize="14dp"
+                            tools:text="C"
+                            app:typeface="robotoBold" />
+
+                        <LinearLayout
+                            android:layout_marginTop="30dp"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:layout_width="40dp"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_gravity="center"
+                                android:id="@+id/puntuacion"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="0dp"
+                                android:layout_marginTop="0dp"
+                                android:text="@{String.valueOf(procesoModel.puntuacionmd)}"
+                                android:textSize="14dp"
+                                tools:text="17"
+                                android:textColor="@{procesoModel.atrasada == 0 ? @color/texto_gris : @color/atrasadas}"
+                                app:typeface="robotoBold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginTop="0dp"
+                                android:gravity="center"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:shadowColor="@color/rojo"
+                                    android:src="@drawable/estrella"
+                                    android:tint="@{procesoModel.atrasada == 0 ? @color/atrasadas : @color/atrasadas}" />
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_marginStart="2dp"
+                                    android:src="@drawable/estrella"
+                                    android:tint="@{procesoModel.atrasada == 0 ? @color/atrasadas : @color/atrasadas}"
+                                    android:visibility="@{String.valueOf(procesoModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}"
+                                    />
+
+                                <ImageView
+                                    android:layout_width="10dp"
+                                    android:layout_height="10dp"
+                                    android:layout_marginStart="2dp"
+                                    android:src="@drawable/estrella"
+                                    android:tint="@{procesoModel.atrasada == 0 ? @color/atrasadas : @color/atrasadas}"
+                                    android:visibility="@{String.valueOf(procesoModel.categoria).equals(@string/categoria_b) || String.valueOf(procesoModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}" />
+
+                            </LinearLayout>
+
+
+
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_gravity="center"
                         android:layout_marginStart="4dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="5dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="left"
-                        android:orientation="horizontal">
+                        android:id="@+id/view3"
+                        android:layout_width="1dp"
+                        android:layout_height="80dp"
+                        android:background="#dfdfdf"
+                        app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
 
-                        <ImageView
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@{procesoModel.faltantes[0].validaciones == 2 ? @drawable/expansioazul : @drawable/expred}"/>
-                        <!--android:visibility="@{procesoModel.faltantes[0].validaciones == 2 ? View.GONE : View.VISIBLE}" -->
 
-                        <ImageView
-                            android:layout_marginStart="7dp"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@{procesoModel.faltantes[1].validaciones == 1 ? @drawable/gestoriaazul : @drawable/gestred}"/>
-                        <!--android:visibility="@{procesoModel.faltantes[1].validaciones == 1 ? View.GONE : View.VISIBLE}" -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_marginStart="7dp"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@{procesoModel.faltantes[2].validaciones == 1 ? @drawable/construccionazul : @drawable/contred}"/>
-                        <!--android:visibility="@{procesoModel.faltantes[2].validaciones == 1 ? View.GONE : View.VISIBLE}" -->
+                        <LinearLayout
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <ImageView
-                            android:layout_marginStart="7dp"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@{procesoModel.faltantes[3].validaciones == 1 ? @drawable/operacionesazul : @drawable/opered}"/>
-                        <!--android:visibility="@{procesoModel.faltantes[3].validaciones == 1 ? View.GONE : View.VISIBLE}" />-->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_marginStart="7dp"
-                            android:layout_width="15dp"
-                            android:layout_height="15dp"
-                            android:src="@{procesoModel.faltantes[4].validaciones == 1 ? @drawable/auditoria : @drawable/audred}"/>
-                        <!--android:visibility="@{procesoModel.faltantes[4].validaciones == 1 ? View.GONE : View.VISIBLE}" -->
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    android:id="@+id/nombre_md"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="@{String.valueOf(procesoModel.nombresitio)}"
+                                    android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/azultaco}"
+                                    android:textSize="12dp"
+                                    tools:text="hola mundo"
+                                    app:typeface="robotoBold" />
 
-                        />
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    android:id="@+id/nombre_creo"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="2dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:text="@{String.valueOf(procesoModel.creador)}"
+                                    android:textColor="@{procesoModel.atrasada == 0 ? @color/texto_gris : @color/texto_gris}"
+                                    android:textSize="10dp"
+                                    tools:text="hola mundo"
+                                    app:typeface="robotoRegular" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <LinearLayout
+                                android:layout_width="115dp"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    android:id="@+id/status"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="3dp"
+                                    android:layout_marginLeft="8dp"
+                                    android:paddingTop="2dp"
+                                    android:textColor="@color/texto_gris"
+                                    android:text="@{tipoCard == 0 ? @string/autorizo : @string/rechazo}"
+                                    android:textSize="10dp"
+                                    app:typeface="robotoRegular" />
+
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    app:typeface="robotoRegular"
+                                    android:id="@+id/fechas"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    tools:text="14/4/1"
+                                    android:textColor="@color/colorPrimary"
+                                    android:text="@{String.valueOf(procesoModel.fechaCreacion)}"
+                                    android:textSize="9dp" />
+
+
+                                <LinearLayout
+                                    android:visibility="gone"
+                                    android:layout_marginLeft="8dp"
+                                    android:layout_width="100dp"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <ImageView
+                                        android:backgroundTint="@color/rojo"
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:visibility="@{procesoModel.faltantes[0].validaciones == 2 ? View.GONE : View.VISIBLE}"
+                                        android:src="@{procesoModel.faltantes[0].validaciones == 2 ? @drawable/expansioazul : @drawable/expansioazul}"/>
+                                    <!---->
+
+                                    <ImageView
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:layout_marginStart="7dp"
+                                        android:visibility="@{procesoModel.faltantes[1].validaciones == 1 ? View.GONE : View.VISIBLE}"
+                                        android:src="@{procesoModel.faltantes[1].validaciones == 1 ? @drawable/gestoriaazul : @drawable/gestoriaazul}"/>
+                                    <!---->
+
+                                    <ImageView
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:layout_marginStart="7dp"
+                                        android:visibility="@{procesoModel.faltantes[2].validaciones == 1 ? View.GONE : View.VISIBLE}"
+                                        android:src="@{procesoModel.faltantes[2].validaciones == 1 ? @drawable/construccionazul : @drawable/construccionazul}"/>
+                                    <!---->
+
+
+                                    <ImageView
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:layout_marginStart="7dp"
+                                        android:visibility="@{procesoModel.faltantes[3].validaciones == 1 ? View.GONE : View.VISIBLE}"
+                                        android:src="@{procesoModel.faltantes[3].validaciones == 1 ? @drawable/operacionesazul : @drawable/operacionesazul}"/>
+                                    <!-- />-->
+
+
+
+                                    <ImageView
+                                        android:layout_width="15dp"
+                                        android:layout_height="15dp"
+                                        android:layout_marginStart="7dp"
+                                        android:visibility="@{procesoModel.faltantes[4].validaciones == 1 ? View.GONE : View.VISIBLE}"
+                                        android:src="@{procesoModel.faltantes[4].validaciones == 1 ? @drawable/auditoria : @drawable/auditoria}"/>
+                                    <!-- -->
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_marginTop="2dp"
+                                android:layout_marginStart="90dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:paddingTop="2dp"
+                                    android:textColor="@color/texto_gris"
+                                    android:text="@string/status"
+                                    android:textSize="10dp"
+                                    app:typeface="robotoRegular" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:paddingTop="2dp"
+                                        android:text="@{procesoModel.atrasada == 0 ? @string/entiempo : @string/atras}"
+                                        android:textColor="@{procesoModel.atrasada == 0 ? @color/azul : @color/atrasadas}"
+                                        android:textSize="10dp"
+                                        app:typeface="robotoRegular" />
+
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:visibility="gone"
+                                        android:id="@+id/totales"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="0dp"
+                                        android:layout_marginStart="-3dp"
+                                        android:layout_marginTop="0dp"
+                                        android:text="@{String.valueOf(procesoModel.parciales)+`/`+String.valueOf(procesoModel.totales)}"
+                                        android:textColor="@{String.valueOf(procesoModel.atrasada).equals(@string/atrasadas) ? @color/rojo :  @color/azul}"
+                                        android:textSize="12dp"
+                                        app:typeface="robotoRegular"
+                                        tools:text="1=1" />
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_marginTop="3dp"
+                                android:layout_marginStart="6dp"
+                                android:layout_gravity="center"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <ImageView
+                                    android:layout_marginStart="4dp"
+                                    android:layout_width="15dp"
+                                    android:layout_height="15dp"
+                                    android:src="@drawable/clock"
+                                    android:tint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/atrasadas}"
+                                    android:visibility="@{procesoModel.atrasada == 0 ? View.INVISIBLE : View.VISIBLE}" />
+
+                            </LinearLayout>
+
+                        </LinearLayout>
 
                     </LinearLayout>
 
 
-                    <ImageView
-                        android:layout_marginStart="7dp"
-                        android:layout_width="15dp"
-                        android:layout_height="15dp"
-                        android:src="@drawable/ic_clock_rojo"
-                        android:layout_marginTop="13dp"
-                        android:visibility="@{procesoModel.atrasada == 0 ? View.GONE : View.VISIBLE}"
-                        />
                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -105,120 +362,31 @@
                         android:text=" "
                         android:textSize="8dp"
                         android:visibility="@{procesoModel.atrasada == 0 ? View.VISIBLE : View.GONE}"
-                        />
-                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                        android:id="@+id/nombre_md"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="2dp"
-                        android:layout_marginTop="5dp"
-                        android:layout_marginLeft="8dp"
-                        android:text="@{String.valueOf(procesoModel.nombresitio)}"
-                        android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                        android:textSize="12dp" />
+                        app:typeface="robotoRegular" />
 
-                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                        android:id="@+id/nombre_creo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="3dp"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginTop="2dp"
-                        android:paddingTop="2dp"
-                        android:text="@{String.valueOf(procesoModel.creador)}"
-                        android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                        android:textSize="8dp" />
 
 
                     <LinearLayout
+                        android:visibility="gone"
                         android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
-
-                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                            android:id="@+id/categoria"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="0dp"
-                            android:layout_marginLeft="8dp"
-                            android:layout_marginTop="0dp"
-                            android:text="@{String.valueOf(procesoModel.categoria)}"
-                            android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                            android:textSize="12dp" />
-
-                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                            android:id="@+id/puntuacion"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="0dp"
-                            android:layout_marginLeft="60dp"
-                            android:layout_marginTop="0dp"
-                            android:text="@{String.valueOf(procesoModel.puntuacionmd)}"
-                            android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                            android:textSize="12dp" />
-
-                    </LinearLayout>
-
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:orientation="horizontal"
-                        android:layout_height="wrap_content">
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
 
 
                         <ProgressBar
                             android:id="@+id/colaboradores"
-                            android:backgroundTint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
                             style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="60dp"
+                            android:layout_width="76dp"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
-                            android:progressTint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
+                            android:backgroundTint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/atrasadas}"
                             android:max="100"
                             android:progress="@{String.valueOf(procesoModel.categoria).equals(@string/categoria_a) ? 100 : String.valueOf(procesoModel.categoria).equals(@string/categoria_b) ? 60 : 30}"
-                            />
-
-                        <LinearLayout
-                            android:layout_marginStart="-4dp"
-                            android:layout_marginTop="-3dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-
-                            <ImageView
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:shadowColor="@color/back_atrasada"
-                                android:tint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                                android:src="@drawable/estrella" />
-
-                            <ImageView
-                                android:layout_marginStart="2dp"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:tint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                                android:src="@drawable/estrella"
-                                android:visibility="@{String.valueOf(procesoModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}"
-                                />
-
-                            <ImageView
-                                android:layout_marginStart="2dp"
-                                android:layout_width="10dp"
-                                android:layout_height="10dp"
-                                android:tint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/back_atrasada}"
-                                android:src="@drawable/estrella"
-                                android:visibility="@{String.valueOf(procesoModel.categoria).equals(@string/categoria_b) || String.valueOf(procesoModel.categoria).equals(@string/categoria_c) ? View.GONE : View.VISIBLE}"
-                                />
-
-                        </LinearLayout>
-
-
+                            android:progressTint="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/atrasadas}" />
 
                     </LinearLayout>
-
 
 
                 </LinearLayout>

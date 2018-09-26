@@ -221,6 +221,7 @@ public class FragmentDialogCancelar extends DialogFragment {
                             } else {
                                 Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
                                         Toast.LENGTH_LONG).show();
+                                dismiss();
                                 loadingProgress(progressDialog, 1);
 
                             }

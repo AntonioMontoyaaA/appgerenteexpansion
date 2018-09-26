@@ -63,78 +63,7 @@ public class ActivityDetalleNotificaciones extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(position==0) {
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("1");
-                        }
-                    });
-                }
 
-
-                if(position==1) {
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("2");
-                        }
-                    });
-                }
-
-                if(position==2){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("3");
-                        }
-                    });
-                }
-
-                if(position==3){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("4");
-                        }
-                    });
-                }
-
-                if(position==4){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("5");
-                        }
-                    });
-                }
-
-                if(position==5){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("6");
-                        }
-                    });
-                }
-
-                if(position==6){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            mostrarTip("7");
-                        }
-                    });
-                }
-
-                if(position==7){
-                    binding.help.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-
-                        }
-                    });
-                }
             }
 
             @Override
@@ -211,10 +140,10 @@ public class ActivityDetalleNotificaciones extends AppCompatActivity {
         for (int i = 0; i < adapter.getCount(); i++) {
             if (i == binding.pager.getCurrentItem()) {
                 navigation += getString(R.string.material_icon_point_full)
-                        + "  ";
+                        + "      ";
             } else {
                 navigation += getString(R.string.material_icon_point_empty)
-                        + "  ";
+                        + "      ";
             }
         }
         binding.circuloPosicion.setText(navigation);
@@ -252,7 +181,7 @@ public class ActivityDetalleNotificaciones extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 8;
+            return 6;
         }
 
         @Override

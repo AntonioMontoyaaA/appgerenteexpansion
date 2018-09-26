@@ -19,6 +19,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Gravity;
@@ -44,6 +45,8 @@ import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +57,7 @@ import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityDocumentosBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentDialogFinalizar;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialogCancelarMdRechazadas;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialogTerminaDocumentacion;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDocumentos.FragmentInicioDocumentos;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
@@ -80,11 +84,10 @@ public class ActivityDocumentos extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 
         initDataBinding();
+
         SharedPreferences preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         usuario = preferences.getString("usuario", "");
         md = preferences.getString("mdId", "");
-        String nombreMd = preferences.getString("nombreSitio", "");
-        binding.nombreMd.setText(nombreMd);
 
         progressDialog = new ProgressDialog(ActivityDocumentos.this, R.style.AppCompatAlertDialogStyle);
 
@@ -267,6 +270,10 @@ public class ActivityDocumentos extends AppCompatActivity {
                         if(autorizaResponse.getCodigo() == 200) {
 
                             loadingProgressDocumentos(progressDialog, 1, "Esta MD se autorizo correctamente");
+                            FragmentManager fm = getSupportFragmentManager();
+                            FragmentDialogTerminaDocumentacion dFragment = new FragmentDialogTerminaDocumentacion();
+                            dFragment.show(fm, "Dialog Fragment");
+
 
                         } else {
 
@@ -280,6 +287,8 @@ public class ActivityDocumentos extends AppCompatActivity {
                         loadingProgressDocumentos(progressDialog, 1, "Error al conectarse al servicio que autoriza/rechaza la pantalla: ");
                     }
                 });
+
+
     }
 
     public void getDatos(){
@@ -305,7 +314,28 @@ public class ActivityDocumentos extends AppCompatActivity {
 
                         plomoTable.addView(rowPlomo);
 
-                            for(int i = 0; i < documentos.getDatos().size(); i ++){
+                        Collections.sort(documentos.getDatos(), new Comparator<Documentos.Dato>() {
+                            @Override
+                            public int compare(Documentos.Dato lhs, Documentos.Dato rhs) {
+                                return lhs.getOpcional().compareTo(rhs.getOpcional());
+                            }
+                        });
+
+
+                        for(int i = 0; i < documentos.getDatos().size(); i ++){
+
+                            final TextView cantidad = new TextView(ActivityDocumentos.this);
+
+                            cantidad.setText("CANTIDAD");
+
+                            cantidad.setTextSize(9);
+                            cantidad.setTextColor(resource.getColor(R.color.grisetxt));
+                            cantidad.setPadding(20, paddingPixel,0,0);
+                            cantidad.setGravity(Gravity.START);
+                            cantidad.setLayoutParams( new TableRow.LayoutParams( 6,
+                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+
+
 
                             switch (documentos.getDatos().get(i).getDocumentoId()){
                                 case "1":
@@ -322,14 +352,17 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl1s.add(fcurl1);
                                                 documentacion.setFcurl1(fcurl1s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                               // cantidad.setVisibility(View.GONE);
                                                 fcurl1s.add(fcurl1);
                                                 fcurl1s.clear();
                                                 documentacion.setFcurl1(fcurl1s);
                                             }
                                         }
                                     }else {
+                                      //  cantidad.setVisibility(View.GONE);
                                         fcurl1s.add(fcurl1);
                                         fcurl1s.clear();
                                         documentacion.setFcurl1(fcurl1s);
@@ -354,14 +387,16 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl2s.add(fcurl2);
                                                 documentacion.setFcurl2(fcurl2s);
-
+                                                cantidad.setVisibility(View.VISIBLE);
                                             }else{
+                                              //  cantidad.setVisibility(View.GONE);
                                                 fcurl2s.add(fcurl2);
                                                 fcurl2s.clear();
                                                 documentacion.setFcurl2(fcurl2s);
                                             }
                                         }
                                     }else{
+                                      //  cantidad.setVisibility(View.GONE);
                                         fcurl2s.add(fcurl2);
                                         fcurl2s.clear();
                                         documentacion.setFcurl2(fcurl2s);
@@ -387,14 +422,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl3s.add(fcurl3);
                                                 documentacion.setFcurl3(fcurl3s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                           //     cantidad.setVisibility(View.GONE);
+
                                                 fcurl3s.add(fcurl3);
                                                 fcurl3s.clear();
                                                 documentacion.setFcurl3(fcurl3s);
                                             }
                                         }
                                     }else{
+                                       // cantidad.setVisibility(View.GONE);
+
                                         fcurl3s.add(fcurl3);
                                         fcurl3s.clear();
                                         documentacion.setFcurl3(fcurl3s);
@@ -419,14 +459,17 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl4s.add(fcurl4);
                                                 documentacion.setFcurl4(fcurl4s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                            //    cantidad.setVisibility(View.GONE);
                                                 fcurl4s.add(fcurl4);
                                                 fcurl4s.clear();
                                                 documentacion.setFcurl4(fcurl4s);
                                             }
                                         }
                                     }else{
+                                     //   cantidad.setVisibility(View.GONE);
                                         fcurl4s.add(fcurl4);
                                         fcurl4s.clear();
                                         documentacion.setFcurl4(fcurl4s);
@@ -451,14 +494,17 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl5s.add(fcurl5);
                                                 documentacion.setFcurl5(fcurl5s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                            //    cantidad.setVisibility(View.GONE);
                                                 fcurl5s.add(fcurl5);
                                                 fcurl5s.clear();
                                                 documentacion.setFcurl5(fcurl5s);
                                             }
                                         }
                                     }else{
+                                     //   cantidad.setVisibility(View.GONE);
                                         fcurl5s.add(fcurl5);
                                         fcurl5s.clear();
                                         documentacion.setFcurl5(fcurl5s);
@@ -480,14 +526,16 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl6s.add(fcurl6);
                                                 documentacion.setFcurl6(fcurl6s);
-
+                                                cantidad.setVisibility(View.VISIBLE);
                                             }else{
+                                             //   cantidad.setVisibility(View.GONE);
                                                 fcurl6s.add(fcurl6);
                                                 fcurl6s.clear();
                                                 documentacion.setFcurl6(fcurl6s);
                                             }
                                         }
                                     }else{
+                                      //  cantidad.setVisibility(View.GONE);
                                         fcurl6s.add(fcurl6);
                                         fcurl6s.clear();
                                         documentacion.setFcurl6(fcurl6s);
@@ -512,14 +560,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl7s.add(fcurl7);
                                                 documentacion.setFcurl7(fcurl7s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                              //  cantidad.setVisibility(View.GONE);
+
                                                 fcurl7s.add(fcurl7);
                                                 fcurl7s.clear();
                                                 documentacion.setFcurl7(fcurl7s);
                                             }
                                         }
                                     }else{
+                                       // cantidad.setVisibility(View.GONE);
+
                                         fcurl7s.add(fcurl7);
                                         fcurl7s.clear();
                                         documentacion.setFcurl7(fcurl7s);
@@ -544,14 +597,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl8s.add(fcurl8);
                                                 documentacion.setFcurl8(fcurl8s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                             //   cantidad.setVisibility(View.GONE);
+
                                                 fcurl8s.add(fcurl8);
                                                 fcurl8s.clear();
                                                 documentacion.setFcurl8(fcurl8s);
                                             }
                                         }
                                     }else{
+                                      //  cantidad.setVisibility(View.GONE);
+
                                         fcurl8s.add(fcurl8);
                                         fcurl8s.clear();
                                         documentacion.setFcurl8(fcurl8s);
@@ -577,14 +635,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl9s.add(fcurl9);
                                                 documentacion.setFcurl9(fcurl9s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                             //   cantidad.setVisibility(View.GONE);
+
                                                 fcurl9s.add(fcurl9);
                                                 fcurl9s.clear();
                                                 documentacion.setFcurl9(fcurl9s);
                                             }
                                         }
                                     }else {
+                                       // cantidad.setVisibility(View.GONE);
+
                                         fcurl9s.add(fcurl9);
                                         fcurl9s.clear();
                                         documentacion.setFcurl9(fcurl9s);
@@ -608,14 +671,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl10s.add(fcurl10);
                                                 documentacion.setFcurl10(fcurl10s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                             //   cantidad.setVisibility(View.GONE);
+
                                                 fcurl10s.add(fcurl10);
                                                 fcurl10s.clear();
                                                 documentacion.setFcurl10(fcurl10s);
                                             }
                                         }
                                     }else{
+                                       // cantidad.setVisibility(View.GONE);
+
                                         fcurl10s.add(fcurl10);
                                         fcurl10s.clear();
                                         documentacion.setFcurl10(fcurl10s);
@@ -640,14 +708,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl11s.add(fcurl11);
                                                 documentacion.setFcurl11(fcurl11s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
                                                 fcurl11s.add(fcurl11);
                                                 fcurl11s.clear();
                                                 documentacion.setFcurl11(fcurl11s);
+                                              //  cantidad.setVisibility(View.GONE);
+
                                             }
                                         }
                                     }else{
+                                       // cantidad.setVisibility(View.GONE);
+
                                         fcurl11s.add(fcurl11);
                                         fcurl11s.clear();
                                         documentacion.setFcurl11(fcurl11s);
@@ -673,14 +746,18 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl12s.add(fcurl12);
                                                 documentacion.setFcurl12(fcurl12s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                            //    cantidad.setVisibility(View.GONE);
                                                 fcurl12s.add(fcurl12);
                                                 fcurl12s.clear();
                                                 documentacion.setFcurl12(fcurl12s);
                                             }
                                         }
                                     }else{
+                                      //  cantidad.setVisibility(View.GONE);
+
                                         fcurl12s.add(fcurl12);
                                         fcurl12s.clear();
                                         documentacion.setFcurl12(fcurl12s);
@@ -706,14 +783,19 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 );
                                                 fcurl13s.add(fcurl13);
                                                 documentacion.setFcurl13(fcurl13s);
+                                                cantidad.setVisibility(View.VISIBLE);
 
                                             }else{
+                                              //  cantidad.setVisibility(View.GONE);
+
                                                 fcurl13s.add(fcurl13);
                                                 fcurl13s.clear();
                                                 documentacion.setFcurl13(fcurl13s);
                                             }
                                         }
                                     }else{
+                                        //cantidad.setVisibility(View.GONE);
+
                                         fcurl13s.add(fcurl13);
                                         fcurl13s.clear();
                                         documentacion.setFcurl13(fcurl13s);
@@ -731,12 +813,20 @@ public class ActivityDocumentos extends AppCompatActivity {
                             TableRow tbrow = new TableRow(ActivityDocumentos.this);
                             tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
                             TextView t1v1 = new TextView(ActivityDocumentos.this);
-
                             if(documentos.getDatos().get(i).getOpcional().equals("0")){
-                                t1v1.setText("  "+documentos.getDatos().get(i).getDescripcion()+"  "+ getString(R.string.obligatorios));
+
+                                String sourceString = "<b>" + documentos.getDatos().get(i).getDescripcion()+"  "+ getString(R.string.obligatorios) + "</b> ";
+                                t1v1.setText(Html.fromHtml(sourceString));
+
                             }else{
+                                String sourceString = "<b>" + documentos.getDatos().get(i).getDescripcion() + "</b> ";
                                 t1v1.setText("  "+documentos.getDatos().get(i).getDescripcion()+"  ");
+                                t1v1.setText(Html.fromHtml(sourceString));
+
                             }
+
+
+
 
                             t1v1.setTextColor(resource.getColor(R.color.azul));
                             t1v1.setPadding(0, paddingPixel,0,0);
@@ -747,21 +837,28 @@ public class ActivityDocumentos extends AppCompatActivity {
                             final TextView imageView = new TextView(ActivityDocumentos.this);
                             imageView.setPadding(0, paddingPixel,0,0);
                             imageView.setGravity(Gravity.START);
-                            imageView.setLayoutParams( new TableRow.LayoutParams( 75,
-                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
 
-                            imageView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.camara, 0, 0, 0);
+//                            imageView.setLayoutParams( new TableRow.LayoutParams( android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+
+                            TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(100, 80);
+                            imageView.setLayoutParams(layoutParams);
+
+                            imageView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cam, 0, 0, 0);
                             imageView.setText(" ");
 
 
                             TextView upload = new TextView(ActivityDocumentos.this);
                             final TextView masFotos = new TextView(ActivityDocumentos.this);
-
                             masFotos.setPadding(0, paddingPixel,0,0);
                             masFotos.setGravity(Gravity.END);
-                            masFotos.setLayoutParams( new TableRow.LayoutParams( 55,
-                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
-                            masFotos.setCompoundDrawablesWithIntrinsicBounds(R.drawable.add, 0, 0, 0);
+
+//                            masFotos.setLayoutParams( new TableRow.LayoutParams( android.view.ViewGroup.LayoutParams.WRAP_CONTENT,
+//                                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+
+                            masFotos.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ot, 0, 0, 0);
+
+                            masFotos.setLayoutParams(layoutParams);
 
                             masFotos.setVisibility(View.GONE);
                             upload.setVisibility(View.GONE);
@@ -787,19 +884,18 @@ public class ActivityDocumentos extends AppCompatActivity {
 
                             size.setTextSize(9);
                             size.setTextColor(resource.getColor(R.color.azul));
-                            size.setPadding(0, paddingPixel,0,0);
+                            size.setPadding(20, paddingPixel,0,0);
                             size.setGravity(Gravity.START);
                             size.setLayoutParams( new TableRow.LayoutParams( 6,
                                 android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
 
+
                             tbrow.addView(t1v1);
-                            tbrow.addView(upload);
                             tbrow.addView(imageView);
                             tbrow.addView(masFotos);
-                            tbrow.addView(size);
+
 
                             final int finalI = i;
-
 
                             imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -854,11 +950,13 @@ public class ActivityDocumentos extends AppCompatActivity {
                                     }
 
                                     masFotos.setVisibility(View.VISIBLE);
-
+                                    cantidad.setVisibility(View.VISIBLE);
                                 }
                             });
 
                             plomoTable.addView(tbrow);
+                            plomoTable.addView(cantidad);
+                            plomoTable.addView(size);
                         }
 
 
@@ -877,7 +975,6 @@ public class ActivityDocumentos extends AppCompatActivity {
                             }
                         }
 
-
                         if(permisos[0]){
                             binding.btnFinalizar.setEnabled(true);
                             binding.btnFinalizar.setAlpha(1);
@@ -886,8 +983,12 @@ public class ActivityDocumentos extends AppCompatActivity {
                             binding.btnFinalizar.setAlpha(.4f);
                         }
                         loadingProgress(progressDialog, 1);
+                    }else{
+                        loadingProgress(progressDialog, 1);
                     }
 
+                }else{
+                    loadingProgress(progressDialog, 1);
                 }
 
             }
@@ -1005,7 +1106,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_CONTRATO";
                 obtenerUrl(nombreImagen , base64, String.valueOf(mdid));
 
@@ -1016,7 +1117,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_TITULO_PROPIEDAD";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1027,7 +1128,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_IDENTIFICACION_OFICIAL";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1038,7 +1139,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_PREDIAL";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1049,7 +1150,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_RECIBO_LUZ";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1060,7 +1161,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_RECIBO_AGUA";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1071,7 +1172,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_RFC_R1";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1082,7 +1183,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_ESTADO_CUENTA";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1093,7 +1194,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_COMPROBANTE_DOMICILIO";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1104,7 +1205,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_ACTA_MATRIMONIO";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1115,7 +1216,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_ACTA_CONSTITUTIVA";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1126,7 +1227,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             }else{
 
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_CARTA_PODER_REPRESENTANTE";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
 
@@ -1136,7 +1237,7 @@ public class ActivityDocumentos extends AppCompatActivity {
 
             }else{
                 Bitmap bitfromPath = getBitmap(imageFilePath);
-                String base64 = getStringImage(compressImage(bitfromPath, 650));
+                String base64 = getStringImage(compressImage(bitfromPath, 1000));
                 nombreImagen = Util.random()+"CAMERA_ID_REPRESENTANTE";
                 obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
             }
@@ -1201,11 +1302,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             @Override
             public void resolve(Codigos codigo) {
                 if(codigo!= null){
-
                     final Boolean[] permisos = {false};
-
-
-
                     if(codigo.getResultado().getSecureUrl()!=null){
                         if(codigo.getResultado().getSecureUrl().contains("CAMERA_CONTRATO")){
 
@@ -1639,7 +1736,7 @@ public class ActivityDocumentos extends AppCompatActivity {
             };
 
             Handler pdCanceller = new Handler();
-            pdCanceller.postDelayed(progressRunnable, 3000);
+            pdCanceller.postDelayed(progressRunnable, 100);
 
         }
     }

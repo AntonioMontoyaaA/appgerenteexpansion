@@ -7,9 +7,12 @@ import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -23,7 +26,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
+import android.text.Html;
 import android.text.InputFilter;
+import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -63,10 +68,12 @@ import com.squareup.picasso.Picasso;
 import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -78,14 +85,21 @@ import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza3Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza4Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza5Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza6Binding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaConstruccionBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaEditar6Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza7Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza8Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaGenBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaPropietarioBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSitioBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSuperficieBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaZonificacionBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Autorizadas;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPredial;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosSitio;
@@ -103,6 +117,7 @@ import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Permiso;
 import expansion.neto.com.mx.gerenteapp.modelView.procesoModel.Proceso;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutorizaFinal;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderConsultaFinaliza;
+import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderCrearMonto;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderCrearPeatonal;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosConstruccion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosGeneralidadesSitio;
@@ -125,6 +140,9 @@ import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
 import expansion.neto.com.mx.gerenteapp.utils.CustomTextWatcher;
 import expansion.neto.com.mx.gerenteapp.utils.ServicioGPS;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
+import expansion.neto.com.mx.gerenteapp.utils.desing.MainSliderAdapter;
+import expansion.neto.com.mx.gerenteapp.utils.desing.PicassoImageLoadingService;
+import ss.com.bannerslider.Slider;
 
 import static android.media.MediaRecorder.VideoSource.CAMERA;
 
@@ -155,12 +173,10 @@ public class FragmentAutoriza extends Fragment implements
     private final int AUTORIZA_ID = 1;
     private final int RECHAZA_ID = 2;
     private final int RECHAZO_DEFINITIVO_ID = 1;
-    String urlFrente = "";
-    String urlLateral1 = "";
-    String urlLateral2 = "";
-    String urlPredial = "";
     private final int AUTORIZA_MD = 1;
     private final int RECHAZA_MD = 0;
+
+    private Slider slider;
 
     List<Zonificacion.Detalle> list = new ArrayList<>();
     List<Zonificacion.Detalle> listGeneradores = new ArrayList<>();
@@ -203,9 +219,11 @@ public class FragmentAutoriza extends Fragment implements
     };
 
     BitmapDescriptor icon;
+
     private OnMapReadyCallback onMapReadyCallbackZonificacion = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
+
             if(puntosCompentencias!=null){
 
                 for(int i = 0;i<puntosCompentencias.size();i++){
@@ -301,6 +319,8 @@ public class FragmentAutoriza extends Fragment implements
         position = getArguments().getInt(ARG_POSITION);
     }
 
+    String nombreSitio;
+
     private SlideUp slideCompetencia;
     private SlideUp slideGenerador;
     private Double lat, lot;
@@ -313,84 +333,242 @@ public class FragmentAutoriza extends Fragment implements
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         Gson gson = new Gson();
         String json = preferences.getString("permisos", null);
-        Type type = new TypeToken<ArrayList<Permiso>>() {}.getType();
+        Type type = new TypeToken<ArrayList<Permiso>>() {
+        }.getType();
         ArrayList<Permiso> permisos = gson.fromJson(json, type);
 
         final Resources resource = getContext().getResources();
         if (position == 0) {
 
             mensaje = "fragment 1";
-            final FragmentAutorizaBinding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza,container,false);
+            final FragmentAutorizaSitioBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_sitio, container, false);
             view = binding.getRoot();
 
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_1));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_1));
 
-
-
-            if(permisoP1){
+            if (permisoP1) {
                 binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP1){
+            } else if (permisoRechazarP1) {
                 binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.datossitio));
-            binding.escogeSitio.setEnabled(false);
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
+            final String mdId = preferences.getString("mdId", "");
+            final String usuarioId = preferences.getString("usuario", "");
+            int atrasa = preferences.getInt("atrasa", 0);
+            int estatus = preferences.getInt("estatusId", 0);
+            String nombreEstatus = preferences.getString("nombreEstatus", "");
+            final String urlLayout = preferences.getString("urlLayout", "");
+            final String monto1 = preferences.getString("monto1", "");
+            final String monto2 = preferences.getString("monto2", "");
+            SharedPreferences.Editor autoriza = preferences.edit();
+
+            Boolean atrasadasAutoriza = false;
+
+
+            if (estatus == 9) {
+
+                autoriza.putBoolean("goneAutoriza", true);
+                autoriza.putString("statusValidacion", "9");
+                autoriza.apply();
+                atrasadasAutoriza = true;
+                binding.nombreStatus.setText(nombreEstatus + "");
+                binding.archivo.setVisibility(View.VISIBLE);
+                binding.nombreStatus.setVisibility(View.VISIBLE);
+                binding.montoFinal.setVisibility(View.GONE);
+                binding.montoFinal.setVisibility(View.GONE);
+                binding.enviarmonto.setVisibility(View.GONE);
+                binding.monto1.setVisibility(View.GONE);
+                binding.monto2.setVisibility(View.GONE);
+                binding.mxn1.setVisibility(View.VISIBLE);
+                binding.mxn2.setVisibility(View.VISIBLE);
+
+                binding.mxn3.setVisibility(View.GONE);
+                binding.simbolo.setVisibility(View.GONE);
+                binding.nombreppo.setVisibility(View.GONE);
+                binding.nombreppa.setVisibility(View.GONE);
+                binding.archivo.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent i = new Intent(Intent.ACTION_VIEW);
+                        if (!urlLayout.equals("-")) {
+                            i.setData(Uri.parse(urlLayout));
+                            startActivity(i);
+                        } else {
+                            Toast.makeText(getContext(), "Esta MD no tiene una URL valida",
+                                    Toast.LENGTH_LONG).show();
+                        }
+
+                    }
+                });
+            } else {
+                autoriza.putBoolean("goneAutoriza", false);
+                autoriza.apply();
+                atrasadasAutoriza = false;
+                binding.nombreStatus.setVisibility(View.GONE);
+                binding.archivo.setVisibility(View.GONE);
+                binding.montoFinal.setVisibility(View.GONE);
+                binding.monto1.setVisibility(View.GONE);
+                binding.monto2.setVisibility(View.GONE);
+
+                binding.mxn1.setVisibility(View.GONE);
+                binding.mxn2.setVisibility(View.GONE);
+                binding.mxn3.setVisibility(View.GONE);
+                binding.simbolo.setVisibility(View.GONE);
+                binding.enviarmonto.setVisibility(View.GONE);
+                binding.nombreppo.setVisibility(View.GONE);
+                binding.nombreppa.setVisibility(View.GONE);
+
+                if (estatus == 12) {
+                    autoriza.putString("statusValidacion", "9");
+                    atrasadasAutoriza = true;
+                    autoriza.putBoolean("goneAutoriza", true);
+                    autoriza.apply();
+                    binding.archivo.setVisibility(View.GONE);
+                    binding.nombreStatus.setText(nombreEstatus + "");
+                    binding.montoFinal.setVisibility(View.VISIBLE);
+                    binding.nombreStatus.setVisibility(View.VISIBLE);
+                    binding.monto1.setVisibility(View.VISIBLE);
+                    binding.monto2.setVisibility(View.VISIBLE);
+                    binding.enviarmonto.setVisibility(View.VISIBLE);
+                    binding.monto1.setText("$" + monto1);
+                    binding.monto2.setText("$" + monto2);
+                    binding.mxn1.setVisibility(View.VISIBLE);
+                    binding.mxn2.setVisibility(View.VISIBLE);
+                    binding.mxn3.setVisibility(View.VISIBLE);
+                    binding.simbolo.setVisibility(View.VISIBLE);
+                    binding.nombreppa.setVisibility(View.VISIBLE);
+                    binding.nombreppo.setVisibility(View.VISIBLE);
+
+                    binding.montoFinal.getBackground().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.SRC_IN);
+
+
+                    binding.enviarmonto.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            String fecha = Util.getFechaKk();
+                            if (!binding.montoFinal.getText().toString().equals("")) {
+                                ProviderCrearMonto.getInstance(getContext()).guardarMonto(
+                                        fecha,
+                                        mdId,
+                                        usuarioId,
+                                        binding.montoFinal.getText().toString(), new ProviderCrearMonto.InterfaceCrearMonto() {
+                                            @Override
+                                            public void resolve(Codigos codigo) {
+                                                if (codigo != null) {
+                                                    if (codigo.getCodigo() == 200) {
+                                                        ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(
+                                                                mdId, usuarioId, 1,
+                                                                0, "", binding.montoFinal.getText().toString(), new ProviderAutorizaFinal.AutorizaFinal() {
+                                                                    @Override
+                                                                    public void resolve(AutorizaResponse autorizaResponse) {
+                                                                        if (autorizaResponse != null) {
+                                                                            Toast.makeText(getContext(), autorizaResponse.getMensaje(),
+                                                                                    Toast.LENGTH_LONG).show();
+                                                                        }
+                                                                    }
+
+                                                                    @Override
+                                                                    public void reject(Exception e) {
+
+                                                                    }
+                                                                }
+
+                                                        );
+                                                    }
+                                                } else {
+                                                    Toast.makeText(getContext(), codigo.getMensaje(),
+                                                            Toast.LENGTH_LONG).show();
+                                                }
+
+                                            }
+
+                                            @Override
+                                            public void reject(Exception e) {
+
+                                            }
+                                        }
+
+                                );
+                            } else {
+                                Toast.makeText(getContext(), "Debes escribir un monto" + "",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                    });
+                } else {
+                    binding.enviarmonto.setVisibility(View.GONE);
+                    binding.nombreStatus.setVisibility(View.GONE);
+                    binding.archivo.setVisibility(View.GONE);
+                    binding.montoFinal.setVisibility(View.GONE);
+                    binding.monto1.setVisibility(View.GONE);
+                    binding.monto2.setVisibility(View.GONE);
+                    binding.mxn1.setVisibility(View.GONE);
+                    binding.mxn2.setVisibility(View.GONE);
+                    binding.mxn3.setVisibility(View.GONE);
+                    binding.simbolo.setVisibility(View.GONE);
+                    binding.nombreppo.setVisibility(View.GONE);
+                    binding.nombreppa.setVisibility(View.GONE);
+                    atrasadasAutoriza = false;
+                    autoriza.putBoolean("goneAutoriza", false);
+                    autoriza.apply();
+                }
+
+            }
+
+
+            if (atrasadasAutoriza) {
+                binding.autorizalayout.setVisibility(View.GONE);
+            } else {
+                binding.autorizalayout.setVisibility(View.VISIBLE);
+            }
+
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
 
             ProviderDatosSitio.getInstance(getContext()).obtenerDatosSitio(mdId, usuarioId, new ProviderDatosSitio.ConsultaDatosSitio() {
                 @Override
                 public void resolve(DatosSitio datosSitio) {
 
-                    if(datosSitio.getDatossitio()!= null && datosSitio.getCodigo()==200){
+                    if (datosSitio.getDatossitio() != null && datosSitio.getCodigo() == 200) {
 
-                        if(datosSitio.getDatossitio().get(0).getDireccion()!=null &&
-                                datosSitio.getDatossitio().get(0).getDetallesValidacion()!=null &&
-                                datosSitio.getDatossitio().get(0).getLatitud()!=null &&
-                                datosSitio.getDatossitio().get(0).getLongitud()!=null &&
-                                datosSitio.getDatossitio().get(0).getNombreSitio()!=null){
+                        if (datosSitio.getDatossitio().get(0).getDireccion() != null &&
+                                datosSitio.getDatossitio().get(0).getDetallesValidacion() != null &&
+                                datosSitio.getDatossitio().get(0).getLatitud() != null &&
+                                datosSitio.getDatossitio().get(0).getLongitud() != null &&
+                                datosSitio.getDatossitio().get(0).getNombreSitio() != null) {
 
-                            if(datosSitio.getDatossitio().get(0).getTipoUbicacionMD().equals("RURAL")){
-                                binding.escogeSitio.setChecked(true);
-                                binding.rural.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.azul));
-
-                            }else{
-                                binding.escogeSitio.setChecked(false);
-                                binding.ciudad.setBackgroundTintList(getContext().getResources().getColorStateList(R.color.azul));
+                            if (datosSitio.getDatossitio().get(0).getTipoUbicacionMD() != null) {
+                                if (datosSitio.getDatossitio().get(0).getTipoUbicacionMD().equals("RURAL")) {
+                                    binding.setRural("Rural");
+                                } else {
+                                    binding.setRural("Ciudad");
+                                }
                             }
 
-                            binding.nombreSitioTitulo.setText(datosSitio.getDatossitio().get(0).getNombreSitio());
+                            nombreSitio = datosSitio.getDatossitio().get(0).getNombreSitio();
 
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString("nombreSitio", datosSitio.getDatossitio().get(0).getNombreSitio().toString());
-                            editor.apply();
+                            binding.nombresitio.setEnabled(false);
+                            binding.nombresitio.setText(datosSitio.getDatossitio().get(0).getNombreSitio());
+                            binding.fechaCreacion.setText(datosSitio.getDatossitio().get(0).getFechaCreacion() + "");
+                            binding.direccionsitio.setText(datosSitio.getDatossitio().get(0).getDireccion() + "");
+                            binding.puntos.setText(datosSitio.getDatossitio().get(0).getTotalmd() + "");
+                            binding.setCategoria(datosSitio.getDatossitio().get(0).getCategoria() + "");
+                            binding.categoria.setText(datosSitio.getDatossitio().get(0).getCategoria() + "");
 
-                            binding.categoria.setText(datosSitio.getDatossitio().get(0).getCategoria()+"");
-                            binding.puntuacion.setText(datosSitio.getDatossitio().get(0).getTotalMdId()+"");
-                            binding.direccion.setText(datosSitio.getDatossitio().get(0).getDireccion()+"");
-                            binding.estado.setText(datosSitio.getDatossitio().get(0).getEstado()+"");
                             lat = Double.valueOf(datosSitio.getDatossitio().get(0).getLatitud());
                             lot = Double.valueOf(datosSitio.getDatossitio().get(0).getLongitud());
-
-                            if(datosSitio.getDatossitio().get(0).getCategoria().equals("A")) {
-                                binding.estrella1.setVisibility(View.VISIBLE);
-                                binding.estrella2.setVisibility(View.VISIBLE);
-                                binding.estrella3.setVisibility(View.VISIBLE);
-                            } else if(datosSitio.getDatossitio().get(0).getCategoria().equals("B")) {
-                                binding.estrella1.setVisibility(View.VISIBLE);
-                                binding.estrella2.setVisibility(View.VISIBLE);
-                                binding.estrella3.setVisibility(View.GONE);
-                            } else if(datosSitio.getDatossitio().get(0).getCategoria().equals("C")) {
-                                binding.estrella1.setVisibility(View.VISIBLE);
-                                binding.estrella2.setVisibility(View.GONE);
-                                binding.estrella3.setVisibility(View.GONE);
-                            }
 
                             SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
                                     .findFragmentById(R.id.map);
@@ -399,12 +577,11 @@ public class FragmentAutoriza extends Fragment implements
 
                             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                             SharedPreferences.Editor editorDatosSitio = preferences.edit();
-                            //editorDatosSitio.putInt("puntajeDatosSitio", datosSitio.getDatossitio().get(0).getPuntuacion());
-                            //editorDatosSitio.putInt("puntajeTotalDatosSitio", datosSitio.getDatossitio().get(0).getPuntoFac() != null ? Integer.parseInt(datosSitio.getDatossitio().get(0).getPuntoFac()) : 0);
+                            editorDatosSitio.putString("nombreSitio", datosSitio.getDatossitio().get(0).getNombreSitio());
                             editorDatosSitio.putString("categoria", datosSitio.getDatossitio().get(0).getCategoria());
-                            editorDatosSitio.putString("creadorMd", datosSitio.getDatossitio().get(0).getNombreUsuario());
-                            if(datosSitio.getDatossitio().get(0).getValidado() == 1) {
-                                if(datosSitio.getDatossitio().get(0).getDetallesValidacion() != null
+
+                            if (datosSitio.getDatossitio().get(0).getValidado() == 1) {
+                                if (datosSitio.getDatossitio().get(0).getDetallesValidacion() != null
                                         && datosSitio.getDatossitio().get(0).getDetallesValidacion().size() > 0
                                         && datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
 
@@ -427,20 +604,20 @@ public class FragmentAutoriza extends Fragment implements
                                 editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", 0);
                                 editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                             }
-                            if(datosSitio.getDatossitio().get(0).getTip().size() > 0) {
-                                StringBuffer tipMod1 = new StringBuffer("");
-                                for(DatosSitio.Tip tip : datosSitio.getDatossitio().get(0).getTip()) {
-                                    tipMod1.append(tip.getDetalle() + "\n");
-                                }
-                                editorDatosSitio.putString("tip_modulo_1", tipMod1.toString());
-                            } else {
-                                editorDatosSitio.putString("tip_modulo_1", "Agrega un tip a esta pantalla");
-                            }
+//                            if(datosSitio.getDatossitio().get(0).getTip().size() > 0) {
+//                                StringBuffer tipMod1 = new StringBuffer("");
+//                                for(DatosSitio.Tip tip : datosSitio.getDatossitio().get(0).getTip()) {
+//                                    tipMod1.append(tip.getDetalle() + "\n");
+//                                }
+//                                editorDatosSitio.putString("tip_modulo_1", tipMod1.toString());
+//                            } else {
+//                                editorDatosSitio.putString("tip_modulo_1", "Agrega un tip a esta pantalla");
+//                            }
                             editorDatosSitio.apply();
 
                             //binding.aceptar.setImageTintMode();
 
-                        }else{
+                        } else {
                             Toast.makeText(getContext(), "Error al cargar los datos",
                                     Toast.LENGTH_LONG).show();
                         }
@@ -449,16 +626,17 @@ public class FragmentAutoriza extends Fragment implements
                 }
 
                 @Override
-                public void reject(Exception e) { }
+                public void reject(Exception e) {
+                }
             });
 
             binding.aceptar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_1_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_1_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_1);
                         editorMotivos.apply();
@@ -467,7 +645,7 @@ public class FragmentAutoriza extends Fragment implements
                         Bundle bundle = new Bundle();
                         bundle.putInt("modulo", MODULO_PANTALLA_1);
                         a.setArguments(bundle);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -489,15 +667,15 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_1_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_1_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_1);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -523,8 +701,8 @@ public class FragmentAutoriza extends Fragment implements
 
         } else if (position == 1) {
 
-            final FragmentAutoriza1Binding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza_1,container,false);
+            final FragmentAutorizaPropietarioBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_propietario, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.datospropietario));
@@ -533,67 +711,76 @@ public class FragmentAutoriza extends Fragment implements
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_2));
 
             binding.aceptar.setVisibility(View.INVISIBLE);
-            if(permisoP2){
-               // binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP2){
-               // binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            if (permisoP2) {
+                // binding.aceptar.setVisibility(View.VISIBLE);
+            } else if (permisoRechazarP2) {
+                // binding.cancelar.setVisibility(View.VISIBLE);
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
+            String mdId = preferences.getString("mdId", "");
+            String usuarioId = preferences.getString("usuario", "");
+
+
+            int atrasa = preferences.getInt("atrasa", 0);
+
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
 
             ProviderDatosPropietario.getInstance(getContext())
                     .obtenerDatosPropietario(mdId, usuarioId, new ProviderDatosPropietario.ConsultaDatosPropietario() {
-                @Override
-                public void resolve(Propietario propietario) {
+                        @Override
+                        public void resolve(Propietario propietario) {
 
-                    if(propietario.getCodigo()==200){
-                        binding.nombrepropietario.setText(propietario.getNombrePropietario()+ " "+
-                        propietario.getAPaternoPropietario()+ " "+ propietario.getAMaternoPropietario());
-                        binding.telefono.setText(PhoneNumberUtils.formatNumber(propietario.getTelefono(), Locale.getDefault().getCountry()));
-                        binding.email.setText(propietario.getMail());
-                        if(propietario.getRentaMasLocales() > 0) {
-                            binding.robotoTextView11.setText("YA RENTA A NETO");
-                        } else {
-                            binding.robotoTextView11.setText("NO RENTA A NETO");
-                        }
+                            if (propietario.getCodigo() == 200) {
+                                binding.nombrepropietario.setText(propietario.getNombrePropietario() + " " +
+                                        propietario.getAPaternoPropietario() + " " + propietario.getAMaternoPropietario());
+                                binding.telefono.setText(PhoneNumberUtils.formatNumber(propietario.getTelefono(), Locale.getDefault().getCountry()));
+                                binding.email.setText(propietario.getMail());
+                                if (propietario.getRentaMasLocales() > 0) {
+                                    binding.robotoTextView11.setText("YA RENTA A NETO");
+                                } else {
+                                    binding.robotoTextView11.setText("NO RENTA A NETO");
+                                }
 
-                        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorPropietario = preferences.edit();
-                        if(propietario.getTip() != null && propietario.getTip().size() > 0) {
-                            StringBuffer tipMod2 = new StringBuffer("");
-                            for(Propietario.Tip tip : propietario.getTip()) {
-                                tipMod2.append(tip.getDetalle() + "\n");
+                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorPropietario = preferences.edit();
+                                if (propietario.getTip() != null && propietario.getTip().size() > 0) {
+                                    StringBuffer tipMod2 = new StringBuffer("");
+                                    for (Propietario.Tip tip : propietario.getTip()) {
+                                        tipMod2.append(tip.getDetalle() + "\n");
+                                    }
+                                    editorPropietario.putString("tip_modulo_2", tipMod2.toString());
+                                } else {
+                                    editorPropietario.putString("tip_modulo_2", "Agrega un tip a esta pantalla");
+                                }
+                                editorPropietario.apply();
+                            } else {
+                                Toast.makeText(getContext(), propietario.getMensaje(),
+                                        Toast.LENGTH_LONG).show();
                             }
-                            editorPropietario.putString("tip_modulo_2", tipMod2.toString());
-                        } else {
-                            editorPropietario.putString("tip_modulo_2", "Agrega un tip a esta pantalla");
+
                         }
-                        editorPropietario.apply();
-                    }else{
-                        Toast.makeText(getContext(), "Error al cargar los datos",
-                                Toast.LENGTH_LONG).show();
-                    }
 
-                }
-
-                @Override
-                public void reject(Exception e) {
-
-                }
-            });
+                        @Override
+                        public void reject(Exception e) { }
+                    });
 
             binding.aceptar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_2_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_2_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_2);
                         editorMotivos.apply();
@@ -602,7 +789,7 @@ public class FragmentAutoriza extends Fragment implements
                         Bundle bundle = new Bundle();
                         bundle.putInt("modulo", MODULO_PANTALLA_2);
                         a.setArguments(bundle);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -624,15 +811,15 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_2_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_2_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_2);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -657,15 +844,15 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-        }else if (position == 2) {
+        } else if (position == 2) {
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            String mdId = preferences.getString("mdId", "");
+            String usuarioId = preferences.getString("usuario", "");
+            final String nombreSitio = preferences.getString("nombreSitio", "");
 
-            final FragmentAutoriza2Binding binding;
-            binding = DataBindingUtil.inflate(inflater,R.layout.fragment_autoriza_2,container,false);
+            final FragmentAutorizaSuperficieBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_superficie, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.datossuperficie));
@@ -673,52 +860,66 @@ public class FragmentAutoriza extends Fragment implements
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_3));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_2));
 
-            binding.frente.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
-            binding.profundidad.setFilters(new InputFilter[] {new CustomTextWatcher(4,1)});
+            binding.frente.setFilters(new InputFilter[]{new CustomTextWatcher(4, 1)});
+            binding.profundidad.setFilters(new InputFilter[]{new CustomTextWatcher(4, 1)});
+
+            int atrasa = preferences.getInt("atrasa", 0);
+
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+
+            if (atrasadasAutoriza) {
+                binding.autorizalayout.setVisibility(View.GONE);
+            } else {
+                binding.autorizalayout.setVisibility(View.VISIBLE);
+            }
 
             ProviderDatosPredial.getInstance(getContext()).obtenerDatosPredial(mdId, usuarioId, new ProviderDatosPredial.ConsultaDatosPredial() {
                 @Override
                 public void resolve(DatosPredial datosPredial) {
-                    if(datosPredial!=null){
-                        if(datosPredial.getCodigo().equals("200")){
-                            if(datosPredial.getAplicaPredial().equals("1")){
-                                binding.predial.setVisibility(View.VISIBLE);
-                            }else{
-                                binding.predial.setVisibility(View.GONE);
-                                urlPredial = " ";
+                    if (datosPredial != null) {
+                        if (datosPredial.getCodigo().equals("200")) {
+                            if (datosPredial.getAplicaPredial().equals("1")) {
+                                //binding.predial.setVisibility(View.VISIBLE);
+                            } else {
+                                // binding.predial.setVisibility(View.GONE);
+                                // urlPredial = " ";
                             }
                         }
-                    }else{
-                        binding.predial.setVisibility(View.GONE);
-                        urlPredial = " ";
+                    } else {
+                        // binding.predial.setVisibility(View.GONE);
+                        // urlPredial = " ";
                     }
                 }
+
                 @Override
                 public void reject(Exception e) {
-                    binding.predial.setVisibility(View.GONE);
-                    urlPredial = " ";
+                    // binding.predial.setVisibility(View.GONE);
+                    // urlPredial = " ";
                 }
             });
 
-            if(permisoP3){
+            if (permisoP3) {
                 binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP3){
+            } else if (permisoRechazarP3) {
                 binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
-
-
-            binding.escogeEsquina.setEnabled(false);
 
             ProviderDatosSuperficie.getInstance(getContext())
                     .obtenerDatosSuperficie(mdId, usuarioId, new ProviderDatosSuperficie.ConsultaDatosSuperficie() {
                         @Override
                         public void resolve(final Superficie superficie) {
-                            if(superficie.getCodigo()==200){
+                            if (superficie.getCodigo() == 200) {
 
-                                binding.escogeEsquina.setEnabled(false);
                                 preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editorSuperficie = preferences.edit();
 
@@ -727,150 +928,61 @@ public class FragmentAutoriza extends Fragment implements
                                 int valorFondo = 0;
                                 int valorEsquina = 0;
 
-                                for(int i = 0;i<superficie.getNiveles().size();i++){
-                                    if(superficie.getNiveles().get(i).getNivel()==4 ||
-                                            superficie.getNiveles().get(i).getNivel()==5){
-                                        Picasso.get().load(superficie.getNiveles().get(i).getImgFrenteId()).into(binding.imagen);
+                                for (int i = 0; i < superficie.getNiveles().size(); i++) {
+                                    if (superficie.getNiveles().get(i).getNivel() == 4 ||
+                                            superficie.getNiveles().get(i).getNivel() == 5) {
                                         valorFoto = i;
                                         valorFondo = i;
                                     }
 
-                                    if(superficie.getNiveles().get(i).getNivel()==6 ||
-                                            superficie.getNiveles().get(i).getNivel()==7){
+                                    if (superficie.getNiveles().get(i).getNivel() == 6 ||
+                                            superficie.getNiveles().get(i).getNivel() == 7) {
                                         valorFrente = i;
                                     }
 
-                                    if(superficie.getNiveles().get(i).getNivel()==8){
+                                    if (superficie.getNiveles().get(i).getNivel() == 8) {
                                         valorEsquina = i;
                                     }
                                 }
 
                                 Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
-
-                                if(esquina==1){
-                                    binding.escogeEsquina.setChecked(true);
-                                }else{
-                                    binding.escogeEsquina.setChecked(false);
+                                binding.nombresitio.setText(nombreSitio + "");
+                                if (esquina == 1) {
+                                    binding.escogeEsquina.setText(R.string.esquina);
+                                } else {
+                                    binding.escogeEsquina.setText(R.string.no_esquina);
                                 }
-                                getContext().getSharedPreferences("datosSuperficie", 0).edit().clear().apply();
+
                                 String superficieS = String.valueOf(superficie.getNiveles().get(valorFrente).getValorreal());
                                 superficieS = superficieS.replace(" ", "");
-
                                 String fondoS = String.valueOf(superficie.getNiveles().get(valorFondo).getFondo());
                                 fondoS = fondoS.replace(" ", "");
 
-                                binding.frente.setText(""+superficieS);
-                                binding.profundidad.setText(""+fondoS);
-
                                 String total = String.valueOf((Double.valueOf(superficieS)
-                                        *(Double.valueOf(fondoS))));
-                                binding.total.setText(""+total+"");
+                                        * (Double.valueOf(fondoS))));
+                                binding.areaterreno.setText(total + " MTS2");
+                                binding.frente.setText(superficieS + " MTS");
+                                binding.profundidad.setText(fondoS + " MTS");
 
-                                binding.frontal.setAlpha(1.0f);
-                                binding.lateral1.setAlpha(0.35f);
-                                binding.lateral2.setAlpha(0.35f);
-                                binding.robotoTextView2.setText(nombreSitio);
+                                Slider.init(new PicassoImageLoadingService());
+                                slider = binding.map;
+                                final int finalValorFoto1 = valorFoto;
 
-                                final int finalValorFoto = valorFoto;
-                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
-
-
-                                binding.frontal.setOnClickListener(new View.OnClickListener() {
+                                slider.postDelayed(new Runnable() {
                                     @Override
-                                    public void onClick(View view) {
-
-                                        Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
-                                        binding.frontal.setAlpha(1.0f);
-                                        binding.lateral1.setAlpha(0.35f);
-                                        binding.lateral2.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgFrenteId().length()>0){
-                                            if(urlFrente.length()>0){
-                                                Picasso.get().load(urlFrente).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgFrenteId()).into(binding.imagen);
-                                            }
-
-                                        }else{
-
-                                        }
+                                    public void run() {
+                                        slider.setAdapter(new MainSliderAdapter(
+                                                superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
+                                        ));
+                                        slider.setSelectedSlide(0);
                                     }
-                                });
+                                }, 1500);
 
-                                binding.lateral1.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id()).into(binding.imagen);
-                                        binding.lateral1.setAlpha(1.0f);
-                                        binding.frontal.setAlpha(0.35f);
-                                        binding.lateral2.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id().length()>0){
-                                            if(urlLateral1.length()>0){
-                                                Picasso.get().load(urlLateral1).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral1Id()).into(binding.imagen);
-                                            }
-                                        }else{
-
-                                        }
-                                    }
-                                });
-
-
-                                urlFrente = superficie.getNiveles().get(finalValorFoto).getImgFrenteId();
-                                urlLateral1 = superficie.getNiveles().get(finalValorFoto).getImgLateral1Id();
-                                urlLateral2 = superficie.getNiveles().get(finalValorFoto).getImgLateral2Id();
-                                urlPredial = superficie.getNiveles().get(finalValorFoto).getImgPredial();
-
-                                binding.predial.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        if(!superficie.getNiveles().get(finalValorFoto).getImgPredial().equals("")){
-                                            Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
-                                            binding.lateral1.setAlpha(0.35f);
-                                            binding.frontal.setAlpha(0.35f);
-                                            binding.lateral2.setAlpha(0.35f);
-                                            binding.predial.setAlpha(1.0f);
-
-                                            if(superficie.getNiveles().get(finalValorFoto).getImgPredial().length()>0){
-                                                if(urlPredial.length()>0){
-                                                    Picasso.get().load(urlPredial).into(binding.imagen);
-                                                } else {
-                                                    Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgPredial()).into(binding.imagen);
-                                                }
-                                            }else{
-
-                                            }
-                                        }
-                                    }
-                                });
-
-                                binding.lateral2.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View view) {
-                                        binding.lateral2.setAlpha(1.0f);
-                                        binding.frontal.setAlpha(0.35f);
-                                        binding.lateral1.setAlpha(0.35f);
-                                        binding.predial.setAlpha(0.35f);
-
-                                        if(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id().length()>0){
-                                            if(urlLateral2.length()>0){
-                                                Picasso.get().load(urlLateral2).into(binding.imagen);
-                                            } else {
-                                                Picasso.get().load(superficie.getNiveles().get(finalValorFoto).getImgLateral2Id()).into(binding.imagen);
-                                            }
-                                        }else{
-
-                                        }
-                                    }
-                                });
-
-
-                                //editorSuperficie.putInt("puntajeSuperficie", superficie.getPuntuacion());
-                               // editorSuperficie.putInt("puntajeTotalSuperficie", superficie.getPuntoFac() != null ? Integer.parseInt(superficie.getPuntoFac()) : 0);
-                                if(superficie.getValidado() == 1) {
-                                    if(superficie.getDetallesValidacion() != null && superficie.getDetallesValidacion().size() > 0 && superficie.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                                if (superficie.getValidado() == 1) {
+                                    if (superficie.getDetallesValidacion() != null && superficie.getDetallesValidacion().size() > 0 && superficie.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
                                         binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
                                         binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION", AUTORIZA_ID);
@@ -891,9 +1003,9 @@ public class FragmentAutoriza extends Fragment implements
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                 }
 
-                                if(superficie.getTip().size() > 0) {
+                                if (superficie.getTip().size() > 0) {
                                     StringBuffer tipMod3 = new StringBuffer("");
-                                    for(Superficie.Tip tip : superficie.getTip()) {
+                                    for (Superficie.Tip tip : superficie.getTip()) {
                                         tipMod3.append(tip.getDetalle() + "\n");
                                     }
                                     editorSuperficie.putString("tip_modulo_3", tipMod3.toString());
@@ -901,7 +1013,7 @@ public class FragmentAutoriza extends Fragment implements
                                     editorSuperficie.putString("tip_modulo_3", "Agrega un tip a esta pantalla");
                                 }
                                 editorSuperficie.apply();
-                            }else{
+                            } else {
                                 Toast.makeText(getContext(), "Error al obtener los datos",
                                         Toast.LENGTH_LONG).show();
                             }
@@ -919,9 +1031,9 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_3_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_3_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_3);
                         editorMotivos.apply();
@@ -930,7 +1042,7 @@ public class FragmentAutoriza extends Fragment implements
                         Bundle bundle = new Bundle();
                         bundle.putInt("modulo", MODULO_PANTALLA_3);
                         a.setArguments(bundle);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -952,15 +1064,15 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_3_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_3_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_3);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -984,76 +1096,89 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-        }else if (position == 3) {
+        } else if (position == 3) {
 
             mensaje = "fragment 2";
-            final FragmentAutoriza3Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_3,container,false);
+            final FragmentAutorizaZonificacionBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_zonificacion, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.zonifica));
-
-            slideUX(binding);
+            binding.ciudad.setVisibility(View.GONE);
 
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_4));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_4));
 
-
-            if(permisoP4){
+            if (permisoP4) {
                 binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP4){
+            } else if (permisoRechazarP4) {
                 binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            String mdId = preferences.getString("mdId", "");
+            String usuarioId = preferences.getString("usuario", "");
+            final String nombreSitio = preferences.getString("nombreSitio", "");
+
+            int atrasa = preferences.getInt("atrasa", 0);
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+
+            if (atrasadasAutoriza) {
+                binding.autorizalayout.setVisibility(View.GONE);
+            } else {
+                binding.autorizalayout.setVisibility(View.VISIBLE);
+            }
 
             ProviderDatosZonificacion.getInstance(getContext())
-                    .obtenerDatosConstruccion(mdId, usuarioId, new ProviderDatosZonificacion.ConsultaDatosZonificacion() {
-                @Override
-                public void resolve(Zonificacion zonificacion) {
-                    if(zonificacion.getCodigo()==200){
-                        list = new ArrayList<>();
-                        listGeneradores = new ArrayList<>();
-                        puntosCompentencias = new ArrayList<>();
+                    .obtenerDatosZonificacion(mdId, usuarioId, new ProviderDatosZonificacion.ConsultaDatosZonificacion() {
+                        @Override
+                        public void resolve(Zonificacion zonificacion) {
+                            if (zonificacion.getCodigo() == 200) {
+                                list = new ArrayList<>();
+                                listGeneradores = new ArrayList<>();
+                                puntosCompentencias = new ArrayList<>();
 //                        int puntuacionCompetencia = 0;
 //                        int puntuacionGeneradores = 0;
 
-                        for (int i = 0; i < zonificacion.getCompetencia().size(); i++) {
+                                for (int i = 0; i < zonificacion.getCompetencia().size(); i++) {
 
-                            for(int j=0;j<zonificacion.getCompetencia().get(i).getDetalle().size();j++){
-                                list.add(zonificacion.getCompetencia().get(i).getDetalle().get(j));
-                                Double compentenciaLatitud =  Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLatitud());
-                                Double compentenciaLongitud =  Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLongitud());
+                                    for (int j = 0; j < zonificacion.getCompetencia().get(i).getDetalle().size(); j++) {
+                                        list.add(zonificacion.getCompetencia().get(i).getDetalle().get(j));
+                                        Double compentenciaLatitud = Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLatitud());
+                                        Double compentenciaLongitud = Double.valueOf(zonificacion.getCompetencia().get(i).getDetalle().get(j).getLongitud());
 
-                                int idIcono = zonificacion.getCompetencia().get(i).getDetalle().get(j).getGeneradorId();
-                                String nombre = zonificacion.getCompetencia().get(i).getDetalle().get(j).getNombreGenerador();
+                                        int idIcono = zonificacion.getCompetencia().get(i).getDetalle().get(j).getGeneradorId();
+                                        String nombre = zonificacion.getCompetencia().get(i).getDetalle().get(j).getNombreGenerador();
 
-                                puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre,null));
+                                        puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre, null));
 
 
-                            }
-                        }
+                                    }
+                                }
 
-                        for (int i = 0; i < zonificacion.getGeneradores().size(); i++) {
-                            for(int n=0;n<zonificacion.getGeneradores().get(i).getDetalle().size();n++){
+                                for (int i = 0; i < zonificacion.getGeneradores().size(); i++) {
+                                    for (int n = 0; n < zonificacion.getGeneradores().get(i).getDetalle().size(); n++) {
 
-                                listGeneradores.add(zonificacion.getGeneradores().get(i).getDetalle().get(n));
+                                        listGeneradores.add(zonificacion.getGeneradores().get(i).getDetalle().get(n));
 
-                                Double compentenciaLatitud =  Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLatitud());
-                                Double compentenciaLongitud =  Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLongitud());
+                                        Double compentenciaLatitud = Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLatitud());
+                                        Double compentenciaLongitud = Double.valueOf(zonificacion.getGeneradores().get(i).getDetalle().get(n).getLongitud());
 
-                                int idIcono = zonificacion.getGeneradores().get(i).getDetalle().get(n).getGeneradorId();
-                                String nombre = zonificacion.getGeneradores().get(i).getDetalle().get(n).getNombreGenerador();
+                                        int idIcono = zonificacion.getGeneradores().get(i).getDetalle().get(n).getGeneradorId();
+                                        String nombre = zonificacion.getGeneradores().get(i).getDetalle().get(n).getNombreGenerador();
 
-                                puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre,null));
-                            }
-                        }
+                                        puntosCompentencias.add(new Points(idIcono, compentenciaLatitud, compentenciaLongitud, nombre, null));
+                                    }
+                                }
 
 //                        if(zonificacion.getCompetencia() != null && zonificacion.getCompetencia().size() > 0) {
 //                            puntuacionCompetencia = Integer.parseInt(zonificacion.getCompetencia().get(0).getPuntuacion());
@@ -1062,94 +1187,79 @@ public class FragmentAutoriza extends Fragment implements
 //                            puntuacionGeneradores = Integer.parseInt(zonificacion.getGeneradores().get(0).getPuntuacion());
 //                        }
 
-                        binding.robotoTextView2.setText("MD " + nombreSitio);
+                                binding.robotoTextView2.setText("MD " + nombreSitio);
 
-                        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorZonificacion = preferences.edit();
-                        //editorZonificacion.putInt("puntajeZonificacion", puntuacionCompetencia + puntuacionGeneradores);
-                       // editorZonificacion.putInt("puntajeTotalZonificacion", zonificacion.getPuntoFac() != null ? Integer.parseInt(zonificacion.getPuntoFac()) : 0);
-                        if(zonificacion.getValidado() == 1) {
-                            if(zonificacion.getDetallesValidacion() != null && zonificacion.getDetallesValidacion().size() > 0 && zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", AUTORIZA_ID);
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorZonificacion = preferences.edit();
+                                //editorZonificacion.putInt("puntajeZonificacion", puntuacionCompetencia + puntuacionGeneradores);
+                                // editorZonificacion.putInt("puntajeTotalZonificacion", zonificacion.getPuntoFac() != null ? Integer.parseInt(zonificacion.getPuntoFac()) : 0);
+                                if (zonificacion.getValidado() == 1) {
+                                    if (zonificacion.getDetallesValidacion() != null && zonificacion.getDetallesValidacion().size() > 0 && zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", AUTORIZA_ID);
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                    } else {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", RECHAZA_ID);
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
+                                        editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", zonificacion.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
+                                    }
+                                } else {
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", SIN_AUTORIZACION);
+                                    editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
+                                    editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                }
+                                if (zonificacion.getTip().size() > 0) {
+                                    StringBuffer tipMod4 = new StringBuffer("");
+                                    for (Zonificacion.Tip tip : zonificacion.getTip()) {
+                                        tipMod4.append(tip.getDetalle() + "\n");
+                                    }
+                                    editorZonificacion.putString("tip_modulo_4", tipMod4.toString());
+                                } else {
+                                    editorZonificacion.putString("tip_modulo_4", "Agrega un tip a esta pantalla");
+                                }
+                                editorZonificacion.apply();
+
+                                // adapter = new AdapterListaCompetencia(list, getContext());
+                                binding.contenido.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
+                                binding.contenido.contentLista.setAdapter(adapter);
+
+                                RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+                                binding.contenido.contentLista.setLayoutManager(mLayoutManager);
+                                binding.contenido.contentLista.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
+                                binding.contenido.contentLista.setItemAnimator(new DefaultItemAnimator());
+
+
+                                //adapter2 = new AdapterListaGeneradores(listGeneradores, getContext());
+                                binding.content2.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
+                                binding.content2.contentLista.setAdapter(adapter2);
+
+                                RecyclerView.LayoutManager mLayoutManager2 = new GridLayoutManager(getContext(), 4);
+                                binding.content2.contentLista.setLayoutManager(mLayoutManager2);
+                                binding.content2.contentLista.addItemDecoration(new GridSpacingItemDecoration(4, dpToPx(5), true));
+                                binding.content2.contentLista.setItemAnimator(new DefaultItemAnimator());
+
+                                SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                                        .findFragmentById(R.id.map);
+
+                                mapFragment.getMapAsync(onMapReadyCallbackZonificacion);
+
                             } else {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", RECHAZA_ID);
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
-                                editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", zonificacion.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
+                                Toast.makeText(getContext(), zonificacion.getMensaje() + "",
+                                        Toast.LENGTH_LONG).show();
                             }
-                        } else {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                            editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", SIN_AUTORIZACION);
-                            editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
-                            editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                         }
-                        if(zonificacion.getTip().size() > 0) {
-                            StringBuffer tipMod4 = new StringBuffer("");
-                            for(Zonificacion.Tip tip : zonificacion.getTip()) {
-                                tipMod4.append(tip.getDetalle() + "\n");
-                            }
-                            editorZonificacion.putString("tip_modulo_4", tipMod4.toString());
-                        } else {
-                            editorZonificacion.putString("tip_modulo_4", "Agrega un tip a esta pantalla");
+
+                        @Override
+                        public void reject(Exception e) {
+
                         }
-                        editorZonificacion.apply();
-
-                        adapter = new AdapterListaCompetencia(list, getContext());
-                        binding.contenido.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
-                        binding.contenido.contentLista.setAdapter(adapter);
-
-                        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
-                        binding.contenido.contentLista.setLayoutManager(mLayoutManager);
-                        binding.contenido.contentLista.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
-                        binding.contenido.contentLista.setItemAnimator(new DefaultItemAnimator());
-
-
-                        adapter2 = new AdapterListaGeneradores(listGeneradores, getContext());
-                        binding.content2.contentLista.setLayoutManager(new LinearLayoutManager(getContext()));
-                        binding.content2.contentLista.setAdapter(adapter2);
-
-                        RecyclerView.LayoutManager mLayoutManager2 = new GridLayoutManager(getContext(), 4);
-                        binding.content2.contentLista.setLayoutManager(mLayoutManager2);
-                        binding.content2.contentLista.addItemDecoration(new GridSpacingItemDecoration(4, dpToPx(5), true));
-                        binding.content2.contentLista.setItemAnimator(new DefaultItemAnimator());
-
-                        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
-                                .findFragmentById(R.id.map);
-
-                        mapFragment.getMapAsync(onMapReadyCallbackZonificacion);
-
-                    }else{
-                        Toast.makeText(getContext(), zonificacion.getMensaje()+"",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void reject(Exception e) {
-
-                }
-            });
-
-            binding.competencia.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    slideCompetencia.show();
-                }
-            });
-
-            binding.generador.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    slideGenerador.show();
-                }
-            });
-
+                    });
 
             binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1163,9 +1273,9 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_4_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_4_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_4);
                         editorMotivos.apply();
@@ -1175,7 +1285,7 @@ public class FragmentAutoriza extends Fragment implements
                         bundle.putInt("modulo", MODULO_PANTALLA_4);
                         a.setArguments(bundle);
                         a.setCancelable(false);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -1197,16 +1307,16 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_4_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_4_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_4);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
                         a.setCancelable(false);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -1222,10 +1332,10 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-        }else if (position == 4) {
+        } else if (position == 4) {
 
-            final FragmentAutoriza4Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_4,container,false);
+            final FragmentAutorizaConstruccionBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_construccion, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.construccion));
@@ -1235,88 +1345,141 @@ public class FragmentAutoriza extends Fragment implements
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_5));
 
 
-            if(permisoP5){
+            if (permisoP5) {
                 binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP5){
+            } else if (permisoRechazarP5) {
                 binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            String mdId = preferences.getString("mdId", "");
+            String usuarioId = preferences.getString("usuario", "");
 
+            final int[] local = {0};
+            final int[] acceso = {0};
+            final int[] grietas = {0};
+            final int[] goteras = {0};
+
+
+            int atrasa = preferences.getInt("atrasa", 0);
+
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+
+            if (atrasadasAutoriza) {
+                binding.autorizalayout.setVisibility(View.GONE);
+            } else {
+                binding.autorizalayout.setVisibility(View.VISIBLE);
+            }
 
             ProviderDatosConstruccion.getInstance(getContext())
                     .obtenerDatosConstruccion(mdId, usuarioId, new ProviderDatosConstruccion.ConsultaDatosConstruccion() {
-                @Override
-                public void resolve(DatosConstruccion datosSitio) {
-                    if(datosSitio.getCodigo()==200 &&  datosSitio.getConstruccion().size() > 0) {
-                        int sumaPuntuacion = 0;
+                        @Override
+                        public void resolve(DatosConstruccions datosSitio) {
+                            if (datosSitio.getCodigo() == 200 && datosSitio.getConstruccion().size() > 0) {
+                                String nombreSitio = preferences.getString("nombreSitio", "");
+                                binding.nombresitio.setText(nombreSitio + "");
+                                for (int i = 0; i < datosSitio.getConstruccion().size(); i++) {
+                                    if (datosSitio.getConstruccion().get(i).getNivelid() == 1
+                                            || datosSitio.getConstruccion().get(i).getNivelid() == 2) {
+                                        String sitio = datosSitio.getConstruccion().get(i).getNombrenivel();
+                                        if (sitio.contains("LOCAL")) {
+                                            binding.setTerreno(1);
+                                            for (int j = 0; j < datosSitio.getConstruccion().get(i).getDetalles().size(); j++) {
+                                                if (datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid() == 1) {
+                                                    local[0] = 1;
+                                                    binding.setLocal(local[0]);
+                                                }
 
-                        for(int i = 0;i < datosSitio.getConstruccion().size(); i++) {
-                            if(datosSitio.getConstruccion().get(i).getNivelid() < 3) {
-                                binding.robotoTextView5.setText(datosSitio.getConstruccion().get(i).getNombrenivel());
-                                creaTablaSubfactores(binding, datosSitio.getConstruccion().get(i).getDetalles());
-                            }
-                            if(datosSitio.getConstruccion().get(i).getNivelid() == 3 || datosSitio.getConstruccion().get(i).getNivelid() == 4 || datosSitio.getConstruccion().get(i).getNivelid() == 5) {
-                                binding.condicion.setText(datosSitio.getConstruccion().get(i).getNombrenivel());
-                            }
-                            //sumaPuntuacion += Integer.parseInt(datosSitio.getConstruccion().get(i).getPuntuacion());
-                        }
+                                                if (datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid() == 2) {
+                                                    acceso[0] = 1;
+                                                    binding.setAcceso(acceso[0]);
+                                                }
 
-                        binding.titulo.setText("MD " + nombreSitio);
+                                                if (datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid() == 3) {
+                                                    grietas[0] = 1;
+                                                    binding.setTechos(grietas[0]);
+                                                }
 
-                        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorConstruccion = preferences.edit();
-                        //editorConstruccion.putInt("puntajeConstruccion", sumaPuntuacion);
-                        //editorConstruccion.putInt("puntajeTotalConstruccion", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
-                        if(datosSitio.getValidado() == 1) {
-                            if(datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", AUTORIZA_ID);
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                                if (datosSitio.getConstruccion().get(i).getDetalles().get(j).getDetalleid() == 4) {
+                                                    goteras[0] = 1;
+                                                    binding.setPisos(goteras[0]);
+                                                }
+                                            }
+                                        } else {
+                                            binding.setTerreno(0);
+                                        }
+                                        binding.construccion.setText(sitio + "");
+                                    }
+
+                                    if (datosSitio.getConstruccion().get(i).getNivelid() == 3
+                                            || datosSitio.getConstruccion().get(i).getNivelid() == 4
+                                            || datosSitio.getConstruccion().get(i).getNivelid() == 5) {
+
+                                        String condicion = datosSitio.getConstruccion().get(i).getNombrenivel();
+                                        binding.setCondiciones(condicion + "");
+
+                                    }
+
+                                }
+
+
+                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorConstruccion = preferences.edit();
+                                //editorConstruccion.putInt("puntajeConstruccion", sumaPuntuacion);
+                                //editorConstruccion.putInt("puntajeTotalConstruccion", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
+                                if (datosSitio.getValidado() == 1) {
+                                    if (datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", AUTORIZA_ID);
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                    } else {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", RECHAZA_ID);
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
+                                        editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
+                                    }
+                                } else {
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", SIN_AUTORIZACION);
+                                    editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
+                                    editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                }
+                                if (datosSitio.getTip().size() > 0) {
+                                    StringBuffer tipMod5 = new StringBuffer("");
+//                            for(DatosConstruccion.Tip tip : datosSitio.getTip()) {
+//                                tipMod5.append(tip.getDetalle() + "\n");
+//                            }
+                                    editorConstruccion.putString("tip_modulo_5", tipMod5.toString());
+                                } else {
+                                    editorConstruccion.putString("tip_modulo_5", "Agrega un tip a esta pantalla");
+                                }
+                                editorConstruccion.apply();
+
                             } else {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", RECHAZA_ID);
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
-                                editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
+                                Toast.makeText(getContext(), "Error al cargar los datos",
+                                        Toast.LENGTH_LONG).show();
                             }
-                        } else {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                            editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", SIN_AUTORIZACION);
-                            editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
-                            editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                         }
-                        if(datosSitio.getTip().size() > 0) {
-                            StringBuffer tipMod5 = new StringBuffer("");
-                            for(DatosConstruccion.Tip tip : datosSitio.getTip()) {
-                                tipMod5.append(tip.getDetalle() + "\n");
-                            }
-                            editorConstruccion.putString("tip_modulo_5", tipMod5.toString());
-                        } else {
-                            editorConstruccion.putString("tip_modulo_5", "Agrega un tip a esta pantalla");
+
+                        @Override
+                        public void reject(Exception e) {
+
                         }
-                        editorConstruccion.apply();
-
-                    } else{
-                        Toast.makeText(getContext(), "Error al cargar los datos",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-
-                @Override
-                public void reject(Exception e) {
-
-                }
-            });
+                    });
 
             binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -1330,9 +1493,9 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_5_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_5_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_5);
                         editorMotivos.apply();
@@ -1341,7 +1504,7 @@ public class FragmentAutoriza extends Fragment implements
                         Bundle bundle = new Bundle();
                         bundle.putInt("modulo", MODULO_PANTALLA_5);
                         a.setArguments(bundle);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -1363,15 +1526,15 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_5_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_5_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_5);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -1389,114 +1552,142 @@ public class FragmentAutoriza extends Fragment implements
         } else if (position == 5) {
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-            String mdId = preferences.getString("mdId","");
-            String usuarioId = preferences.getString("usuario","");
-            final String nombreSitio = preferences.getString("nombreSitio","");
+            String mdId = preferences.getString("mdId", "");
+            String usuarioId = preferences.getString("usuario", "");
+            final String nombreSitio = preferences.getString("nombreSitio", "");
 
-            final FragmentAutoriza5Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_5,container,false);
+            final FragmentAutorizaGenBinding binding;
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_gen, container, false);
             view = binding.getRoot();
             binding.toolbar.nombreTitulo.setText(getString(R.string.generalidades));
 
+            int atrasa = preferences.getInt("atrasa", 0);
+
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
 
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_6));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_6));
 
 
-            if(permisoP6){
+            if (permisoP6) {
                 binding.aceptar.setVisibility(View.VISIBLE);
-            }else if(permisoRechazarP6){
+            } else if (permisoRechazarP6) {
                 binding.cancelar.setVisibility(View.VISIBLE);
-            }else{
+            } else {
                 binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
             }
 
+            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
 
+            if (atrasadasAutoriza) {
+                binding.autorizalayout.setVisibility(View.GONE);
+            } else {
+                binding.autorizalayout.setVisibility(View.VISIBLE);
+            }
+            final DecimalFormat formatter = new DecimalFormat("#,###,###");
             ProviderDatosGeneralidadesSitio.getInstance(getContext())
                     .obtenerDatosGeneralidades(mdId, usuarioId, new ProviderDatosGeneralidadesSitio.ConsultaGeneralidadesSitio() {
-                @Override
-                public void resolve(GeneralidadesSitio datosSitio) {
-                    DecimalFormat formatter = new DecimalFormat("#,###");
-                    if(datosSitio!=null && datosSitio.getCodigo()==200) {
+                        @Override
+                        public void resolve(GeneralidadesSitio datosSitio) {
+                            if (datosSitio != null && datosSitio.getCodigo() == 200) {
+                                if (datosSitio.getGeneralidades().size() > 0) {
 
-                        //int sumaPuntuacion = 0;
-                        for(int i = 0; i < datosSitio.getGeneralidades().size(); i++) {
+                                    binding.nombresitio.setText(nombreSitio);
 
-                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 1 || datosSitio.getGeneralidades().get(i).getNivelid() == 2 || datosSitio.getGeneralidades().get(i).getNivelid() == 3){
-                                binding.renta.setText("$" + formatter.format(datosSitio.getGeneralidades().get(i).getValor()) +" al mes");
+                                    for (int i = 0; i < datosSitio.getGeneralidades().size(); i++) {
 
-                                if(datosSitio.getGeneralidades().get(i).getDetalles() != null && datosSitio.getGeneralidades().get(i).getDetalles().size() > 0) {
-                                    binding.periodogracia.setText(datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + " " + datosSitio.getGeneralidades().get(i).getDetalles().get(0).getUnidadmedicion());
+                                        if (datosSitio.getGeneralidades().get(i).getNivelid() == 7 ||
+                                                datosSitio.getGeneralidades().get(i).getNivelid() == 8 ||
+                                                datosSitio.getGeneralidades().get(i).getNivelid() == 9) {
+
+                                            binding.periodoamotizacion.setText(
+                                                    datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + ""
+                                            );
+
+                                            binding.amortizaciontotal.setText(
+                                                    "$" + formatter.format(datosSitio.getGeneralidades().get(i).getValor()) + ".00"
+                                            );
+
+                                        }
+
+                                        if (datosSitio.getGeneralidades().get(i).getNivelid() == 4 || datosSitio.getGeneralidades().get(i).getNivelid() == 5 || datosSitio.getGeneralidades().get(i).getNivelid() == 6) {
+
+                                            if (datosSitio.getGeneralidades().get(i).getNivelid() == 4) {
+                                                binding.apartirde.setText(getString(R.string.disponible) + "");
+                                            }
+
+                                            if (datosSitio.getGeneralidades().get(i).getNivelid() == 5) {
+                                                binding.apartirde.setText(getString(R.string.apartir) + " " + datosSitio.getGeneralidades().get(i).getFechadisponible() + "");
+                                            }
+
+                                            if (datosSitio.getGeneralidades().get(i).getNivelid() == 6) {
+                                                binding.apartirde.setText(R.string.ocupados);
+                                            }
+
+                                        }
+
+                                        if (datosSitio.getGeneralidades().get(i).getNivelid() == 1 ||
+                                                datosSitio.getGeneralidades().get(i).getNivelid() == 2 ||
+                                                datosSitio.getGeneralidades().get(i).getNivelid() == 3) {
+
+                                            binding.renta.setText("$" + formatter.format(datosSitio.getGeneralidades().get(i).getValor()) + ".00");
+                                            binding.periodogracia.setText(
+                                                    datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + ""
+                                            );
+                                        }
+                                    }
                                 }
-                            }
 
-                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 4 || datosSitio.getGeneralidades().get(i).getNivelid() == 5 || datosSitio.getGeneralidades().get(i).getNivelid() == 6){
-                                if(datosSitio.getGeneralidades().get(i).getNivelid() == 5) {
-                                    binding.disponibilidad.setText(getString(R.string.bien) + " " + datosSitio.getGeneralidades().get(i).getNombrenivel() + " " + datosSitio.getGeneralidades().get(i).getFechadisponible());
+                                preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editorGeneralidades = preferences.edit();
+                                // editorGeneralidades.putInt("puntajeGeneralidades", sumaPuntuacion);
+                                // editorGeneralidades.putInt("puntajeTotalGeneralidades", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
+                                if (datosSitio.getValidado() == 1) {
+                                    if (datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", AUTORIZA_ID);
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
+                                    } else {
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", RECHAZA_ID);
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
+                                        editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
+                                    }
                                 } else {
-                                    binding.disponibilidad.setText(getString(R.string.bien) + " " + datosSitio.getGeneralidades().get(i).getNombrenivel());
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", SIN_AUTORIZACION);
+                                    editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
+                                    editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                 }
-                            }
-
-                            if(datosSitio.getGeneralidades().get(i).getNivelid() == 7 || datosSitio.getGeneralidades().get(i).getNivelid() == 8 || datosSitio.getGeneralidades().get(i).getNivelid() == 9){
-                                binding.amortizacion.setText(datosSitio.getGeneralidades().get(i).getValor() + " MXN");
-
-                                if(datosSitio.getGeneralidades().get(i).getDetalles() != null && datosSitio.getGeneralidades().get(i).getDetalles().size() > 0) {
-                                    binding.tiempoamortizacion.setText(datosSitio.getGeneralidades().get(i).getDetalles().get(0).getValor() + " " + datosSitio.getGeneralidades().get(i).getDetalles().get(0).getUnidadmedicion());
+                                if (datosSitio.getTip().size() > 0) {
+                                    StringBuffer tipMod6 = new StringBuffer("");
+                                    for (GeneralidadesSitio.Tip tip : datosSitio.getTip()) {
+                                        tipMod6.append(tip.getDetalle() + "\n");
+                                    }
+                                    editorGeneralidades.putString("tip_modulo_6", tipMod6.toString());
+                                } else {
+                                    editorGeneralidades.putString("tip_modulo_6", "Agrega un tip a esta pantalla");
                                 }
-                            }
-                           // sumaPuntuacion += datosSitio.getGeneralidades().get(i).getPuntuacion();
+                                editorGeneralidades.apply();
 
+                            }
                         }
 
-                        binding.robotoTextView2.setText("MD " + nombreSitio);
+                        @Override
+                        public void reject(Exception e) {
 
-                        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorGeneralidades = preferences.edit();
-                       // editorGeneralidades.putInt("puntajeGeneralidades", sumaPuntuacion);
-                       // editorGeneralidades.putInt("puntajeTotalGeneralidades", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
-                        if(datosSitio.getValidado() == 1) {
-                            if(datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", AUTORIZA_ID);
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
-                            } else {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", RECHAZA_ID);
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
-                                editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
-                            }
-                        } else {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
-                            editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", SIN_AUTORIZACION);
-                            editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
-                            editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                         }
-                        if(datosSitio.getTip().size() > 0) {
-                            StringBuffer tipMod6 = new StringBuffer("");
-                            for(GeneralidadesSitio.Tip tip : datosSitio.getTip()) {
-                                tipMod6.append(tip.getDetalle() + "\n");
-                            }
-                            editorGeneralidades.putString("tip_modulo_6", tipMod6.toString());
-                        } else {
-                            editorGeneralidades.putString("tip_modulo_6", "Agrega un tip a esta pantalla");
-                        }
-                        editorGeneralidades.apply();
-
-                    }
-                }
-
-                @Override
-                public void reject(Exception e) {
-
-                }
-            });
-
+                    });
 
 
             binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
@@ -1511,9 +1702,9 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_6_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_6_TIPO_AUTORIZACION", 0);
 
-                    if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_6);
                         editorMotivos.apply();
@@ -1522,7 +1713,7 @@ public class FragmentAutoriza extends Fragment implements
                         Bundle bundle = new Bundle();
                         bundle.putInt("modulo", MODULO_PANTALLA_6);
                         a.setArguments(bundle);
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
@@ -1544,15 +1735,15 @@ public class FragmentAutoriza extends Fragment implements
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int accion = preferences.getInt("MODULO_6_TIPO_AUTORIZACION",0);
+                    int accion = preferences.getInt("MODULO_6_TIPO_AUTORIZACION", 0);
 
-                    if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                    if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                         SharedPreferences.Editor editorMotivos = preferences.edit();
                         editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_6);
                         editorMotivos.apply();
 
                         FragmentDialogCancelar a = new FragmentDialogCancelar();
-                        a.show(getChildFragmentManager(),"child");
+                        a.show(getChildFragmentManager(), "child");
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
@@ -1567,23 +1758,31 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-        }else if (position == 6) {
+        } else if (position == 6) {
             setPermisos(permisos, String.valueOf(MODULO_PANTALLA_7));
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_7));
 
-            if(permisoEditar7){
+            if (permisoEditar7) {
 
                 final FragmentAutorizaEditar6Binding binding;
-                binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_editar_6,container,false);
+                binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_editar_6, container, false);
                 view = binding.getRoot();
 
-                if(permisoP7){
+                if (permisoP7) {
                     binding.aceptar.setVisibility(View.VISIBLE);
-                }else if(permisoRechazarP7){
+                } else if (permisoRechazarP7) {
                     binding.cancelar.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     binding.aceptar.setVisibility(View.INVISIBLE);
                     binding.cancelar.setVisibility(View.INVISIBLE);
+                }
+
+                Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+
+                if (atrasadasAutoriza) {
+                    binding.autorizalayout.setVisibility(View.GONE);
+                } else {
+                    binding.autorizalayout.setVisibility(View.VISIBLE);
                 }
 
                 final ArrayList<String> horarios = new ArrayList<>();
@@ -1594,6 +1793,14 @@ public class FragmentAutoriza extends Fragment implements
 
                 String nombreMd = preferences[0].getString("nombreSitio", "");
                 binding.robotoTextView2.setText(nombreMd);
+                int atrasa = preferences[0].getInt("atrasa", 0);
+
+
+                if (atrasa == 1) {
+                    binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+                } else {
+                    binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+                }
 
                 listaPeatonal(binding);
 
@@ -1617,13 +1824,13 @@ public class FragmentAutoriza extends Fragment implements
                     @Override
                     public void onClick(View view) {
 
-                        if (conteos[0]==0) {
+                        if (conteos[0] == 0) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                                 binding.peatonalConteo.chronometer1.setCountDown(true);
                             }
 
 
-                            int sec = 60* tiempo[0];
+                            int sec = 60 * tiempo[0];
                             //int sec = 60* 1;
 
                             downTimer[0] = new CountDownTimer(1000 * sec, 1000) {
@@ -1653,37 +1860,37 @@ public class FragmentAutoriza extends Fragment implements
 
 
                         conteos[0]++;
-                        if(conteos[0]<=9){
-                            binding.peatonalConteo.real.setText(conteos[0]+"");
+                        if (conteos[0] <= 9) {
+                            binding.peatonalConteo.real.setText(conteos[0] + "");
                         }
 
-                        if (conteos[0]>9) {
+                        if (conteos[0] > 9) {
                             String real = String.valueOf(conteos[0]).substring(String.valueOf(conteos[0]).length() - 1);
                             char first = String.valueOf(conteos[0]).charAt(0);
-                            binding.peatonalConteo.real.setText(real+"");
-                            binding.peatonalConteo.diez.setText(first+"");
+                            binding.peatonalConteo.real.setText(real + "");
+                            binding.peatonalConteo.diez.setText(first + "");
                         }
 
-                        if (conteos[0]>99) {
+                        if (conteos[0] > 99) {
                             char primerNumero = String.valueOf(conteos[0]).charAt(0);
                             char segundoNumero = String.valueOf(conteos[0]).charAt(1);
                             char tercerNumero = String.valueOf(conteos[0]).charAt(2);
-                            binding.peatonalConteo.cien.setText(primerNumero+"");
-                            binding.peatonalConteo.diez.setText(segundoNumero+"");
-                            binding.peatonalConteo.real.setText(tercerNumero+"");
+                            binding.peatonalConteo.cien.setText(primerNumero + "");
+                            binding.peatonalConteo.diez.setText(segundoNumero + "");
+                            binding.peatonalConteo.real.setText(tercerNumero + "");
                         }
 
-                        if (conteos[0]>999) {
+                        if (conteos[0] > 999) {
 
                             char primerNumero = String.valueOf(conteos[0]).charAt(0);
                             char segundoNumero = String.valueOf(conteos[0]).charAt(1);
                             char tercerNumero = String.valueOf(conteos[0]).charAt(2);
                             char cuartoNumero = String.valueOf(conteos[0]).charAt(3);
 
-                            binding.peatonalConteo.mil.setText(primerNumero+"");
-                            binding.peatonalConteo.cien.setText(segundoNumero+"");
-                            binding.peatonalConteo.diez.setText(tercerNumero+"");
-                            binding.peatonalConteo.real.setText(cuartoNumero+"");
+                            binding.peatonalConteo.mil.setText(primerNumero + "");
+                            binding.peatonalConteo.cien.setText(segundoNumero + "");
+                            binding.peatonalConteo.diez.setText(tercerNumero + "");
+                            binding.peatonalConteo.real.setText(cuartoNumero + "");
 
                         }
 
@@ -1709,7 +1916,7 @@ public class FragmentAutoriza extends Fragment implements
 
                         binding.peatonalConteo.presion.setEnabled(true);
 
-                        if(downTimer[0]!=null){
+                        if (downTimer[0] != null) {
                             downTimer[0].cancel();
                         }
 
@@ -1717,27 +1924,26 @@ public class FragmentAutoriza extends Fragment implements
                 });
 
 
-
                 ProviderHorasPeatonales.getInstance(getContext()).obtenerHoras(mdIdterminar, usuarioId,
                         new ProviderHorasPeatonales.InterfaceObtieneHoras() {
                             @Override
                             public void resolve(final HorasPeatonales horasPeatonales) {
-                                if(horasPeatonales!=null){
-                                    if(horasPeatonales.getCodigo()==200) {
+                                if (horasPeatonales != null) {
+                                    if (horasPeatonales.getCodigo() == 200) {
 
                                         tiempo[0] = Integer.parseInt(horasPeatonales.getTiempoConteos());
 
                                         binding.peatonalConteo.chronometer1.setBase(SystemClock.elapsedRealtime() - (tiempo[0] * 60000 + 0 * 1000));
                                         tiempos[0] = TimeUnit.MINUTES.toMillis(tiempo[0]);
-                                        if(horasPeatonales.getDetalle().size()<0){
+                                        if (horasPeatonales.getDetalle().size() < 0) {
                                             binding.btnFinalizar.setAlpha(0.35f);
-                                        }else{
+                                        } else {
                                             binding.botones.setVisibility(View.VISIBLE);
                                             binding.btnFinalizar.setEnabled(true);
                                         }
 
-                                        for(int i=0;i<horasPeatonales.getDetalle().size();i++){
-                                            horarios.add(horasPeatonales.getDetalle().get(i).getHoraMin()+" - "+
+                                        for (int i = 0; i < horasPeatonales.getDetalle().size(); i++) {
+                                            horarios.add(horasPeatonales.getDetalle().get(i).getHoraMin() + " - " +
                                                     horasPeatonales.getDetalle().get(i).getHoraMax());
                                         }
 
@@ -1781,14 +1987,14 @@ public class FragmentAutoriza extends Fragment implements
                                                 hoI = hoI.substring(0, 5);
                                                 hoF = hoF.substring(0, 5);
 
-                                                hora [0] =  isHourInInterval(strDate, hoI, hoF);
-                                                if(hora [0] != false){
+                                                hora[0] = isHourInInterval(strDate, hoI, hoF);
+                                                if (hora[0] != false) {
                                                     //TODO CONDICION QUE TRAE EL RANGO DE HORAS, Y EL RANGO DE MINUTOS EN EL CRONOMETRO
                                                     binding.peatonalConteo.btnGuardar.setAlpha(1.0f);
                                                     binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                     horaInicio = hoI;
                                                     horaFinal = hoF;
-                                                }else{
+                                                } else {
                                                     binding.peatonalConteo.btnGuardar.setAlpha(0.4f);
                                                     binding.peatonalConteo.btnGuardar.setEnabled(false);
                                                     hora[0] = false;
@@ -1801,55 +2007,56 @@ public class FragmentAutoriza extends Fragment implements
                                                 final String finalHoF = hoF;
 
                                                 binding.peatonalConteo.spinnerHora.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener<String>() {
-                                                    @Override public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
-                                                        if(position==0){
-                                                            hora [0] = isHourInInterval(strDate, finalHoI, finalHoF);
-                                                            if(hora [0]!=false){
+                                                    @Override
+                                                    public void onItemSelected(MaterialSpinner view, int position, long id, String item) {
+                                                        if (position == 0) {
+                                                            hora[0] = isHourInInterval(strDate, finalHoI, finalHoF);
+                                                            if (hora[0] != false) {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(1.0f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                                 horaInicio = finalHoI;
                                                                 horaFinal = finalHoF;
-                                                            }else{
+                                                            } else {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(0.4f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(false);
                                                                 hora[0] = false;
                                                             }
                                                         }
 
-                                                        if(position==1){
+                                                        if (position == 1) {
                                                             String hoI = horasPeatonales.getDetalle().get(1).getHoraMin();
                                                             String hoF = horasPeatonales.getDetalle().get(1).getHoraMax();
-                                                            hora [0] =  isHourInInterval(strDate, hoI, hoF);
-                                                            if(hora [0]!=false){
+                                                            hora[0] = isHourInInterval(strDate, hoI, hoF);
+                                                            if (hora[0] != false) {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(1.0f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                                 horaInicio = hoI;
                                                                 horaFinal = hoF;
-                                                            }else{
+                                                            } else {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(0.4f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(false);
                                                                 hora[0] = false;
                                                             }
                                                         }
 
-                                                        if(position==2){
+                                                        if (position == 2) {
                                                             String hoI;
                                                             String hoF;
-                                                            if(horarios.size()>1){
+                                                            if (horarios.size() > 1) {
                                                                 hoI = horasPeatonales.getDetalle().get(2).getHoraMin();
                                                                 hoF = horasPeatonales.getDetalle().get(2).getHoraMax();
-                                                            }else{
+                                                            } else {
                                                                 hoI = "";
                                                                 hoF = "";
                                                             }
 
-                                                            hora [0] = isHourInInterval(strDate, hoI, hoF);
-                                                            if(hora [0]!=false){
+                                                            hora[0] = isHourInInterval(strDate, hoI, hoF);
+                                                            if (hora[0] != false) {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(1.0f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                                 horaInicio = hoI;
                                                                 horaFinal = hoF;
-                                                            }else{
+                                                            } else {
                                                                 binding.peatonalConteo.btnGuardar.setAlpha(0.4f);
                                                                 binding.peatonalConteo.btnGuardar.setEnabled(false);
                                                                 hora[0] = false;
@@ -1865,7 +2072,7 @@ public class FragmentAutoriza extends Fragment implements
                                                     @Override
                                                     public void onClick(View view) {
                                                         binding.peatonalConteo.btnGuardar.setEnabled(false);
-                                                        if(conteos[0]>0 && hora [0]){
+                                                        if (conteos[0] > 0 && hora[0]) {
                                                             ServicioGPS n = new ServicioGPS(getContext());
                                                             CrearPeatonal crearPeatonal = new CrearPeatonal(
                                                                     usuarioId,
@@ -1884,7 +2091,7 @@ public class FragmentAutoriza extends Fragment implements
                                                             ProviderCrearPeatonal.getInstance(getContext()).guardarPeatonal(crearPeatonal, new ProviderCrearPeatonal.InterfaceCrearDatosPeatonal() {
                                                                 @Override
                                                                 public void resolve(Codigos codigo) {
-                                                                    if(codigo.getCodigo()==200){
+                                                                    if (codigo.getCodigo() == 200) {
                                                                         binding.recyclerHoras.setVisibility(View.VISIBLE);
 
                                                                         Toast.makeText(getContext(), "Flujo peatonal guardado con éxito", Toast.LENGTH_SHORT).show();
@@ -1892,7 +2099,6 @@ public class FragmentAutoriza extends Fragment implements
                                                                         binding.recyclerPeatonal.setVisibility(View.VISIBLE);
                                                                         listaPeatonal(binding);
                                                                         binding.peatonalConteo.etTotal.setText("");
-                                                                        binding.btnFinalizar.setVisibility(View.VISIBLE);
                                                                         binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                                         binding.promedio.setVisibility(View.VISIBLE);
                                                                         binding.peatonalConteo.chronometer1.stop();
@@ -1911,18 +2117,20 @@ public class FragmentAutoriza extends Fragment implements
                                                                         binding.peatonalConteo.mil.setText("0");
                                                                         binding.peatonalConteo.diez.setText("0");
                                                                         binding.peatonalConteo.presion.setEnabled(true);
+                                                                        binding.btnFinalizar.setVisibility(View.GONE);
 
-                                                                        if(downTimer[0]!=null){
+                                                                        if (downTimer[0] != null) {
                                                                             downTimer[0].cancel();
                                                                         }
-                                                                    }else{
+                                                                    } else {
                                                                         Toast.makeText(getContext(), codigo.getMensaje(), Toast.LENGTH_SHORT).show();
                                                                         binding.peatonalConteo.btnGuardar.setEnabled(true);
                                                                     }
                                                                 }
 
                                                                 @Override
-                                                                public void reject(Exception e) { }
+                                                                public void reject(Exception e) {
+                                                                }
                                                             });
                                                         } else {
                                                             binding.peatonalConteo.btnGuardar.setEnabled(true);
@@ -1937,7 +2145,7 @@ public class FragmentAutoriza extends Fragment implements
                                                         binding.peaton.setVisibility(View.GONE);
                                                         binding.btnFinalizar.setVisibility(View.VISIBLE);
                                                         binding.recyclerPeatonal.setVisibility(View.VISIBLE);
-                                                        binding.btnFinalizar.setVisibility(View.VISIBLE);
+                                                        binding.btnFinalizar.setVisibility(View.GONE);
                                                         binding.promedio.setVisibility(View.VISIBLE);
                                                         binding.linearLayout.setVisibility(View.VISIBLE);
                                                         binding.conteo.setAlpha(1f);
@@ -1955,7 +2163,7 @@ public class FragmentAutoriza extends Fragment implements
                                                         binding.peatonalConteo.diez.setText("0");
                                                         binding.peatonalConteo.presion.setEnabled(true);
                                                         binding.peatonalConteo.contador.setText("00:00");
-                                                        if(downTimer[0]!=null){
+                                                        if (downTimer[0] != null) {
                                                             downTimer[0].cancel();
                                                         }
                                                     }
@@ -1975,14 +2183,13 @@ public class FragmentAutoriza extends Fragment implements
                         });
 
 
-
                 binding.aceptar.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         preferences[0] = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        int accion = preferences[0].getInt("MODULO_7_TIPO_AUTORIZACION",0);
+                        int accion = preferences[0].getInt("MODULO_7_TIPO_AUTORIZACION", 0);
 
-                        if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                        if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                             SharedPreferences.Editor editorMotivos = preferences[0].edit();
                             editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_7);
                             editorMotivos.apply();
@@ -1991,7 +2198,7 @@ public class FragmentAutoriza extends Fragment implements
                             Bundle bundle = new Bundle();
                             bundle.putInt("modulo", MODULO_PANTALLA_7);
                             a.setArguments(bundle);
-                            a.show(getChildFragmentManager(),"child");
+                            a.show(getChildFragmentManager(), "child");
                             a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                                 @Override
                                 public void onModuloAceptado(int modulo) {
@@ -2011,15 +2218,15 @@ public class FragmentAutoriza extends Fragment implements
                     @Override
                     public void onClick(View view) {
                         preferences[0] = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        int accion = preferences[0].getInt("MODULO_7_TIPO_AUTORIZACION",0);
+                        int accion = preferences[0].getInt("MODULO_7_TIPO_AUTORIZACION", 0);
 
-                        if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                        if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                             SharedPreferences.Editor editorMotivos = preferences[0].edit();
                             editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_7);
                             editorMotivos.apply();
 
                             FragmentDialogCancelar a = new FragmentDialogCancelar();
-                            a.show(getChildFragmentManager(),"child");
+                            a.show(getChildFragmentManager(), "child");
                             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                                 @Override
                                 public void onModuloRechazado(int modulo) {
@@ -2034,23 +2241,31 @@ public class FragmentAutoriza extends Fragment implements
                     }
                 });
 
-            }else{
+            } else {
 
                 final FragmentAutoriza6Binding binding;
-                binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_6,container,false);
+                binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_6, container, false);
                 view = binding.getRoot();
 
                 listaPeatonal(binding);
 
                 binding.toolbar.nombreTitulo.setText(getString(R.string.flujopeatonal));
 
-                if(permisoP7){
+                if (permisoP7) {
                     binding.aceptar.setVisibility(View.VISIBLE);
-                }else if(permisoRechazarP7){
+                } else if (permisoRechazarP7) {
                     binding.cancelar.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     binding.aceptar.setVisibility(View.INVISIBLE);
                     binding.cancelar.setVisibility(View.INVISIBLE);
+                }
+
+                Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+
+                if (atrasadasAutoriza) {
+                    binding.autorizalayout.setVisibility(View.GONE);
+                } else {
+                    binding.autorizalayout.setVisibility(View.VISIBLE);
                 }
 
                 binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
@@ -2065,15 +2280,15 @@ public class FragmentAutoriza extends Fragment implements
                     @Override
                     public void onClick(View view) {
                         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        int accion = preferences.getInt("MODULO_7_TIPO_AUTORIZACION",0);
+                        int accion = preferences.getInt("MODULO_7_TIPO_AUTORIZACION", 0);
 
-                        if(accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
+                        if (accion == RECHAZA_ID || accion == SIN_AUTORIZACION) {
                             SharedPreferences.Editor editorMotivos = preferences.edit();
                             editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_7);
                             editorMotivos.apply();
 
                             FragmentDialogAceptar a = new FragmentDialogAceptar();
-                            a.show(getChildFragmentManager(),"child");
+                            a.show(getChildFragmentManager(), "child");
                             a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                                 @Override
                                 public void onModuloAceptado(int modulo) {
@@ -2092,15 +2307,15 @@ public class FragmentAutoriza extends Fragment implements
                     @Override
                     public void onClick(View view) {
                         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        int accion = preferences.getInt("MODULO_7_TIPO_AUTORIZACION",0);
+                        int accion = preferences.getInt("MODULO_7_TIPO_AUTORIZACION", 0);
 
-                        if(accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
+                        if (accion == AUTORIZA_ID || accion == SIN_AUTORIZACION) {
                             SharedPreferences.Editor editorMotivos = preferences.edit();
                             editorMotivos.putInt("moduloAutorizaRechaza", MODULO_PANTALLA_7);
                             editorMotivos.apply();
 
                             FragmentDialogCancelar a = new FragmentDialogCancelar();
-                            a.show(getChildFragmentManager(),"child");
+                            a.show(getChildFragmentManager(), "child");
                             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                                 @Override
                                 public void onModuloRechazado(int modulo) {
@@ -2118,11 +2333,10 @@ public class FragmentAutoriza extends Fragment implements
 
         } else if (position == 7) {
             FragmentAutoriza7Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_7,container,false);
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_7, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.resumenpuntuacion));
-
 
             getDatos(binding);
 
@@ -2134,11 +2348,29 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
         } else if (position == 8) {
+
             final FragmentAutoriza8Binding binding;
-            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_8,container,false);
+            binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_8, container, false);
             view = binding.getRoot();
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.resumenautorizacion));
+
+            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+            int atrasa = preferences.getInt("atrasa", 0);
+
+            if (atrasa == 1) {
+                binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            } else {
+                binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            }
+
+//            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
+//
+//            if (atrasadasAutoriza) {
+//                binding.autorizalayout.setVisibility(View.GONE);
+//            } else {
+//                binding.autorizalayout.setVisibility(View.VISIBLE);
+//            }
 
             creaTablaResumenAutorizacion(binding);
 
@@ -2273,24 +2505,27 @@ public class FragmentAutoriza extends Fragment implements
         TextView texto1 = new TextView(getContext());
         texto1.setText("");
         texto1.setWidth(widthCeldaDescripcion);
-        texto1.setTextColor(resource.getColor(R.color.azul));
-        texto1.setPadding(0, 5, 5, 1);
+        texto1.setTextColor(resource.getColor(R.color.grisetxt));
+        texto1.setPadding(0, 45, 5, 1);
         texto1.setLayoutParams(lp);
         texto1.setGravity(Gravity.LEFT);
 
         TextView aceptadosHeader = new TextView(getContext());
         aceptadosHeader.setText("Aceptados");
+        String sourceString = "<b>" + "Aceptados" + "</b> ";
+        aceptadosHeader.setText(Html.fromHtml(sourceString));
         aceptadosHeader.setWidth(widthCeldaAceptados);
         aceptadosHeader.setTextColor(resource.getColor(R.color.azul));
-        aceptadosHeader.setPadding(0, 5, 5, 1);
+        aceptadosHeader.setPadding(0, 55, 5, 1);
         aceptadosHeader.setLayoutParams(lp);
         aceptadosHeader.setGravity(Gravity.CENTER);
 
         TextView rechazadosHeader = new TextView(getContext());
-        rechazadosHeader.setText("Rechazados");
+        String sourceString2 = "<b>" + "Rechazados" + "</b> ";
+        rechazadosHeader.setText(Html.fromHtml(sourceString2));
         rechazadosHeader.setWidth(widthCeldaRechazados);
         rechazadosHeader.setTextColor(resource.getColor(R.color.azul));
-        rechazadosHeader.setPadding(0, 5, 5, 1);
+        rechazadosHeader.setPadding(0, 55, 5, 1);
         rechazadosHeader.setLayoutParams(lp);
         rechazadosHeader.setGravity(Gravity.CENTER);
 
@@ -2311,17 +2546,24 @@ public class FragmentAutoriza extends Fragment implements
         int motivoId1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
+
+
         TextView sitioText = new TextView(getContext());
         sitioText.setText("Datos del sitio");
         sitioText.setWidth(widthCeldaDescripcion);
-        sitioText.setTextColor(resource.getColor(R.color.azul));
+        sitioText.setTextColor(resource.getColor(R.color.grisetxt));
         sitioText.setPadding(10, 5, 5, 1);
         sitioText.setLayoutParams(lp);
         sitioText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor = new ImageView(getContext());
         if(modulo1 == AUTORIZA_ID) {
+
+            imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
+
         } else {
             imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2333,10 +2575,17 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo1 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
+
+            imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.blanco), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
+            imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.blanco), android.graphics.PorterDuff.Mode.SRC_IN);
+            imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.blanco), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
         if(modulo1 == SIN_AUTORIZACION) {
@@ -2378,14 +2627,17 @@ public class FragmentAutoriza extends Fragment implements
         TextView superficieText = new TextView(getContext());
         superficieText.setText("Superficie");
         superficieText.setWidth(widthCeldaDescripcion);
-        superficieText.setTextColor(resource.getColor(R.color.azul));
+        superficieText.setTextColor(resource.getColor(R.color.grisetxt));
         superficieText.setPadding(10, 5, 5, 1);
         superficieText.setLayoutParams(lp);
         superficieText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor5 = new ImageView(getContext());
         if(modulo3 == AUTORIZA_ID) {
+            imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor5.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             imgSubfactor5.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2397,7 +2649,10 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo3 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
@@ -2430,14 +2685,17 @@ public class FragmentAutoriza extends Fragment implements
         TextView zonificacionText = new TextView(getContext());
         zonificacionText.setText("Zonificación");
         zonificacionText.setWidth(widthCeldaDescripcion);
-        zonificacionText.setTextColor(resource.getColor(R.color.azul));
+        zonificacionText.setTextColor(resource.getColor(R.color.grisetxt));
         zonificacionText.setPadding(10, 5, 5, 1);
         zonificacionText.setLayoutParams(lp);
         zonificacionText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor7 = new ImageView(getContext());
         if(modulo4 == AUTORIZA_ID) {
+            imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor7.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             imgSubfactor7.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2449,7 +2707,10 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo4 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
@@ -2481,14 +2742,17 @@ public class FragmentAutoriza extends Fragment implements
         TextView construccionText = new TextView(getContext());
         construccionText.setText("Construcción");
         construccionText.setWidth(widthCeldaDescripcion);
-        construccionText.setTextColor(resource.getColor(R.color.azul));
+        construccionText.setTextColor(resource.getColor(R.color.grisetxt));
         construccionText.setPadding(10, 5, 5, 1);
         construccionText.setLayoutParams(lp);
         construccionText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor9 = new ImageView(getContext());
         if(modulo5 == AUTORIZA_ID) {
+            imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor9.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             imgSubfactor9.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2500,7 +2764,10 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo5 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
@@ -2532,14 +2799,17 @@ public class FragmentAutoriza extends Fragment implements
         TextView generalidadesText = new TextView(getContext());
         generalidadesText.setText("Generalidades");
         generalidadesText.setWidth(widthCeldaDescripcion);
-        generalidadesText.setTextColor(resource.getColor(R.color.azul));
+        generalidadesText.setTextColor(resource.getColor(R.color.grisetxt));
         generalidadesText.setPadding(10, 5, 5, 1);
         generalidadesText.setLayoutParams(lp);
         generalidadesText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor11 = new ImageView(getContext());
         if(modulo6 == AUTORIZA_ID) {
+            imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor11.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             imgSubfactor11.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2551,7 +2821,10 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo6 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+                imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
         } else {
             imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
@@ -2583,7 +2856,7 @@ public class FragmentAutoriza extends Fragment implements
         TextView peatonalText = new TextView(getContext());
         peatonalText.setText("Flujo peatonal");
         peatonalText.setWidth(widthCeldaDescripcion);
-        peatonalText.setTextColor(resource.getColor(R.color.azul));
+        peatonalText.setTextColor(resource.getColor(R.color.grisetxt));
         peatonalText.setPadding(10, 5, 5, 1);
         peatonalText.setLayoutParams(lp);
         peatonalText.setGravity(Gravity.LEFT);
@@ -2591,6 +2864,8 @@ public class FragmentAutoriza extends Fragment implements
         ImageView imgSubfactor13 = new ImageView(getContext());
         if(modulo7 == AUTORIZA_ID) {
             imgSubfactor13.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
+            imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
             imgSubfactor13.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
@@ -2602,7 +2877,12 @@ public class FragmentAutoriza extends Fragment implements
             if(rechazoDefinitivo7 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
-                imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+
+                imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
+                imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
+
             }
         } else {
             imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
@@ -2640,66 +2920,6 @@ public class FragmentAutoriza extends Fragment implements
 
     }
 
-    public void creaTablaSubfactores(FragmentAutoriza4Binding binding, List<DatosConstruccion.Detalle> listaSubfactores) {
-        limpiaTabla(binding);
-        Resources resource = getContext().getResources();
-
-        if(listaSubfactores != null && listaSubfactores.size() > 0) {
-            TableLayout ll = binding.tablaSubfactores;
-            TableRow row = new TableRow(getContext());
-            row.setGravity(Gravity.LEFT);
-            TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-            row.setLayoutParams(lp);
-
-            int widthCeldaImg = (int) (ll.getWidth() * 0.2);
-            int widthCeldaDescripcion = (int) (ll.getWidth() * 0.8);
-
-            for (int i = 0; i < listaSubfactores.size(); i++) {
-                row = new TableRow(getContext());
-                row.setGravity(Gravity.CENTER_HORIZONTAL);
-                row.setPadding(0,10,0,0);
-                lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
-                lp.height = 85;
-                row.setLayoutParams(lp);
-
-                ImageView imgSubfactor = new ImageView(getContext());
-                imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.ic_btn_select));
-                imgSubfactor.setMaxWidth(14);
-                imgSubfactor.setPadding(0, 0, 5, 1);
-                imgSubfactor.setLayoutParams(lp);
-
-                TextView descripcionText = new TextView(getContext());
-                descripcionText.setText(listaSubfactores.get(i).getNombredetalle());
-                descripcionText.setWidth(widthCeldaDescripcion);
-                descripcionText.setTextColor(resource.getColor(R.color.azul));
-                descripcionText.setPadding(0, 5, 5, 1);
-                descripcionText.setLayoutParams(lp);
-                descripcionText.setGravity(Gravity.LEFT);
-
-
-                row.addView(imgSubfactor);
-                row.addView(descripcionText);
-                ll.addView(row, i);
-
-            }
-        }
-    }
-
-    public void limpiaTabla(FragmentAutoriza4Binding binding) {
-
-        ScrollView sv = binding.containerScrollView;
-        sv.scrollTo(0, 0);
-        sv.computeScroll();
-        TableLayout ll = binding.tablaSubfactores;
-
-        int count = ll.getChildCount();
-        for (int i = 0; i < count; i++) {
-            View child = ll.getChildAt(i);
-            if (child instanceof TableRow) ((ViewGroup) child).removeAllViews();
-        }
-    }
-
-
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_usuario, menu);
@@ -2730,61 +2950,16 @@ public class FragmentAutoriza extends Fragment implements
 
     String mensaje = null;
 
-    public void slideUX(final FragmentAutoriza3Binding binding){
-        slideGenerador = new SlideUpBuilder(binding.content2.slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        binding.dim.setAlpha(1 - (percent / 100));
-                        //if (binding.fab.isShown() && percent < 100) {
-                        // binding.fab.hide();
-                        // }
-                    }
-
-                    @Override
-                    public void onVisibilityChanged(int visibility) {
-                        if (visibility == View.GONE){
-                            //fab.show();
-                        }
-                    }
-                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(true).withGesturesEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView)
-                .withTouchableAreaPx(100)
-                .withTouchableAreaDp(100)
-                .build();
-
-        slideCompetencia = new SlideUpBuilder(binding.contenido.slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        binding.dim2.setAlpha(1 - (percent / 100));
-                    }
-
-                    @Override
-                    public void onVisibilityChanged(int visibility) {
-                        if (visibility == View.GONE){
-                            //fab.show();
-                        }
-                    }
-                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(true).withGesturesEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView2)
-                .withTouchableAreaPx(100)
-                .withTouchableAreaDp(100)
-                .build();
-
-    }
-
     ArrayList<Peatonal> peatonales;
     AdapterListaHoras adapterHoras;
-    AdapterListaHorasGestoria adapterListaHorasGestoria;
 
     public void listaPeatonal(final FragmentAutorizaEditar6Binding binding){
+
         final Resources resource = getContext().getResources();
         final ArrayList<String> horarios = new ArrayList<>();
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mdId = preferences.getString("mdId","");
         String usuarioId = preferences.getString("usuario","");
-        final String nombreSitio = preferences.getString("nombreSitio","");
 
         ProviderDatosPeatonal.getInstance(getContext()).obtenerDatosPeatonal(mdId, usuarioId, new ProviderDatosPeatonal.ConsultaPeatonal() {
             @Override
@@ -2806,7 +2981,6 @@ public class FragmentAutoriza extends Fragment implements
                        // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
                     }
 
-                    binding.robotoTextView2.setText("MD " + nombreSitio);
                     if(peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
                         binding.promedio.setText("Promedio: " + peatonal.getConteos().get(0).getPromedioPeatonal());
                     } else {
@@ -2896,7 +3070,6 @@ public class FragmentAutoriza extends Fragment implements
                        // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
                     }
 
-                    binding.robotoTextView2.setText("MD " + nombreSitio);
                     if(peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
                         binding.promedioPeatonal.setText("Promedio: " + peatonal.getConteos().get(0).getPromedioPeatonal());
                     } else {
@@ -3206,6 +3379,14 @@ public class FragmentAutoriza extends Fragment implements
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mdid = preferences.getString("mdId", "");
         String usuario = preferences.getString("usuario", "");
+
+        int atrasa = preferences.getInt("atrasa",0);
+        if(atrasa==1){
+            binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+        }else{
+            binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+        }
+
         ProviderConsultaFinaliza.getInstance(getContext()).obtenerPuntos(mdid, usuario, new ProviderConsultaFinaliza.ConsultaPuntos() {
             @Override
             public void resolve(DatosPuntuacion datosPuntuacion) {
@@ -3279,8 +3460,8 @@ public class FragmentAutoriza extends Fragment implements
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
             t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-            t1v1.setTextColor(resource.getColor(R.color.azul));
-            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t1v1.setPadding(0, paddingPixel,0,5);
             t1v1.setGravity(Gravity.START);
 
             t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
@@ -3288,22 +3469,29 @@ public class FragmentAutoriza extends Fragment implements
             tbrow.addView(t1v1);
 
             TextView t3v1 = new TextView(getContext());
-            t3v1.setTextSize(10);
+            t3v1.setTextSize(12);
             t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-            t3v1.setTextColor(resource.getColor(R.color.azul));
-            t3v1.setGravity(Gravity.LEFT);
+            t3v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t3v1.setGravity(Gravity.RIGHT);
             t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v1);
 
+
             TextView t3v2 = new TextView(getContext());
-            t3v2.setTextSize(10);
-            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setTextSize(12);
+            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
+                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            }else{
+                binding.tituloMacro.setVisibility(View.GONE);
+                binding.tituloMicro.setVisibility(View.GONE);
+            }
+            t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v2);
+
 
             binding.factores.addView(tbrow);
         }
@@ -3327,27 +3515,32 @@ public class FragmentAutoriza extends Fragment implements
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
             t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
-            t1v1.setTextColor(resource.getColor(R.color.azul));
-            t1v1.setPadding(0, paddingPixel,0,0);
+            t1v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t1v1.setPadding(0, paddingPixel,0,5);
             t1v1.setGravity(Gravity.START);
 
             t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t1v1);
-            //Selecciona el tipo de sitio
+
             TextView t3v1 = new TextView(getContext());
-            t3v1.setTextSize(10);
+            t3v1.setTextSize(12);
             t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
-            t3v1.setTextColor(resource.getColor(R.color.azul));
-            t3v1.setGravity(Gravity.LEFT);
+            t3v1.setTextColor(resource.getColor(R.color.grisetxt));
+            t3v1.setGravity(Gravity.RIGHT);
             t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
             tbrow.addView(t3v1);
 
             TextView t3v2 = new TextView(getContext());
-            t3v2.setTextSize(10);
-            t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-            t3v2.setTextColor(resource.getColor(R.color.azul));
+            t3v2.setTextSize(12);
+            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
+                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
+            }else{
+                binding.tituloMacro.setVisibility(View.GONE);
+                binding.tituloMicro.setVisibility(View.GONE);
+            }
+            t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
             t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
@@ -3356,5 +3549,6 @@ public class FragmentAutoriza extends Fragment implements
             binding.factoresMicro.addView(tbrow);
         }
     }
+
 
 }

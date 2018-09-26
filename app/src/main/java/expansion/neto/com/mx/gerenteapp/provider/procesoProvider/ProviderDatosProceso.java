@@ -7,6 +7,7 @@ import com.google.gson.Gson;
 
 import java.util.Calendar;
 
+import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.constantes.RestUrl;
 import expansion.neto.com.mx.gerenteapp.modelView.procesoModel.Proceso;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario;
@@ -59,7 +60,7 @@ public class ProviderDatosProceso {
                             .add("estatus", ESTATUS_EN_PROCESO_APP_GERENTE)
                             .add("area", String.valueOf(areaId))
                             .add("mes", String.valueOf(mes))
-                            .add("semana", String.valueOf(semana))
+                            .add("semana", context.getString(R.string.zero))
                             .add("anio", String.valueOf(anio))
                             .add("tipoconsulta", TIPO_CONSULTA_MD_POR_AUTORIZAR)
                             .add("tipoapp", TIPO_APP)

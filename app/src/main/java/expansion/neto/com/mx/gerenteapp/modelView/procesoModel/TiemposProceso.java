@@ -38,6 +38,41 @@ public class TiemposProceso implements SortedListAdapter.ViewModel  {
     @SerializedName("recDefinitivo")
     @Expose
     private int recDefinitivo;
+    @SerializedName("puntajeTot")
+    @Expose
+    private int puntajeTot;
+
+    public int getPuntajeTot() {
+        return puntajeTot;
+    }
+
+    public void setPuntajeTot(int puntajeTot) {
+        this.puntajeTot = puntajeTot;
+    }
+
+    public int getMtvRechazoid() {
+        return mtvRechazoid;
+    }
+
+    public void setMtvRechazoid(int mtvRechazoid) {
+        this.mtvRechazoid = mtvRechazoid;
+    }
+
+    public String getMtvRechazo() {
+        return mtvRechazo;
+    }
+
+    public void setMtvRechazo(String mtvRechazo) {
+        this.mtvRechazo = mtvRechazo;
+    }
+
+    public int getRecDefinitivo() {
+        return recDefinitivo;
+    }
+
+    public void setRecDefinitivo(int recDefinitivo) {
+        this.recDefinitivo = recDefinitivo;
+    }
 
     public Integer getCodigo() {
         return codigo;
@@ -95,31 +130,7 @@ public class TiemposProceso implements SortedListAdapter.ViewModel  {
         this.seguimiento = seguimiento;
     }
 
-    public int getMtvRechazoid() {
-        return mtvRechazoid;
-    }
-
-    public void setMtvRechazoid(int mtvRechazoid) {
-        this.mtvRechazoid = mtvRechazoid;
-    }
-
-    public String getMtvRechazo() {
-        return mtvRechazo;
-    }
-
-    public void setMtvRechazo(String mtvRechazo) {
-        this.mtvRechazo = mtvRechazo;
-    }
-
-    public int getRecDefinitivo() {
-        return recDefinitivo;
-    }
-
-    public void setRecDefinitivo(int recDefinitivo) {
-        this.recDefinitivo = recDefinitivo;
-    }
-
-    public class Seguimiento {
+    public class Seguimiento implements SortedListAdapter.ViewModel {
         @SerializedName("areaId")
         @Expose
         private int areaId;
@@ -141,6 +152,17 @@ public class TiemposProceso implements SortedListAdapter.ViewModel  {
         @SerializedName("tieneRechazo")
         @Expose
         private int tieneRechazo;
+        @SerializedName("nomArea")
+        @Expose
+        private String nomArea;
+
+        public String getNomArea() {
+            return nomArea;
+        }
+
+        public void setNomArea(String nomArea) {
+            this.nomArea = nomArea;
+        }
 
         public int getAreaId() {
             return areaId;
@@ -175,6 +197,9 @@ public class TiemposProceso implements SortedListAdapter.ViewModel  {
         }
 
         public String getFechaAtencion() {
+            if(fechaAtencion==null){
+                fechaAtencion = "-";
+            }
             return fechaAtencion;
         }
 

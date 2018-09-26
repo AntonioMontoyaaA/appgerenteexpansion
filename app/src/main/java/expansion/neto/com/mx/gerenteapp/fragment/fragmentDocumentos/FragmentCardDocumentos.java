@@ -55,28 +55,27 @@ public class FragmentCardDocumentos extends Fragment implements ProcesoHolder.Li
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_proceso_list,container,false);
         View view = binding.getRoot();
 
+        binding.rootView.setVisibility(View.GONE);
         getListaProceso(perfil);
 
         adapter = new AdapterProceso(getContext(),ALPHABETICAL_COMPARATOR, this);
         binding.recyclerAutoriza.setLayoutManager(new LinearLayoutManager(getContext()));
         binding.recyclerAutoriza.setAdapter(adapter);
 
-        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 3);
+        RecyclerView.LayoutManager mLayoutManager = new GridLayoutManager(getContext(), 1);
         binding.recyclerAutoriza.setLayoutManager(mLayoutManager);
-        binding.recyclerAutoriza.addItemDecoration(new GridSpacingItemDecoration(3, dpToPx(4), true));
+        binding.recyclerAutoriza.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(1), true));
         binding.recyclerAutoriza.setItemAnimator(new DefaultItemAnimator());
 
         binding.buscar.addTextChangedListener(new TextWatcher() {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
-                                      int count) {
-            }
+                                      int count) { }
 
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count,
-                                          int after) {
-            }
+                                          int after) { }
 
             @SuppressLint("DefaultLocale")
             @Override
@@ -101,16 +100,7 @@ public class FragmentCardDocumentos extends Fragment implements ProcesoHolder.Li
             }
         });
 
-
-        slideUX(binding);
-
-        binding.leyenda.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                slide.show();
-            }
-        });
-
+        binding.leyendaLayout.setVisibility(View.GONE);
         binding.content2.leyendacerrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,27 +124,32 @@ public class FragmentCardDocumentos extends Fragment implements ProcesoHolder.Li
         }
     };
 
-    //ArrayList<Autorizadas> autorizadas;
+    public void resizeRecycler(ActivityProcesoListBinding binding, int tam){
+        ViewGroup.LayoutParams params = binding.recyclerAutoriza.getLayoutParams();
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (tam * scale + 0.5f);
+        params.height=pixels;
+        binding.recyclerAutoriza.setLayoutParams(params);
+    }
 
     public void getListaProceso(UsuarioLogin.Perfil perfil){
-
         binding.prog.setVisibility(View.VISIBLE);
-
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mes = preferences.getString("mesConsulta","");
         String semana = preferences.getString("semanaConsulta","");
-
         ProviderDatosProceso.getInstance(getContext()).obtenerDatosProceso("5",semana, mes, new ProviderDatosProceso.ConsultaDatosProceso() {
             @Override
             public void resolve(Proceso memorias) {
                 if(memorias.getCodigo()==200){
                     if(memorias.getCodigo()!=404) {
-                        binding.leyendaLayout.setVisibility(View.VISIBLE);
                         if(memorias.getMemorias() != null && memorias.getMemorias().size() > 0) {
                             listaMemorias = memorias.getMemorias();
                             adapter.edit().replaceAll(memorias.getMemorias()).commit();
                             adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                             binding.prog.setVisibility(View.GONE);
+
+                            resizeRecycler(binding, 570);
+
                         } else {
                             binding.prog.setVisibility(View.GONE);
                             Snackbar snackbar = Snackbar.make(binding.layout,
@@ -250,27 +245,5 @@ public class FragmentCardDocumentos extends Fragment implements ProcesoHolder.Li
         Resources r = getResources();
         return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, r.getDisplayMetrics()));
     }
-
-    public void slideUX(final ActivityProcesoListBinding binding){
-        slide = new SlideUpBuilder(binding.content2.slideView)
-                .withListeners(new SlideUp.Listener.Events() {
-                    @Override
-                    public void onSlide(float percent) {
-                        binding.dim.setAlpha(1 - (percent / 100));
-                    }
-
-                    @Override
-                    public void onVisibilityChanged(int visibility) {
-                        if (visibility == 0){
-
-                        }
-                    }
-                }).withStartGravity(Gravity.BOTTOM).withLoggingEnabled(true).withGesturesEnabled(true)
-                .withStartState(SlideUp.State.HIDDEN).withSlideFromOtherView(binding.rootView)
-                .withTouchableAreaPx(100)
-                .withTouchableAreaDp(100)
-                .build();
-    }
-
 
 }

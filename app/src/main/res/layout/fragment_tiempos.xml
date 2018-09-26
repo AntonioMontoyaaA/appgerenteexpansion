@@ -3,9 +3,20 @@
 
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="categoria"
+            type="String"/>
+
+        <variable
+            name="atra"
+            type="Integer"/>
 
     </data>
 
@@ -22,29 +33,278 @@
             android:layout_height="match_parent"
             >
 
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-
                 <LinearLayout
                     android:background="@drawable/background"
-                    android:layout_marginTop="40dp"
-                    android:padding="18dp"
+                    android:layout_marginTop="35dp"
+                    android:padding="16dp"
                     android:layout_width="match_parent"
-                    android:layout_height="570dp"
-                    android:orientation="horizontal">
+                    android:layout_height="577dp"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:background="@drawable/estilo_boton_blanco"
+                        android:id="@+id/linear_motivo_rechazo"
+                        android:layout_width="match_parent"
+                        android:layout_height="90dp"
+                        android:orientation="horizontal"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/linearLayout18">
+
+                        <LinearLayout
+                            android:layout_marginBottom="4dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp">
+
+                            <android.support.v7.widget.CardView
+                                android:id="@+id/card_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_margin="@dimen/card_margin"
+                                android:elevation="1dp"
+                                card_view:cardCornerRadius="@dimen/card_album_radius">
+
+
+                                <android.support.constraint.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="90dp">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="90dp"
+                                        android:layout_marginBottom="5dp"
+                                        android:layout_marginStart="0dp"
+                                        android:layout_marginTop="0dp"
+                                        android:gravity="left"
+                                        android:orientation="horizontal">
+
+                                        <LinearLayout
+                                            android:id="@+id/colorStatus"
+                                            android:layout_width="10dp"
+                                            android:layout_height="90dp"
+                                            android:background="@color/gris_borde"
+                                            android:orientation="vertical"/>
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <LinearLayout
+                                                android:orientation="horizontal"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content">
+
+                                                <LinearLayout
+                                                    android:layout_marginTop="6dp"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="vertical">
+
+                                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                                        android:id="@+id/nombre_md"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginBottom="2dp"
+                                                        android:layout_marginLeft="8dp"
+                                                        android:layout_marginTop="5dp"
+                                                        android:textSize="14dp"
+                                                        android:textColor="@color/colorPrimary"
+                                                        tools:text="hola mundo"
+                                                        app:typeface="robotoBold" />
+
+                                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                                        android:id="@+id/nombre_creo"
+                                                        android:layout_width="wrap_content"
+                                                        android:layout_height="wrap_content"
+                                                        android:layout_marginBottom="2dp"
+                                                        android:layout_marginLeft="8dp"
+                                                        android:textSize="12dp"
+                                                        android:textColor="@color/grisetxt"
+                                                        app:typeface="robotoRegular" />
+
+                                                </LinearLayout>
+
+                                            </LinearLayout>
+
+                                            <LinearLayout
+                                                android:layout_marginBottom="0dp"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="vertical">
+                                                <LinearLayout
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:orientation="vertical">
+                                                    <!--android:text="@{prueba.equals(@string/atrasadas) ? @string/verdetalle : prueba.equals(@string/modificar) ? @string/modificar : @string/categoria_c}"-->
+
+                                                    <LinearLayout
+                                                        android:layout_marginBottom="4dp"
+                                                        android:layout_marginTop="15dp"
+                                                        android:layout_marginStart="10dp"
+                                                        android:orientation="horizontal"
+                                                        android:layout_width="match_parent"
+                                                        android:layout_height="wrap_content">
+
+                                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                                            android:id="@+id/categoria"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:textSize="18dp"
+                                                            tools:text="C"
+                                                            android:textColor="@color/texto_gris"
+                                                            app:typeface="robotoBold" />
+
+
+                                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                                            android:layout_marginStart="90dp"
+                                                            android:textColor="@color/texto_gris"
+                                                            android:layout_gravity="center"
+                                                            android:id="@+id/puntuacion"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:layout_marginBottom="0dp"
+                                                            android:layout_marginTop="0dp"
+                                                            android:textSize="18dp"
+                                                            tools:text="17"
+                                                            app:typeface="robotoBold" />
+
+                                                        <LinearLayout
+                                                            android:layout_marginStart="6dp"
+                                                            android:layout_width="wrap_content"
+                                                            android:layout_height="wrap_content"
+                                                            android:layout_marginTop="8dp"
+                                                            android:gravity="center"
+                                                            android:orientation="horizontal">
+
+                                                            <ImageView
+                                                                android:layout_width="10dp"
+                                                                android:layout_height="10dp"
+                                                                android:shadowColor="@color/rojo"
+                                                                android:src="@drawable/estrella" />
+
+                                                            <ImageView
+                                                                android:layout_width="10dp"
+                                                                android:layout_height="10dp"
+                                                                android:layout_marginStart="2dp"
+                                                                android:src="@drawable/estrella"
+                                                                android:visibility="@{categoria.equals(@string/categoria_c) ? View.INVISIBLE : View.VISIBLE}" />
+
+                                                            <ImageView
+                                                                android:layout_width="10dp"
+                                                                android:layout_height="10dp"
+                                                                android:layout_marginStart="2dp"
+                                                                android:src="@drawable/estrella"
+                                                                android:visibility="@{categoria.equals(@string/categoria_b) || categoria.equals(@string/categoria_c) ? View.INVISIBLE : View.VISIBLE}" />
+
+
+                                                        </LinearLayout>
+
+                                                        <Button
+                                                            android:layout_marginStart="25dp"
+                                                            android:layout_gravity="center"
+                                                            android:textAllCaps="false"
+                                                            android:background="@drawable/estilo_boton_azul_claro"
+                                                            android:id="@+id/verdetalle"
+                                                            android:layout_width="105dp"
+                                                            android:layout_height="25dp"
+                                                            android:textSize="10dp"
+                                                            android:textColor="@color/blanco"
+                                                            android:text="@string/verdetalle" />
+
+                                                    </LinearLayout>
+
+                                                </LinearLayout>
+
+
+                                            </LinearLayout>
+
+                                        </LinearLayout>
+
+
+
+
+
+                                        <LinearLayout
+                                            android:visibility="gone"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="horizontal">
+
+                                        </LinearLayout>
+
+
+                                    </LinearLayout>
+
+                                </android.support.constraint.ConstraintLayout>
+
+
+
+                            </android.support.v7.widget.CardView>
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <android.support.constraint.ConstraintLayout
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal"
                         android:background="@drawable/estilo_boton_blanco"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <LinearLayout
+                            android:id="@+id/linearLayout20"
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp"
+                            android:layout_marginTop="2dp"
+                            android:orientation="vertical"
+                            app:layout_constraintTop_toTopOf="parent">
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:background="@android:color/transparent"
+                                android:gravity="center"
+                                android:text="@string/seguimiento_de_autorizacion"
+                                android:textColor="@color/azultaco"
+                                android:textSize="12sp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/cancelar"
+                                app:typeface="robotoBold" />
+
+                            <View
+                                android:id="@+id/view3"
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="2dp"
+                                android:background="#dfdfdf" />
+
+                        </LinearLayout>
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/recycler_tiempos"
+                            android:layout_width="match_parent"
+                            android:layout_height="423dp"
+                            android:layout_marginEnd="0dp"
+                            android:layout_marginStart="0dp"
+                            android:layout_marginTop="0dp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout20" />
+
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/linearlayout1"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -68,8 +328,8 @@
                                 android:id="@+id/creacion_md_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:layout_marginEnd="9dp"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginEnd="8dp"
                                 android:background="@android:color/transparent"
                                 android:text="---"
                                 android:textColor="@color/azultaco"
@@ -82,6 +342,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_marginTop="2dp"
                             android:layout_marginStart="2dp"
                             android:layout_marginEnd="2dp"
@@ -96,7 +357,7 @@
                                 android:id="@+id/categoriaLabel"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="7dp"
+                                android:layout_marginStart="8dp"
                                 android:background="@android:color/transparent"
                                 android:text="Categoría"
                                 android:layout_gravity="center"
@@ -118,7 +379,7 @@
 
                             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                 android:layout_width="wrap_content"
-                                android:layout_marginStart="126dp"
+                                android:layout_marginStart="123dp"
                                 android:layout_height="wrap_content"
                                 android:background="@android:color/transparent"
                                 android:text="Puntuación"
@@ -137,6 +398,7 @@
                                 android:src="@drawable/estrella" />
 
                             <ImageView
+                                android:layout_marginStart="3dp"
                                 android:layout_gravity="center"
                                 android:id="@+id/estrella2"
                                 android:layout_width="14dp"
@@ -145,17 +407,18 @@
                                 />
 
                             <ImageView
+                                android:layout_marginStart="3dp"
                                 android:layout_gravity="center"
                                 android:id="@+id/estrella3"
-                                android:layout_marginStart="2dp"
                                 android:layout_width="14dp"
                                 android:layout_height="14dp"
                                 android:src="@drawable/estrella"
                                 android:layout_marginEnd="10dp"
                                 />
                         </LinearLayout>
-
+                        <!-- boton ver detalle aqui-->
                         <LinearLayout
+                            android:visibility="gone"
                             android:id="@+id/linearlayout3"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -174,16 +437,6 @@
                                 android:layout_weight="1"
                                 app:typeface="robotoRegular" />
 
-                            <Button
-                                android:textAllCaps="false"
-                                android:layout_marginEnd="10dp"
-                                android:background="@drawable/estilo_boton_azul_claro"
-                                android:id="@+id/verdetalle"
-                                android:layout_width="105dp"
-                                android:layout_height="22dp"
-                                android:textSize="10dp"
-                                android:textColor="@color/blanco"
-                                android:text="@string/verdetalle" />
 
                         </LinearLayout>
 
@@ -194,6 +447,8 @@
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
                             android:layout_marginTop="5dp"
+                            android:layout_marginStart="5dp"
+                            android:layout_marginEnd="5dp"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/linearlayout3">
 
@@ -231,6 +486,7 @@
                         </LinearLayout>
 
                         <TableLayout
+                            android:visibility="gone"
                             android:id="@+id/tabla_tiempos"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -643,8 +899,6 @@
                                     app:layout_constraintStart_toStartOf="parent"
                                     app:typeface="robotoRegular" />
                             </TableRow>
-
-
                             <View
                                 android:layout_marginLeft="0dp"
                                 android:layout_width="wrap_content"
@@ -718,7 +972,9 @@
 
                         </TableLayout>
 
+
                         <LinearLayout
+                            android:visibility="gone"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -747,13 +1003,13 @@
 
                                 <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                     android:layout_width="wrap_content"
-
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="G Expansión"
+                                    android:text="@string/g_expansi_n"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />
+
                             </LinearLayout>
 
                             <LinearLayout
@@ -775,7 +1031,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="Expansión"
+                                    android:text="@string/expansi_n"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />
@@ -800,7 +1056,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
-                                    android:text="Gestoría"
+                                    android:text="@string/gestor_a"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />
@@ -827,7 +1083,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="4dp"
-                                    android:text="Construcción"
+                                    android:text="@string/construcci_n"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />
@@ -852,7 +1108,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="1dp"
-                                    android:text="Operaciones"
+                                    android:text="@string/operaciones"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />
@@ -877,7 +1133,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:layout_marginTop="1dp"
-                                    android:text="Auditoría"
+                                    android:text="@string/auditor_a"
                                     android:textColor="@color/azultaco"
                                     android:textSize="9sp"
                                     app:typeface="robotoRegular" />

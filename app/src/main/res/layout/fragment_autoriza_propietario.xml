@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/toolbar"
+            layout="@layout/toolbar_autoriza"
+            />
+
+        <ScrollView
+            android:background="@drawable/background"
+            android:id="@+id/scroll_bar"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:background="@drawable/background"
+                    android:layout_marginTop="2dp"
+                    android:padding="18dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="610dp"
+                    android:orientation="vertical">
+
+                    <android.support.constraint.ConstraintLayout
+                        android:orientation="horizontal"
+                        android:background="@drawable/estilo_boton_blanco"
+                        android:layout_width="match_parent"
+                        android:layout_height="541dp">
+
+                        <LinearLayout
+                            android:id="@+id/view3"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_gravity="top"
+                            android:background="@drawable/estilo_boton_blanco_up_celeste"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/linearLayout21">
+
+
+                            <LinearLayout
+                                android:layout_marginTop="20dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:orientation="vertical">
+
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="6dp"
+                                    android:backgroundTint="@color/azul"
+                                    android:textColor="@color/colorPrimary"
+                                    android:textSize="14sp"
+                                    android:layout_marginLeft="10dp"
+                                    app:typeface="robotoBold"
+                                    android:text="@string/propietario" />
+
+                                <LinearLayout
+                                    android:layout_marginTop="2dp"
+                                    android:orientation="horizontal"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content">
+
+                                    <de.hdodenhof.circleimageview.CircleImageView
+                                        android:layout_marginStart="10dp"
+                                        android:id="@+id/profile_image"
+                                        android:layout_marginTop="0dp"
+                                        android:layout_width="40dp"
+                                        android:layout_height="40dp"
+                                        android:src="@drawable/profile"
+                                        android:layout_gravity="center"
+                                        />
+
+                                    <LinearLayout
+                                        android:layout_marginStart="4dp"
+                                        android:layout_marginTop="4dp"
+                                        android:orientation="vertical"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content">
+
+                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                            android:id="@+id/nombrepropietario"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:backgroundTint="@color/azul"
+                                            android:textColor="@color/grisetxt"
+                                            android:textSize="12sp"
+                                            android:layout_marginLeft="10dp"
+                                            app:typeface="robotoRegular"
+                                            tools:text="@string/propietario" />
+                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                            android:id="@+id/telefono"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:backgroundTint="@color/azul"
+                                            android:textColor="@color/grisetxt"
+                                            android:textSize="12sp"
+                                            android:layout_marginLeft="10dp"
+                                            app:typeface="robotoRegular"
+                                            tools:text="@string/propietario" />
+                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                            android:id="@+id/email"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:backgroundTint="@color/azul"
+                                            android:textColor="@color/grisetxt"
+                                            android:textSize="12sp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginBottom="6dp"
+                                            app:typeface="robotoRegular"
+                                            tools:text="@string/propietario" />
+
+                                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                            android:id="@+id/robotoTextView11"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:backgroundTint="@color/azul"
+                                            android:textColor="@color/grisetxt"
+                                            android:textSize="12sp"
+                                            android:layout_marginLeft="10dp"
+                                            android:layout_marginBottom="6dp"
+                                            app:typeface="robotoBold"
+                                            android:textAllCaps="true"
+                                            tools:text="@string/propietario" />
+
+                                    </LinearLayout>
+
+
+                                </LinearLayout>
+
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+
+                    </android.support.constraint.ConstraintLayout>
+                    <LinearLayout
+                        android:visibility="gone"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+
+                        <ImageView
+                            android:id="@+id/cancelar"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="0dp"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:typeface="robotoBold" />
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:layout_marginStart="4dp"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blanco"
+                            android:textSize="18sp"
+                            app:typeface="robotoRegular"
+                            android:text="@string/rechazar"  />
+
+
+                        <ImageView
+                            android:layout_marginStart="50dp"
+                            android:id="@+id/aceptar"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginTop="0dp"
+                            android:textColor="@color/letra"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:typeface="robotoBold" />
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/blanco"
+                            android:textSize="18sp"
+                            app:typeface="robotoRegular"
+                            android:text="@string/autorizar" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+</layout>

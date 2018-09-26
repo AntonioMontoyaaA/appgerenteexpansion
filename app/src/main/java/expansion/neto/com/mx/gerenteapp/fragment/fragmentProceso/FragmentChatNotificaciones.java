@@ -55,24 +55,20 @@ public class FragmentChatNotificaciones extends Fragment {
 
 
     private static final int TIPO_COMENTARIO_CHAT_GRAL = 1;
-    private static int tipoChats = 0;
 
     private RecyclerView mMessageRecycler;
     private MensajeChatAdapter mMessageAdapter;
     int index;
-    public static FragmentChatNotificaciones newInstance() {
-        FragmentChatNotificaciones fragmentChat = new FragmentChatNotificaciones();
+    public static FragmentChat newInstance() {
+        FragmentChat fragmentChat = new FragmentChat();
         Bundle args = new Bundle();
         fragmentChat.setArguments(args);
-        tipoChats = args.getInt("index", 0);
         return fragmentChat;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
     }
 
     // Inflate the view for the fragment based on layout XML
@@ -84,19 +80,230 @@ public class FragmentChatNotificaciones extends Fragment {
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chat_notificacion,container,false);
         view = binding.getRoot();
         binding.buttonChat.setEnabled(false);
-        binding.tol.guardar.setVisibility(View.GONE);
-        binding.tol.nombreTitulo.setText(getText(R.string.chat));
+        binding.tol.nombreTitulo.setText(getString(R.string.chat));
+        binding.tol.guardar.setVisibility(View.INVISIBLE);
 
-        binding.tol.back.setOnClickListener(new OnClickListener() {
+        binding.content2.viewge.setAlpha(1);
+        binding.content2.imggerente.setAlpha(1.0f);
+        binding.content2.txtgexpansion.setAlpha(1.0f);
+
+        ViewGroup.LayoutParams params = binding.reyclerviewMessageList.getLayoutParams();
+        final float scale = getContext().getResources().getDisplayMetrics().density;
+        int pixels = (int) (452 * scale + 0.5f);
+        params.height=pixels;
+        binding.reyclerviewMessageList.setLayoutParams(params);
+
+        binding.tol.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main = new Intent(getContext(), ActivityNotificaciones.class);
-                startActivity(main);
+                Intent intent = new Intent(getActivity(), ActivityNotificaciones.class);
+                startActivity(intent);
             }
         });
 
 
-        binding.chatGeneralBtn.setOnClickListener(new OnClickListener() {
+
+        binding.content2.gexpansion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                binding.content2.viewge.setAlpha(1);
+                binding.content2.imggerente.setAlpha(1.0f);
+                binding.content2.txtgexpansion.setAlpha(1.0f);
+
+                binding.content2.imgconstruccion.setAlpha(0.2f);
+                binding.content2.imgauditoria.setAlpha(0.2f);
+                binding.content2.imgoperaciones.setAlpha(0.2f);
+                binding.content2.imggestoria.setAlpha(0.2f);
+                binding.content2.imgexpansion.setAlpha(0.2f);
+
+                binding.content2.viewe.setAlpha(0.2f);
+                binding.content2.viewges.setAlpha(0.2f);
+                binding.content2.viewcon.setAlpha(0.2f);
+                binding.content2.viewope.setAlpha(0.2f);
+                binding.content2.viewaudi.setAlpha(0.2f);
+
+                binding.content2.txtoperaciones.setAlpha(0.2f);
+                binding.content2.txtexpansion.setAlpha(0.2f);
+                binding.content2.txtauditoria.setAlpha(0.2f);
+                binding.content2.txtconstruccion.setAlpha(0.2f);
+                binding.content2.txtgestoria.setAlpha(0.2f);
+
+                consultaChatPorArea(AREA_CONSULTA_GENERAL);
+                areaSeleccionada = AREA_CONSULTA_GENERAL;
+                binding.edittextChatbox.setHint("Escribir mensaje");
+
+            }
+        });
+
+        binding.content2.expansiones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                consultaChatPorArea(AREA_CONSULTA_EXPANSION);
+                areaSeleccionada = AREA_CONSULTA_EXPANSION;
+                binding.edittextChatbox.setHint("Escribir mensaje a expansión");
+
+                binding.content2.viewe.setAlpha(1);
+                binding.content2.imgexpansion.setAlpha(1.0f);
+                binding.content2.txtexpansion.setAlpha(1.0f);
+
+                binding.content2.imgconstruccion.setAlpha(0.2f);
+                binding.content2.imgauditoria.setAlpha(0.2f);
+                binding.content2.imgoperaciones.setAlpha(0.2f);
+                binding.content2.imggestoria.setAlpha(0.2f);
+                binding.content2.imggerente.setAlpha(0.2f);
+
+                binding.content2.viewge.setAlpha(0.2f);
+                binding.content2.viewges.setAlpha(0.2f);
+                binding.content2.viewcon.setAlpha(0.2f);
+                binding.content2.viewope.setAlpha(0.2f);
+                binding.content2.viewaudi.setAlpha(0.2f);
+
+
+                binding.content2.txtoperaciones.setAlpha(0.2f);
+                binding.content2.txtgestoria.setAlpha(0.2f);
+                binding.content2.txtauditoria.setAlpha(0.2f);
+                binding.content2.txtconstruccion.setAlpha(0.2f);
+                binding.content2.txtgexpansion.setAlpha(0.2f);
+
+            }
+        });
+
+        binding.content2.gestoria.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                binding.content2.viewges.setAlpha(1);
+                binding.content2.imggestoria.setAlpha(1.0f);
+                binding.content2.txtgestoria.setAlpha(1.0f);
+
+                binding.content2.imgconstruccion.setAlpha(0.2f);
+                binding.content2.imgauditoria.setAlpha(0.2f);
+                binding.content2.imgoperaciones.setAlpha(0.2f);
+                binding.content2.imgexpansion.setAlpha(0.2f);
+                binding.content2.imggerente.setAlpha(0.2f);
+
+                binding.content2.viewge.setAlpha(0.2f);
+                binding.content2.viewe.setAlpha(0.2f);
+                binding.content2.viewcon.setAlpha(0.2f);
+                binding.content2.viewope.setAlpha(0.2f);
+                binding.content2.viewaudi.setAlpha(0.2f);
+
+                binding.content2.txtoperaciones.setAlpha(0.2f);
+                binding.content2.txtexpansion.setAlpha(0.2f);
+                binding.content2.txtauditoria.setAlpha(0.2f);
+                binding.content2.txtconstruccion.setAlpha(0.2f);
+                binding.content2.txtgexpansion.setAlpha(0.2f);
+                consultaChatPorArea(AREA_CONSULTA_GESTORIA);
+                areaSeleccionada = AREA_CONSULTA_GESTORIA;
+                binding.edittextChatbox.setHint("Escribir mensaje a gestoría");
+
+            }
+        });
+
+        binding.content2.construccion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                consultaChatPorArea(AREA_CONSULTA_CONSTRUCCION);
+                areaSeleccionada = AREA_CONSULTA_CONSTRUCCION;
+                binding.edittextChatbox.setHint("Escribir mensaje a construcción");
+
+                binding.content2.viewcon.setAlpha(1);
+                binding.content2.imgconstruccion.setAlpha(1.0f);
+                binding.content2.txtconstruccion.setAlpha(1.0f);
+
+                binding.content2.imggestoria.setAlpha(0.2f);
+                binding.content2.imgauditoria.setAlpha(0.2f);
+                binding.content2.imgoperaciones.setAlpha(0.2f);
+                binding.content2.imgexpansion.setAlpha(0.2f);
+                binding.content2.imggerente.setAlpha(0.2f);
+
+                binding.content2.viewge.setAlpha(0.2f);
+                binding.content2.viewe.setAlpha(0.2f);
+                binding.content2.viewges.setAlpha(0.2f);
+                binding.content2.viewope.setAlpha(0.2f);
+                binding.content2.viewaudi.setAlpha(0.2f);
+
+                binding.content2.txtoperaciones.setAlpha(0.2f);
+                binding.content2.txtexpansion.setAlpha(0.2f);
+                binding.content2.txtauditoria.setAlpha(0.2f);
+                binding.content2.txtgestoria.setAlpha(0.2f);
+                binding.content2.txtgexpansion.setAlpha(0.2f);
+
+            }
+        });
+
+        binding.content2.operaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                consultaChatPorArea(AREA_CONSULTA_OPERACIONES);
+                areaSeleccionada = AREA_CONSULTA_OPERACIONES;
+                binding.edittextChatbox.setHint("Escribir mensaje a operaciones");
+
+                binding.content2.viewope.setAlpha(1);
+                binding.content2.imgoperaciones.setAlpha(1.0f);
+                binding.content2.txtoperaciones.setAlpha(1.0f);
+
+                binding.content2.imggestoria.setAlpha(0.2f);
+                binding.content2.imgauditoria.setAlpha(0.2f);
+                binding.content2.imgconstruccion.setAlpha(0.2f);
+                binding.content2.imgexpansion.setAlpha(0.2f);
+                binding.content2.imggerente.setAlpha(0.2f);
+
+                binding.content2.viewge.setAlpha(0.2f);
+                binding.content2.viewe.setAlpha(0.2f);
+                binding.content2.viewges.setAlpha(0.2f);
+                binding.content2.viewcon.setAlpha(0.2f);
+                binding.content2.viewaudi.setAlpha(0.2f);
+
+                binding.content2.txtconstruccion.setAlpha(0.2f);
+                binding.content2.txtexpansion.setAlpha(0.2f);
+                binding.content2.txtauditoria.setAlpha(0.2f);
+                binding.content2.txtgestoria.setAlpha(0.2f);
+                binding.content2.txtgexpansion.setAlpha(0.2f);
+
+            }
+        });
+
+        binding.content2.auditorias.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                binding.content2.viewaudi.setAlpha(1);
+                binding.content2.imgauditoria.setAlpha(1.0f);
+                binding.content2.txtauditoria.setAlpha(1.0f);
+
+                binding.content2.imggerente.setAlpha(0.2f);
+                binding.content2.imgoperaciones.setAlpha(0.2f);
+                binding.content2.imgconstruccion.setAlpha(0.2f);
+                binding.content2.imgexpansion.setAlpha(0.2f);
+                binding.content2.imggestoria.setAlpha(0.2f);
+
+                binding.content2.viewge.setAlpha(0.2f);
+                binding.content2.viewe.setAlpha(0.2f);
+                binding.content2.viewges.setAlpha(0.2f);
+                binding.content2.viewcon.setAlpha(0.2f);
+                binding.content2.viewope.setAlpha(0.2f);
+
+                binding.content2.txtconstruccion.setAlpha(0.2f);
+                binding.content2.txtexpansion.setAlpha(0.2f);
+                binding.content2.txtoperaciones.setAlpha(0.2f);
+                binding.content2.txtgestoria.setAlpha(0.2f);
+                binding.content2.txtgexpansion.setAlpha(0.2f);
+
+                consultaChatPorArea(AREA_CONSULTA_AUDITORIA);
+                areaSeleccionada = AREA_CONSULTA_AUDITORIA;
+                binding.edittextChatbox.setHint("Escribir mensaje");
+
+            }
+        });
+
+        /************************** nuevo version **************************/
+
+        binding.chatGeneralBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_on));
@@ -114,7 +321,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatAuditoriaBtn.setOnClickListener(new OnClickListener() {
+        binding.chatAuditoriaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatAuditoriaBtn.setImageDrawable(resource.getDrawable(R.drawable.auditoriaon));
@@ -131,7 +338,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatGexpansionBtn.setOnClickListener(new OnClickListener() {
+        binding.chatGexpansionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_off));
@@ -148,7 +355,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatExpansionBtn.setOnClickListener(new OnClickListener() {
+        binding.chatExpansionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_off));
@@ -165,7 +372,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatGestoriaBtn.setOnClickListener(new OnClickListener() {
+        binding.chatGestoriaBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_off));
@@ -182,7 +389,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatConstruccionBtn.setOnClickListener(new OnClickListener() {
+        binding.chatConstruccionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_off));
@@ -199,7 +406,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.chatOperacionesBtn.setOnClickListener(new OnClickListener() {
+        binding.chatOperacionesBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.chatGeneralBtn.setImageDrawable(resource.getDrawable(R.drawable.ic_general_off));
@@ -239,7 +446,7 @@ public class FragmentChatNotificaciones extends Fragment {
             }
         });
 
-        binding.buttonChat.setOnClickListener(new OnClickListener() {
+        binding.buttonChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 binding.buttonChat.setEnabled(false);

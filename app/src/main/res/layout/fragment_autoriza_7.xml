@@ -45,50 +45,62 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
 
+                        <LinearLayout
+                            android:id="@id/view3"
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_gravity="top"
+                            android:background="@drawable/estilo_boton_blanco_up_celeste"
+                            android:orientation="vertical">
+
+                        </LinearLayout>
 
                         <LinearLayout
                             android:id="@+id/linearLayoutHeader"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal"
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent">
 
                             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="18dp"
-                                android:layout_weight="1"
-                                android:text=""
-                                android:textColor="@color/azultaco"
-                                android:textSize="14sp"
-                                app:typeface="robotoRegular" />
+                                android:layout_gravity="right"
+                                android:layout_marginEnd="16dp"
+                                android:layout_marginTop="0dp"
+                                app:typeface="robotoBold"
+                                android:text="Puntos"
+                                android:textColor="@color/colorPrimaryDark"/>
 
-
-                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="right"
-                            android:layout_marginEnd="16dp"
-                            android:layout_marginTop="10dp"
-                            app:typeface="robotoBold"
-                            android:text="Puntos"
-                            android:textColor="@color/colorPrimaryDark"/>
+                            <View
+                                android:id="@+id/view4"
+                                android:layout_width="match_parent"
+                                android:layout_height=".5dp"
+                                android:layout_marginTop="6dp"
+                                android:layout_gravity="center"
+                                android:layout_marginEnd="0dp"
+                                android:layout_marginStart="0dp"
+                                android:background="@color/grisetxt"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/map" />
 
                         </LinearLayout>
 
 
                         <LinearLayout
-                            android:background="@color/blanco"
                             android:id="@+id/linearLayout"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
                             android:layout_marginStart="16dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_marginTop="8dp"
+                            android:background="@color/blanco"
                             android:orientation="vertical"
                             app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/linearLayoutHeader">
 
@@ -99,22 +111,22 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_margin="0dp"
-                                android:textSize="14dp"
-                                app:typeface="robotoBold"
                                 android:layout_marginTop="0dp"
                                 android:text="@string/macro_ubicaci_n"
-                                android:textColor="@color/colorPrimaryDark"/>
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="14dp"
+                                app:typeface="robotoBold" />
 
                             <TableLayout
-                                android:layout_marginTop="4dp"
                                 android:id="@+id/factores"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:divider="@drawable/line"
+                                android:layout_marginBottom="4dp"
+                                android:layout_marginTop="4dp"
+                                android:divider="@drawable/background_blanco"
                                 android:dividerPadding="-2dp"
                                 android:orientation="horizontal"
                                 android:showDividers="middle"
-                                android:layout_marginBottom="4dp"
                                 android:stretchColumns="*">
 
                             </TableLayout>
@@ -125,19 +137,19 @@
                                 android:layout_height="wrap_content"
                                 android:layout_gravity="left"
                                 android:layout_margin="0dp"
-                                android:textSize="14dp"
                                 android:layout_marginTop="4dp"
-                                app:typeface="robotoBold"
                                 android:text="@string/micro_ubicaci_n"
-                                android:textColor="@color/colorPrimaryDark"/>
+                                android:textColor="@color/colorPrimaryDark"
+                                android:textSize="14dp"
+                                app:typeface="robotoBold" />
 
                             <TableLayout
                                 android:id="@+id/factoresMicro"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:divider="@drawable/line"
-                                android:dividerPadding="-2dp"
                                 android:layout_marginTop="4dp"
+                                android:divider="@drawable/background_blanco"
+                                android:dividerPadding="-2dp"
                                 android:orientation="horizontal"
                                 android:showDividers="middle"
                                 android:stretchColumns="*">

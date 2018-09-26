@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:id="@+id/layout"
+        android:background="@drawable/background"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/buscar"
+            android:padding="4dp"
+            android:backgroundTint="@color/blanco"
+            android:drawableLeft="@drawable/places_ic_search"
+            android:drawableTint="@color/azultaco"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_edit_buscar"
+            android:layout_width="match_parent"
+            android:textSize="12sp"
+            android:layout_height="28dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:hint="@string/buscar"
+            android:imeOptions="actionSearch"/>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:layout_marginTop="10dp"
+            android:background="@android:color/transparent"
+            android:id="@+id/rootView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="9dp"
+            android:layout_marginStart="9dp">
+
+            <include
+                android:id="@+id/content2"
+                layout="@layout/slide_leyenda"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="0dp"
+            android:id="@+id/estadisticas"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/esta"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginTop="4dp"
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <LinearLayout
+                    android:background="@drawable/estilo_boton_blanco_borde_list"
+                    android:layout_width="162dp"
+                    android:layout_height="50dp">
+
+                    <LinearLayout
+                        android:background="@drawable/estilo_boton_blanco_borde_list_bor"
+                        android:id="@+id/colorIzq"
+                        android:layout_width="10dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/totalMd"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="350"
+                        android:textColor="@color/grisetxt"
+                        android:textSize="16sp"
+                        app:typeface="robotoRegular" />
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="MDs Totales"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/grisetxt"
+                        android:textSize="14sp"
+                        app:typeface="robotoRegular" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_marginStart="20dp"
+                    android:background="@drawable/estilo_boton_blanco_borde_list"
+                    android:layout_width="162dp"
+                    android:layout_height="50dp">
+                    <LinearLayout
+                        android:background="@drawable/estilo_boton_blanco_borde_list_bors"
+                        android:id="@+id/colorDer"
+                        android:layout_width="10dp"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+
+
+
+                    </LinearLayout>
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        tools:text="350"
+                        android:id="@+id/totalAtrasadas"
+                        android:textColor="@color/atrasadas"
+                        android:textSize="16sp"
+                        app:typeface="robotoRegular" />
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/atrasmayus"
+                        android:layout_marginStart="10dp"
+                        android:layout_gravity="center"
+                        android:textColor="@color/grisetxt"
+                        android:textSize="14sp"
+                        app:typeface="robotoRegular" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="6dp"
+            android:id="@+id/layouts"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.RecyclerView
+                android:layout_marginStart="7dp"
+                android:layout_marginEnd="7dp"
+                android:id="@+id/recycler_autoriza"
+                android:layout_width="match_parent"
+                android:layout_height="475dp"/>
+
+            <ProgressBar
+                android:layout_gravity="center"
+                android:id="@+id/prog"
+                style="?android:attr/progressBarStyleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-250dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:indeterminate="true" />
+
+
+
+            <LinearLayout
+                android:visibility="gone"
+                android:id="@+id/leyendaLayout"
+                android:layout_marginTop="40dp"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:background="@drawable/estilo_boton_blanco_up">
+
+                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                    android:id="@+id/leyenda"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Leyenda"
+                    android:textColor="@color/azultaco"
+                    android:textSize="12sp"
+                    app:typeface="robotoRegular" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <Button
+            android:visibility="gone"
+            android:layout_marginTop="8dp"
+            android:id="@+id/vermas"
+            android:layout_width="105dp"
+            android:layout_height="30dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_gravity="center"
+            android:background="@drawable/estilo_boton_azul_claro"
+            android:text="@string/vermas"
+            android:textAllCaps="false"
+            android:textColor="@color/blanco" />
+
+
+    </LinearLayout>
+
+
+
+
+</layout>

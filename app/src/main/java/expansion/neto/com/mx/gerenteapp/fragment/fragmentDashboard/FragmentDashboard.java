@@ -1,25 +1,17 @@
 package expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard;
 
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.format.DateFormat;
-import android.text.style.AlignmentSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.eralp.circleprogressview.ProgressAnimationListener;
@@ -27,12 +19,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.cron.ReminderUtilities;
@@ -43,14 +32,12 @@ import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentInicio
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutorizadas.FragmentInicioAutorizadas;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDocumentos.FragmentInicioDocumentos;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazo.FragmentInicioRechazadas;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentInicioRechazadas;
 import expansion.neto.com.mx.gerenteapp.modelView.dashboardModel.Dashboard;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Permiso;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.UsuarioLogin;
 import expansion.neto.com.mx.gerenteapp.provider.dashboardProvider.ProviderDatosDashboard;
-import expansion.neto.com.mx.gerenteapp.ui.autoriza.ActivityAutorizar;
-import expansion.neto.com.mx.gerenteapp.ui.autorizadas.ActivityAutorizadas;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
 public class FragmentDashboard extends Fragment {
@@ -123,7 +110,7 @@ public class FragmentDashboard extends Fragment {
         binding.autorizadas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main = new Intent(getContext(), ActivityAutorizadas.class);
+                Intent main = new Intent(getContext(), FragmentInicioAutorizadas.class);
                 startActivity(main);
             }
         });

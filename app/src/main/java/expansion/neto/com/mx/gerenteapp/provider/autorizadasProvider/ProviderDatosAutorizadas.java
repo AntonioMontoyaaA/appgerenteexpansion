@@ -40,7 +40,7 @@ public class ProviderDatosAutorizadas {
     private final String SEMANA_0 = "0";
 
 
-    public void obtenerDatosAutorizadas(final String mes, final String usuarioId, final ConsultaDatosSitio promise){
+    public void obtenerDatosAutorizadas(final String vermas, final String mes, final String usuarioId, final ConsultaDatosSitio promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Autorizadas>() {
             @Override
@@ -55,6 +55,7 @@ public class ProviderDatosAutorizadas {
                             .add("usuarioId", usuarioId)
                             .add("mes", mes)
                             .add("semana", SEMANA_0)
+                            .add("vermas", vermas)
                             .add("anio", String.valueOf(anio));
 
                     RequestBody formBody = formBuilder.build();
@@ -67,12 +68,8 @@ public class ProviderDatosAutorizadas {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
-                    usuarioCallback = gson.fromJson(jsonInString, Autorizadas.class);
-                    if(usuarioCallback.getCodigo() == 404) {
-                        Util.cerrarSesion(context);
-                        return null;
-                    }
-                        return usuarioCallback;
+                    return usuarioCallback = gson.fromJson(jsonInString, Autorizadas.class);
+
                 }catch (Exception e){
                     if(e.getMessage().contains("Failed to connect to")){
                         usuarioCallback = new Autorizadas();
@@ -80,7 +77,7 @@ public class ProviderDatosAutorizadas {
                         return usuarioCallback;
                     }else{
                         usuarioCallback = new Autorizadas();
-                        usuarioCallback.setCodigo(403);
+                        usuarioCallback.setCodigo(404);
                         return usuarioCallback;
                     }
                 }

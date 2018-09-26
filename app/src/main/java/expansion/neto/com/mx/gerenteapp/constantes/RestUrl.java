@@ -11,11 +11,13 @@ public class RestUrl {
     public static String ip = "167.99.102.173"; // QA
     //public static String ip = "206.189.223.154"; // produccion
 
+    //cuando se finalice aparesca progress dialog de finalizado, cuando damos aceptar menu documentos
+
     //public static String dominio = "voksedesapi"; // desarrollo
     public static String dominio = "vokseqaapi"; // QA
     //public static String dominio = "vokseapi"; // produccion
 
-    public static String VERSION_APP = "1.1.3";
+    public static String VERSION_APP = "1.2.1";
 
     public static String NUM_TELEFONO = "0";
 
@@ -96,6 +98,36 @@ public class RestUrl {
     public static String REST_ACTION_CONSULTAR_DOCUMENTOS = "http://"+ ip +"/"+ dominio +"/obtienelistadoctos/";
 
     public static String REST_ACTION_GUARDAR_DOCUMENTOS = "http://"+ ip +"/"+ dominio +"/guardadocsmontos/";
+
+    public static String REST_ACTION_OBTENER_FACTORES_CONSTRUCCION = "http://"+ ip +"/"+ dominio +"/consultacatfactores/";
+
+    public static String FACTOR_ID = "5";
+
+    public static String REST_ACTION_CONSULTAR_DATOS_COMPETENCIA_GENERADORES = "http://"+ ip +"/"+ dominio +"/obtienecomgen/";
+
+    public static String REST_CONSULTA_TOTALES = "http://"+ ip +"/"+ dominio +"/consultamdstotales/";
+
+    public static String STATUS_TOTALES = "1";
+
+    public static String ID_GEXPANSION = "4";
+
+    public static String ID_EXPANSION = "1";
+
+    public static String ID_GESTORIA = "2";
+
+    public static String ID_CONSTRUCCION = "3";
+
+    public static String ID_AUDITORIA = "4";
+
+    public static String ID_FINANZAS = "6";
+
+    public static String ID_OPERACIONES = "5";
+
+    public static String ANIO_ACTUAL = "2018";
+
+    public static String TIPOSERVICIO = "11";
+
+    public static String REST_CONSULTA_MONTO = "http://"+ ip +"/"+ dominio +"/guardadocsmontos/";
 
 
 }

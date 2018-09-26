@@ -60,8 +60,6 @@
         <activity android:name=".ui.autoriza.ActivityAutorizar" android:screenOrientation="portrait"/>
         <activity android:name=".ui.autoriza.ActivityListaAutoriza" android:screenOrientation="portrait"/>
         <activity android:name=".ui.proceso.ActivityProceso" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.rechazo.ActivityRechazo" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.autorizadas.ActivityAutorizadas" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityCalendario" android:screenOrientation="portrait"/>
         <activity android:name=".ui.detalle.ActivityDetalle" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityAddEvento" android:screenOrientation="portrait"/>
@@ -72,12 +70,12 @@
         <activity android:name=".fragment.fragmentRechazo.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentAutorizadas.FragmentInicioAutorizadas" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentDocumentos.FragmentInicioDocumentos" android:screenOrientation="portrait"/>
-
         <activity android:name=".ui.documentos.ActivityDocumentos" android:screenOrientation="portrait"/>
-
         <activity android:name=".fragment.fragmentAgenda.FragmentInicioAgenda" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityNotificaciones" android:screenOrientation="portrait"/>
         <activity android:name=".ui.agenda.ActivityDetalleNotificaciones" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.rechazadas.ActivityRechazadas" android:screenOrientation="portrait"/>
+        <activity android:name=".fragment.fragmentRechazadas.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

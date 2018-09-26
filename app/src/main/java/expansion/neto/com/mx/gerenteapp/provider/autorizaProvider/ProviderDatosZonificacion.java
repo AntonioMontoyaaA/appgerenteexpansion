@@ -36,7 +36,7 @@ public class ProviderDatosZonificacion {
         return instance;
     }
 
-    public void obtenerDatosConstruccion(final String mdId, final String usuarioId, final ConsultaDatosZonificacion promise){
+    public void obtenerDatosZonificacion(final String mdId, final String usuarioId, final ConsultaDatosZonificacion promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Zonificacion>() {
             @Override
@@ -58,20 +58,19 @@ public class ProviderDatosZonificacion {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
-                    callback = gson.fromJson(jsonInString, Zonificacion.class);
-                    if(callback.getCodigo() == 404) {
-                        Util.cerrarSesion(context);
-                        return null;
-                    }
-                    return callback;
+
+
+                    return callback = gson.fromJson(jsonInString, Zonificacion.class);
+
                 }catch (Exception e){
+                    e.printStackTrace();
                     if(e.getMessage().contains("Failed to connect to")){
                         callback = new Zonificacion();
                         callback.setCodigo(1);
                         return callback;
                     }else{
                         callback = new Zonificacion();
-                        callback.setCodigo(403);
+                        callback.setCodigo(404);
                         return callback;
                     }
                 }
@@ -87,5 +86,6 @@ public class ProviderDatosZonificacion {
         void resolve(Zonificacion zonificacion);
         void reject(Exception e);
     }
+
 
 }

@@ -100,6 +100,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="582dp"
                     android:layout_marginBottom="8dp"
+
                     android:layout_marginEnd="12dp"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginStart="12dp"
@@ -116,19 +117,41 @@
                     app:layout_constraintVertical_bias="1.0">
 
 
-
                 <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                    android:id="@+id/nombreMd"
+                    android:visibility="gone"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="14dp"
                     android:layout_marginTop="10dp"
                     app:typeface="robotoRegular"
-                    tools:text="@string/administramd"
+                    android:text="Obligatorios"
                     android:textColor="@color/colorPrimary" />
 
-                <LinearLayout
+                <Button
+                    android:enabled="false"
+                    android:alpha=".4"
+                    android:id="@+id/btn_finalizar"
+                    android:layout_width="170dp"
+                    android:layout_height="35dp"
+                    android:layout_margin="10dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:background="@drawable/estilo_boton_azul_claro"
+                    android:text="@string/finalizar"
+                    android:textColor="@color/blanco" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginTop="6dp"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="0dp"
+                    android:layout_marginStart="0dp"
+                    android:background="@color/grisetxt"
+                    />
+
+                <ScrollView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -142,39 +165,29 @@
                             android:id="@+id/plomosTable"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:divider="@drawable/line"
+                            android:divider="@drawable/background_blanco"
                             android:dividerPadding="-2dp"
-                            android:orientation="horizontal"
+                            android:orientation="vertical"
                             android:showDividers="middle"
                             android:stretchColumns="*">
 
                     </TableLayout>
 
 
-                </LinearLayout>
+                    <!--<LinearLayout-->
+                        <!--android:layout_gravity="center"-->
+                        <!--android:gravity="center"-->
+                        <!--android:layout_marginTop="10dp"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:orientation="horizontal"-->
+                        <!--android:padding="10dp">-->
 
-                <LinearLayout
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="10dp">
 
-                    <Button
-                        android:enabled="false"
-                        android:alpha=".4"
-                        android:id="@+id/btn_finalizar"
-                        android:layout_width="170dp"
-                        android:layout_height="35dp"
-                        android:layout_margin="10dp"
-                        android:layout_gravity="center"
-                        android:gravity="center"
-                        android:background="@drawable/estilo_boton_azul_claro"
-                        android:text="@string/finalizar"
-                        android:textColor="@color/blanco" />
-                </LinearLayout>
+                    <!--</LinearLayout>-->
+                </ScrollView>
+
+
 
             </LinearLayout>
 

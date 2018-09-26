@@ -16,7 +16,7 @@ public class AutorizaHolder extends SortedListAdapter.ViewHolder<Autorizadas.Mem
 
     @Override
     protected void performBind(Autorizadas.Memoria item) {
-        itemAutorizaPrickerBinding.setAutorizaModel(item);
+        itemAutorizaPrickerBinding.setProcesoModel(item);
     }
 
     public interface Listener {

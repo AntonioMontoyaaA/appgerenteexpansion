@@ -24,7 +24,7 @@ public class ProviderObtieneNotificaciones {
     Notificaciones usuarioCallback = null;
 
     private static String ESTATUS_NOTIFICACION = "0";
-    private static String NUM_REGISTROS = "50";
+    private static String NUM_REGISTROS = "100";
     private static String TIPO_NOTIFICACION = "1";
 
     public ProviderObtieneNotificaciones() {}

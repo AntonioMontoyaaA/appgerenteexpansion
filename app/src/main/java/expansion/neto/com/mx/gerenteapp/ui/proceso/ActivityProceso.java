@@ -1,39 +1,25 @@
 package expansion.neto.com.mx.gerenteapp.ui.proceso;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityProcesoBinding;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentAutoriza;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentChat;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentTiempos;
-import expansion.neto.com.mx.gerenteapp.ui.autoriza.ActivityAutorizar;
-import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
 
 public class ActivityProceso extends AppCompatActivity {
-    FragmentPagerAdapter adapterViewPager;
-
     private ActivityProcesoBinding binding;
     private ActivityProcesoAdapter adapter;
-    private int currentItem;
-
-    private final int BACK_EN_PROCESO = 1;
     private static final int PANTALLA_EN_PROCESO = 1;
 
     @Override
@@ -45,27 +31,22 @@ public class ActivityProceso extends AppCompatActivity {
         setSupportActionBar(binding.toolbarOpciones);
 
         binding.toolbar.nombreTitulo.setText(getString(R.string.enProceso));
+        binding.toolbar.guardar.setVisibility(View.GONE);
 
         binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent main = new Intent(getApplicationContext(), FragmentInicioProceso.class);
-                startActivity(main);
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentDialogCancelarMdProceso dFragment = new FragmentDialogCancelarMdProceso();
+                dFragment.show(fm, "Dialog Fragment");
             }
         });
-
-        SharedPreferences preferences;
-        preferences = getApplicationContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt("TIPO_BACK", BACK_EN_PROCESO);
-        editor.apply();
 
         TabLayout tabLayout = binding.tabLayout;
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.enProcesoMenuTiempos)));
         tabLayout.addTab(tabLayout.newTab().setText(getString(R.string.enProcesoMenuChat)));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
-        currentItem = 0;
         binding.anterior.setVisibility(View.INVISIBLE);
         adapter = new ActivityProcesoAdapter(getSupportFragmentManager());
         binding.pager.setAdapter(adapter);
@@ -111,13 +92,11 @@ public class ActivityProceso extends AppCompatActivity {
                 case 0:
                     return FragmentTiempos.newInstance(PANTALLA_EN_PROCESO);
                 case 1:
-                    return FragmentChat.newInstance(PANTALLA_EN_PROCESO);
+                    return FragmentChat.newInstance();
                 default:
                     return null;
             }
         }
-
-        // Returns the page title for the top indicator
         @Override
         public CharSequence getPageTitle(int position) {
             return "Page " + position;
@@ -127,7 +106,12 @@ public class ActivityProceso extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        Intent main = new Intent(getApplicationContext(), FragmentInicioProceso.class);
-        startActivity(main);
+        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+            getSupportFragmentManager().popBackStack();
+        } else {
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentDialogCancelarMdProceso dFragment = new FragmentDialogCancelarMdProceso();
+            dFragment.show(fm, "Dialog Fragment");
+        }
     }
 }
