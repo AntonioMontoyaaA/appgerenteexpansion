@@ -256,7 +256,7 @@ public class Usuario {
         usuario.setNombre(preferences.getString("nombreCompleto", ""));
         usuario.setCorreo(preferences.getString("correo", ""));
         return usuario;
-
+        
     }
 
 }

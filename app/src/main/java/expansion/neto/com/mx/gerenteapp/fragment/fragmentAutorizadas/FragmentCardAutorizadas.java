@@ -31,6 +31,8 @@ import java.util.List;
 
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityAutorizadasListBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDetalle.FragmentDetalle;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterAutoriza;
+import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolder;
 import expansion.neto.com.mx.gerenteapp.sorted.autorizadas.AutorizadasHolder;
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Autorizadas;
@@ -372,6 +374,13 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
         return view;
     }
 
+    private AutorizadasHolder.Listener autorizaHolder = new AutorizadasHolder.Listener() {
+        @Override
+        public void onProcesoSelect(Autorizadas.Autorizada model) {
+        }
+    };
+
+
     public void getListaProceso(){
 
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -383,23 +392,23 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
                 new ProviderDatosAutorizadas.ConsultaDatosSitio() {
                     @Override
                     public void resolve(Autorizadas datosSitio) {
-
                         if(datosSitio!=null && datosSitio.getAutorizadas()!=null){
 
-                            loadingProgress(progressDialog, 1);
-
-                            binding.recyclerAutoriza.setAdapter(null);
-                            binding.recyclerAutoriza.removeAllViews();
+                            adapter = new AdapterAutorizadas(getContext(),ALPHABETICAL_COMPARATOR, autorizaHolder);
+                            listaMemorias.clear();
+                            adapter.edit().replaceAll(listaMemorias).commit();
+                            adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
+                            binding.recyclerAutoriza.setAdapter(adapter);
 
 
                             listaMemorias = datosSitio.getAutorizadas();
-                            adapter.edit().replaceAll(datosSitio.getAutorizadas()).commit();
+                            adapter.edit().replaceAll(listaMemorias).commit();
                             adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                             binding.recyclerAutoriza.setAdapter(adapter);
 
                             binding.prog.setVisibility(View.GONE);
-                            //binding.rootView.setVisibility(View.VISIBLE);
                             binding.vermas.setVisibility(View.VISIBLE);
+                            loadingProgress(progressDialog, 1);
 
 
                         }else{
@@ -444,20 +453,14 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
 
                         if(datosSitio!=null && datosSitio.getAutorizadas()!=null){
 
-                            loadingProgress(progressDialog, 1);
-
-                            binding.recyclerAutoriza.setAdapter(null);
-                            binding.recyclerAutoriza.removeAllViews();
-
-
                             listaMemorias = datosSitio.getAutorizadas();
                             adapter.edit().replaceAll(datosSitio.getAutorizadas()).commit();
                             adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                             binding.recyclerAutoriza.setAdapter(adapter);
 
                             binding.prog.setVisibility(View.GONE);
-                            //binding.rootView.setVisibility(View.VISIBLE);
                             binding.vermas.setVisibility(View.VISIBLE);
+                            loadingProgress(progressDialog, 1);
 
 
                         }else{
@@ -474,7 +477,9 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
     }
 
     @Override
-    public void onProcesoSelect(Autorizadas.Autorizada model) { }
+    public void onProcesoSelect(Autorizadas.Autorizada model) {
+
+    }
 
     public class GridSpacingItemDecoration extends RecyclerView.ItemDecoration {
 

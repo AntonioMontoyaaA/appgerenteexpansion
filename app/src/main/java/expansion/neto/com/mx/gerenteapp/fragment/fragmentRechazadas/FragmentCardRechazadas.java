@@ -372,7 +372,7 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
 
         binding.prog.setVisibility(View.VISIBLE);
 
-        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProceso(area, mes, new ProviderDatosProceso.ConsultaDatosProceso() {
+        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProcesos("0",area, mes, new ProviderDatosProceso.ConsultaDatosProceso() {
             @Override
             public void resolve(Proceso memorias) {
                 if(memorias!=null){
@@ -385,7 +385,7 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
                                 adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                                 binding.prog.setVisibility(View.GONE);
                                 binding.rootView.setVisibility(View.VISIBLE);
-                                binding.vermas.setVisibility(View.VISIBLE);
+                                //binding.vermas.setVisibility(View.VISIBLE);
 
                             } else {
                                 binding.prog.setVisibility(View.GONE);
@@ -444,7 +444,6 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
 
         binding.prog.setVisibility(View.VISIBLE);
 
-
         ProviderDatosRechazadas.getInstance(getContext()).obtenerDatosRechazadas(usuarioId, area, mes, new
                 ProviderDatosRechazadas.ConsultaDatosRechazadas() {
             @Override
@@ -465,7 +464,7 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
 
                                 binding.prog.setVisibility(View.GONE);
                                 binding.rootView.setVisibility(View.VISIBLE);
-                                binding.vermas.setVisibility(View.VISIBLE);
+                               // binding.vermas.setVisibility(View.VISIBLE);
 
                             } else {
                                 binding.prog.setVisibility(View.GONE);

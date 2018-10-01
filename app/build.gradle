@@ -8,7 +8,7 @@ android {
         applicationId "expansion.neto.com.mx.gerenteapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 9
+        versionCode 10
         versionName "1.2.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -24,6 +24,7 @@ android {
 
     defaultConfig {
         multiDexEnabled true
+        vectorDrawables.useSupportLibrary = true
     }
 
     buildToolsVersion '27.0.3'
@@ -59,7 +60,7 @@ dependencies {
     implementation 'noman.weekcalendar:weekcalendar:1.0.6'
     implementation 'joda-time:joda-time:2.9.9'
     implementation project(':calendarlibrary')
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.5'
     implementation 'com.ss.bannerslider:bannerslider:2.0.0'
 
     implementation 'com.squareup.picasso:picasso:2.71828'

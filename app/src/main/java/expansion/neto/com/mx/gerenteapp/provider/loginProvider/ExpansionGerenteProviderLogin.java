@@ -15,6 +15,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_APLICACION;
 import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
 import static expansion.neto.com.mx.gerenteapp.utils.Util.md5;
 
@@ -58,9 +59,9 @@ public class ExpansionGerenteProviderLogin {
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("usuarioId", usuario.getUsuario())
                             .add("contrasena", md5(usuario.getContra()))
-                            .add("numImei", Util.getImei(context))
+                            .add("numImei", "351881091739183")
                             .add("versionapp", VERSION_APP)
-                            .add("tipoLog", "1");
+                            .add("tipoLog", TIPO_APLICACION);
 
                     RequestBody formBody = formBuilder.build();
                     Request request = new Request.Builder()

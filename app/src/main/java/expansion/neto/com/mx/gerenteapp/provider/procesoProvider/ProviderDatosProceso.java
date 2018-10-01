@@ -40,7 +40,7 @@ public class ProviderDatosProceso {
         return instance;
     }
 
-    public void obtenerDatosProceso(final String semana, final String mes, final ProviderDatosProceso.ConsultaDatosProceso promise){
+    public void obtenerDatosProcesos(final String vermas, final String semana, final String mes, final ProviderDatosProceso.ConsultaDatosProceso promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Proceso>() {
             @Override
@@ -64,6 +64,7 @@ public class ProviderDatosProceso {
                             .add("anio", String.valueOf(anio))
                             .add("tipoconsulta", TIPO_CONSULTA_MD_POR_AUTORIZAR)
                             .add("tipoapp", TIPO_APP)
+                            .add("vermas", vermas)
                             .add("usuarioId", Usuario.sharedGet(context).getUsuario());
 
                     RequestBody formBody = formBuilder.build();

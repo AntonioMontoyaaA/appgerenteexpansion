@@ -349,12 +349,12 @@ public class FragmentAutoriza extends Fragment implements
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_1));
 
             if (permisoP1) {
-                binding.aceptar.setVisibility(View.VISIBLE);
+                binding.acep.setVisibility(View.VISIBLE);
             } else if (permisoRechazarP1) {
-                binding.cancelar.setVisibility(View.VISIBLE);
+                binding.can.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
-                binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.can.setVisibility(View.INVISIBLE);
+                binding.acep.setVisibility(View.INVISIBLE);
             }
 
             binding.toolbar.nombreTitulo.setText(getString(R.string.datossitio));
@@ -498,7 +498,7 @@ public class FragmentAutoriza extends Fragment implements
 
                                 );
                             } else {
-                                Toast.makeText(getContext(), "Debes escribir un monto" + "",
+                                Toast.makeText(getContext(), getString(R.string.monto) + "",
                                         Toast.LENGTH_LONG).show();
                             }
                         }
@@ -585,21 +585,31 @@ public class FragmentAutoriza extends Fragment implements
                                         && datosSitio.getDatossitio().get(0).getDetallesValidacion().size() > 0
                                         && datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
 
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+//                                    Picasso.get()
+//                                            .load(R.drawable.aprovado)
+//                                            .placeholder(R.drawable.aprovado)
+//                                            .into(binding.aceptar);
+//
+
+
+
+
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION", AUTORIZA_ID);
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                 } else {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION", RECHAZA_ID);
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                                     editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDatossitio().get(0).getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                                 }
                             } else {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                 editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                                 editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", 0);
                                 editorDatosSitio.putInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -630,7 +640,7 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-            binding.aceptar.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -649,8 +659,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -662,8 +672,7 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-
-            binding.cancelar.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -679,8 +688,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -689,7 +698,6 @@ public class FragmentAutoriza extends Fragment implements
                     }
                 }
             });
-
 
             binding.toolbar.back.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -716,9 +724,12 @@ public class FragmentAutoriza extends Fragment implements
             } else if (permisoRechazarP2) {
                 // binding.cancelar.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
                 binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.aceptar.setVisibility(View.INVISIBLE);
             }
+
+
+
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             String mdId = preferences.getString("mdId", "");
@@ -793,8 +804,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -823,8 +834,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -906,12 +917,12 @@ public class FragmentAutoriza extends Fragment implements
             });
 
             if (permisoP3) {
-                binding.aceptar.setVisibility(View.VISIBLE);
+                binding.acep.setVisibility(View.VISIBLE);
             } else if (permisoRechazarP3) {
-                binding.cancelar.setVisibility(View.VISIBLE);
+                binding.can.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
-                binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.acep.setVisibility(View.INVISIBLE);
+                binding.can.setVisibility(View.INVISIBLE);
             }
 
             ProviderDatosSuperficie.getInstance(getContext())
@@ -983,21 +994,21 @@ public class FragmentAutoriza extends Fragment implements
 
                                 if (superficie.getValidado() == 1) {
                                     if (superficie.getDetallesValidacion() != null && superficie.getDetallesValidacion().size() > 0 && superficie.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION", AUTORIZA_ID);
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO", 0);
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                     } else {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION", RECHAZA_ID);
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO", superficie.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                                         editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", superficie.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                                     }
                                 } else {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorSuperficie.putInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -1027,7 +1038,7 @@ public class FragmentAutoriza extends Fragment implements
                     });
 
 
-            binding.aceptar.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1046,8 +1057,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -1060,7 +1071,7 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-            binding.cancelar.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1076,8 +1087,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -1110,12 +1121,12 @@ public class FragmentAutoriza extends Fragment implements
             setPermisosRechazar(permisos, String.valueOf(MODULO_PANTALLA_4));
 
             if (permisoP4) {
-                binding.aceptar.setVisibility(View.VISIBLE);
+                binding.acep.setVisibility(View.VISIBLE);
             } else if (permisoRechazarP4) {
-                binding.cancelar.setVisibility(View.VISIBLE);
+                binding.can.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
-                binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.acep.setVisibility(View.INVISIBLE);
+                binding.can.setVisibility(View.INVISIBLE);
             }
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1195,21 +1206,21 @@ public class FragmentAutoriza extends Fragment implements
                                 // editorZonificacion.putInt("puntajeTotalZonificacion", zonificacion.getPuntoFac() != null ? Integer.parseInt(zonificacion.getPuntoFac()) : 0);
                                 if (zonificacion.getValidado() == 1) {
                                     if (zonificacion.getDetallesValidacion() != null && zonificacion.getDetallesValidacion().size() > 0 && zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", AUTORIZA_ID);
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                     } else {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", RECHAZA_ID);
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", zonificacion.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                                         editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", zonificacion.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                                     }
                                 } else {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                     editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                                     editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorZonificacion.putInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -1269,7 +1280,7 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-            binding.aceptar.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1289,8 +1300,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -1303,7 +1314,7 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-            binding.cancelar.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1320,8 +1331,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -1346,12 +1357,12 @@ public class FragmentAutoriza extends Fragment implements
 
 
             if (permisoP5) {
-                binding.aceptar.setVisibility(View.VISIBLE);
+                binding.acep.setVisibility(View.VISIBLE);
             } else if (permisoRechazarP5) {
                 binding.cancelar.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
-                binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.acep.setVisibility(View.INVISIBLE);
+                binding.can.setVisibility(View.INVISIBLE);
             }
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1439,21 +1450,21 @@ public class FragmentAutoriza extends Fragment implements
                                 //editorConstruccion.putInt("puntajeTotalConstruccion", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
                                 if (datosSitio.getValidado() == 1) {
                                     if (datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", AUTORIZA_ID);
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                     } else {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", RECHAZA_ID);
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                                         editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                                     }
                                 } else {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                     editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                                     editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorConstruccion.putInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -1489,7 +1500,7 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-            binding.aceptar.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1508,8 +1519,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -1522,7 +1533,7 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-            binding.cancelar.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1538,8 +1549,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -1575,12 +1586,12 @@ public class FragmentAutoriza extends Fragment implements
 
 
             if (permisoP6) {
-                binding.aceptar.setVisibility(View.VISIBLE);
+                binding.acep.setVisibility(View.VISIBLE);
             } else if (permisoRechazarP6) {
-                binding.cancelar.setVisibility(View.VISIBLE);
+                binding.can.setVisibility(View.VISIBLE);
             } else {
-                binding.aceptar.setVisibility(View.INVISIBLE);
-                binding.cancelar.setVisibility(View.INVISIBLE);
+                binding.acep.setVisibility(View.INVISIBLE);
+                binding.can.setVisibility(View.INVISIBLE);
             }
 
             Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
@@ -1650,21 +1661,21 @@ public class FragmentAutoriza extends Fragment implements
                                 // editorGeneralidades.putInt("puntajeTotalGeneralidades", datosSitio.getPuntoFac() != null ? Integer.parseInt(datosSitio.getPuntoFac()) : 0);
                                 if (datosSitio.getValidado() == 1) {
                                     if (datosSitio.getDetallesValidacion() != null && datosSitio.getDetallesValidacion().size() > 0 && datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", AUTORIZA_ID);
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                                     } else {
-                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", RECHAZA_ID);
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", datosSitio.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                                         editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", datosSitio.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                                     }
                                 } else {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                     editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                                     editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
                                     editorGeneralidades.putInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -1698,7 +1709,7 @@ public class FragmentAutoriza extends Fragment implements
                 }
             });
 
-            binding.aceptar.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1717,8 +1728,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                             @Override
                             public void onModuloAceptado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             }
                         });
                     } else {
@@ -1731,7 +1742,7 @@ public class FragmentAutoriza extends Fragment implements
             });
 
 
-            binding.cancelar.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -1747,8 +1758,8 @@ public class FragmentAutoriza extends Fragment implements
                         a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                             @Override
                             public void onModuloRechazado(int modulo) {
-                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             }
                         });
                     } else {
@@ -1769,12 +1780,12 @@ public class FragmentAutoriza extends Fragment implements
                 view = binding.getRoot();
 
                 if (permisoP7) {
-                    binding.aceptar.setVisibility(View.VISIBLE);
+                    binding.acep.setVisibility(View.VISIBLE);
                 } else if (permisoRechazarP7) {
-                    binding.cancelar.setVisibility(View.VISIBLE);
+                    binding.can.setVisibility(View.VISIBLE);
                 } else {
-                    binding.aceptar.setVisibility(View.INVISIBLE);
-                    binding.cancelar.setVisibility(View.INVISIBLE);
+                    binding.acep.setVisibility(View.INVISIBLE);
+                    binding.can.setVisibility(View.INVISIBLE);
                 }
 
                 Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
@@ -2183,7 +2194,7 @@ public class FragmentAutoriza extends Fragment implements
                         });
 
 
-                binding.aceptar.setOnClickListener(new View.OnClickListener() {
+                binding.acep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         preferences[0] = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -2202,8 +2213,8 @@ public class FragmentAutoriza extends Fragment implements
                             a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                                 @Override
                                 public void onModuloAceptado(int modulo) {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                 }
                             });
                         } else {
@@ -2214,7 +2225,7 @@ public class FragmentAutoriza extends Fragment implements
                 });
 
 
-                binding.cancelar.setOnClickListener(new View.OnClickListener() {
+                binding.can.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         preferences[0] = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -2230,8 +2241,8 @@ public class FragmentAutoriza extends Fragment implements
                             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                                 @Override
                                 public void onModuloRechazado(int modulo) {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                 }
                             });
                         } else {
@@ -2252,12 +2263,12 @@ public class FragmentAutoriza extends Fragment implements
                 binding.toolbar.nombreTitulo.setText(getString(R.string.flujopeatonal));
 
                 if (permisoP7) {
-                    binding.aceptar.setVisibility(View.VISIBLE);
+                    binding.acep.setVisibility(View.VISIBLE);
                 } else if (permisoRechazarP7) {
-                    binding.cancelar.setVisibility(View.VISIBLE);
+                    binding.can.setVisibility(View.VISIBLE);
                 } else {
-                    binding.aceptar.setVisibility(View.INVISIBLE);
-                    binding.cancelar.setVisibility(View.INVISIBLE);
+                    binding.acep.setVisibility(View.INVISIBLE);
+                    binding.can.setVisibility(View.INVISIBLE);
                 }
 
                 Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
@@ -2276,7 +2287,7 @@ public class FragmentAutoriza extends Fragment implements
                     }
                 });
 
-                binding.aceptar.setOnClickListener(new View.OnClickListener() {
+                binding.acep.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -2292,8 +2303,8 @@ public class FragmentAutoriza extends Fragment implements
                             a.setModuloAceptadoListener(new FragmentDialogAceptar.OnModuloAceptadoListener() {
                                 @Override
                                 public void onModuloAceptado(int modulo) {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                                 }
                             });
                         } else {
@@ -2303,7 +2314,7 @@ public class FragmentAutoriza extends Fragment implements
                     }
                 });
 
-                binding.cancelar.setOnClickListener(new View.OnClickListener() {
+                binding.can.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
@@ -2319,8 +2330,8 @@ public class FragmentAutoriza extends Fragment implements
                             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                                 @Override
                                 public void onModuloRechazado(int modulo) {
-                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                                    binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                                 }
                             });
                         } else {
@@ -2332,6 +2343,7 @@ public class FragmentAutoriza extends Fragment implements
             }
 
         } else if (position == 7) {
+
             FragmentAutoriza7Binding binding;
             binding = DataBindingUtil.inflate(inflater, R.layout.fragment_autoriza_7, container, false);
             view = binding.getRoot();
@@ -2347,6 +2359,7 @@ public class FragmentAutoriza extends Fragment implements
                     getContext().startActivity(main);
                 }
             });
+
         } else if (position == 8) {
 
             final FragmentAutoriza8Binding binding;
@@ -2364,30 +2377,25 @@ public class FragmentAutoriza extends Fragment implements
                 binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
             }
 
-//            Boolean atrasadasAutoriza = preferences.getBoolean("goneAutoriza", false);
-//
-//            if (atrasadasAutoriza) {
-//                binding.autorizalayout.setVisibility(View.GONE);
-//            } else {
-//                binding.autorizalayout.setVisibility(View.VISIBLE);
-//            }
-
             creaTablaResumenAutorizacion(binding);
 
-            binding.rechazaBoton.setOnClickListener(new View.OnClickListener() {
+            binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
-                    autorizaRechazaMD(RECHAZA_MD);
+                    autorizaRechazaMD(RECHAZA_MD, binding, resource);
+                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
 
                 }
             });
 
 
-            binding.autorizaBoton.setOnClickListener(new View.OnClickListener() {
+            binding.acep.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    autorizaRechazaMD(AUTORIZA_MD);
+                    autorizaRechazaMD(AUTORIZA_MD, binding, resource);
+                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+
                 }
             });
 
@@ -2404,7 +2412,7 @@ public class FragmentAutoriza extends Fragment implements
 
     String horaInicio, horaFinal;
 
-    public void autorizaRechazaMD(final int tipoAccion) {
+    public void autorizaRechazaMD(final int tipoAccion, final FragmentAutoriza8Binding binding, final Resources resource ) {
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         final String mdId = preferences.getString("mdId","");
         final String usuarioId = preferences.getString("usuario","");
@@ -2438,10 +2446,14 @@ public class FragmentAutoriza extends Fragment implements
                                 editorFinalizar.putString("tituloFinalizar", "MD Rechazada");
                                 editorFinalizar.putString("descripcionFinalizar", "Se ha rechazado esta MD");
                                 editorFinalizar.apply();
+                                binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
+                                binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
 
                                 FragmentDialogFinalizar a = new FragmentDialogFinalizar();
                                 a.show(getChildFragmentManager(),"child");
                             } else {
+                                binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+
                                 Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
                                         Toast.LENGTH_LONG).show();
                             }
@@ -2449,6 +2461,8 @@ public class FragmentAutoriza extends Fragment implements
 
                         @Override
                         public void reject(Exception e) {
+                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+
                             Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
                                     Toast.LENGTH_LONG).show();
                         }
@@ -2467,9 +2481,15 @@ public class FragmentAutoriza extends Fragment implements
                         editorFinalizar.putString("descripcionFinalizar", "Se ha autorizado esta MD");
                         editorFinalizar.apply();
 
+                        binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                        binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+
                         FragmentDialogFinalizar a = new FragmentDialogFinalizar();
                         a.show(getChildFragmentManager(),"child");
                     } else {
+                        binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                        binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+
                         Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
                                 Toast.LENGTH_LONG).show();
                     }
@@ -2477,13 +2497,15 @@ public class FragmentAutoriza extends Fragment implements
 
                 @Override
                 public void reject(Exception e) {
+                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                    binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+
                     Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
                             Toast.LENGTH_LONG).show();
                 }
             });
         }
     }
-
 
     public void creaTablaResumenAutorizacion(FragmentAutoriza8Binding binding) {
         Resources resource = getContext().getResources();
@@ -2560,7 +2582,7 @@ public class FragmentAutoriza extends Fragment implements
         if(modulo1 == AUTORIZA_ID) {
 
             imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
-            imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
 
@@ -2576,7 +2598,7 @@ public class FragmentAutoriza extends Fragment implements
                 imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -2635,7 +2657,7 @@ public class FragmentAutoriza extends Fragment implements
         ImageView imgSubfactor5 = new ImageView(getContext());
         if(modulo3 == AUTORIZA_ID) {
             imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
-            imgSubfactor5.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor5.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
@@ -2650,7 +2672,7 @@ public class FragmentAutoriza extends Fragment implements
                 imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -2693,7 +2715,7 @@ public class FragmentAutoriza extends Fragment implements
         ImageView imgSubfactor7 = new ImageView(getContext());
         if(modulo4 == AUTORIZA_ID) {
             imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
-            imgSubfactor7.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor7.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
@@ -2708,7 +2730,7 @@ public class FragmentAutoriza extends Fragment implements
                 imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -2750,7 +2772,7 @@ public class FragmentAutoriza extends Fragment implements
         ImageView imgSubfactor9 = new ImageView(getContext());
         if(modulo5 == AUTORIZA_ID) {
             imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
-            imgSubfactor9.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor9.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
@@ -2765,7 +2787,7 @@ public class FragmentAutoriza extends Fragment implements
                 imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -2807,7 +2829,7 @@ public class FragmentAutoriza extends Fragment implements
         ImageView imgSubfactor11 = new ImageView(getContext());
         if(modulo6 == AUTORIZA_ID) {
             imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
-            imgSubfactor11.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor11.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
@@ -2822,7 +2844,7 @@ public class FragmentAutoriza extends Fragment implements
                 imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
             }
@@ -2863,7 +2885,7 @@ public class FragmentAutoriza extends Fragment implements
 
         ImageView imgSubfactor13 = new ImageView(getContext());
         if(modulo7 == AUTORIZA_ID) {
-            imgSubfactor13.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
+            imgSubfactor13.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
         } else {
@@ -2879,7 +2901,7 @@ public class FragmentAutoriza extends Fragment implements
             } else {
 
                 imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
-                imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar));
+                imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                 imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
                 imgSubfactor14.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.SRC_IN);
 
@@ -2999,21 +3021,21 @@ public class FragmentAutoriza extends Fragment implements
                    // editorPeatonales.putInt("puntajeTotalPeatonales", peatonal.getPuntoFac() != null ? Integer.parseInt(peatonal.getPuntoFac()) : 0);
                     if(peatonal.getValidado() == 1) {
                         if(peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", AUTORIZA_ID);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                         } else {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", RECHAZA_ID);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", peatonal.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                         }
                     } else {
-                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
@@ -3088,21 +3110,21 @@ public class FragmentAutoriza extends Fragment implements
                     //editorPeatonales.putInt("puntajeTotalPeatonales", peatonal.getPuntoFac() != null ? Integer.parseInt(peatonal.getPuntoFac()) : 0);
                     if(peatonal.getValidado() == 1) {
                         if(peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.palomita_azul));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", AUTORIZA_ID);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                         } else {
-                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancel_rojo));
+                            binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                            binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", RECHAZA_ID);
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID());
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", peatonal.getDetallesValidacion().get(0).getRECHAZODEFINITIVO());
                         }
                     } else {
-                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.ic_palomita_azul_contorno));
-                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.tache_cancelar_contorno));
+                        binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                        binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", SIN_AUTORIZACION);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);

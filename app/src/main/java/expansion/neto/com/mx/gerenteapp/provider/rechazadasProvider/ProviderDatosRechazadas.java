@@ -54,12 +54,15 @@ public class ProviderDatosRechazadas {
                 //TODO CONNECT AND GET DATA
                 try {
 
+                    Calendar fecha = Calendar.getInstance();
+                    int anio = fecha.get(Calendar.YEAR);
+
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("estatus", ESTATUS_POR_TERMINAR)
                             .add("area", area)
                             .add("mes", mes)
                             .add("semana", TIPO_CONSULTA_SEMANA)
-                            .add("anio", ANIO_ACTUAL)
+                            .add("anio", String.valueOf(anio))
                             .add("tipoapp", TIPO_APP)
                             .add("tipoconsulta", TIPO_CONSULTA_TIPO)
                             .add("usuarioId", usuarioId);

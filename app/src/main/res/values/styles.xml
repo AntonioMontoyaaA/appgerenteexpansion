@@ -16,6 +16,11 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="AlertDialogCustom" parent="Base.Theme.AppCompat.Light.Dialog">
+        <item name="android:textColor">#254581</item>
+        <item name="android:textColorPrimary">#000000</item>
+        <item name="android:colorAccent">#1b5e20</item>
+    </style>
 
     <style name="tabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">10sp</item>

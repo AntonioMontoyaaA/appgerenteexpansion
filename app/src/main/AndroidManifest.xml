@@ -76,6 +76,7 @@
         <activity android:name=".ui.agenda.ActivityDetalleNotificaciones" android:screenOrientation="portrait"/>
         <activity android:name=".ui.rechazadas.ActivityRechazadas" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentRechazadas.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
+        <activity android:name=".ui.detalle.ActivityDetalleRechazadas" android:screenOrientation="portrait"/>
 
         <meta-data
             android:name="io.fabric.ApiKey"

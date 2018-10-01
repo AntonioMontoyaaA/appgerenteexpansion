@@ -172,7 +172,7 @@
                                     android:layout_marginLeft="8dp"
                                     android:layout_marginTop="5dp"
                                     android:text="@{String.valueOf(procesoModel.nombresitio)}"
-                                    android:textColor="@{procesoModel.atrasada == 0 ? @color/azultaco : @color/azultaco}"
+                                    android:textColor="@{procesoModel.estatusid == 17 ? @color/rojo : @color/azultaco}"
                                     android:textSize="12dp"
                                     tools:text="hola mundo"
                                     app:typeface="robotoBold" />

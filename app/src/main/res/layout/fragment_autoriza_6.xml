@@ -169,54 +169,68 @@
 
                     </android.support.constraint.ConstraintLayout>
                     <LinearLayout
-                        android:id="@+id/autorizalayout"
                         android:layout_marginTop="10dp"
+                        android:id="@+id/autorizalayout"
                         android:layout_gravity="center"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-
-                        <ImageView
-                            android:id="@+id/cancelar"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_alignParentLeft="true"
-                            android:layout_marginStart="8dp"
-                            android:layout_marginTop="0dp"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:typeface="robotoBold" />
-
-                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                            android:layout_marginStart="4dp"
+                        <LinearLayout
+                            android:id="@+id/can"
+                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/blanco"
-                            android:textSize="18sp"
-                            app:typeface="robotoRegular"
-                            android:text="@string/rechazar"  />
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/cancelar"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_marginStart="8dp"
+                                android:layout_marginTop="0dp"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:typeface="robotoBold" />
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_marginStart="4dp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:textSize="18sp"
+                                app:typeface="robotoRegular"
+                                android:text="@string/rechazar"  />
+                        </LinearLayout>
 
 
-                        <ImageView
-                            android:layout_marginStart="50dp"
-                            android:id="@+id/aceptar"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginEnd="8dp"
-                            android:layout_marginTop="0dp"
-                            android:textColor="@color/letra"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:typeface="robotoBold" />
-
-                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        <LinearLayout
+                            android:id="@+id/acep"
+                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textColor="@color/blanco"
-                            android:textSize="18sp"
-                            app:typeface="robotoRegular"
-                            android:text="@string/autorizar" />
+                            android:layout_height="wrap_content">
+                            <ImageView
+                                android:id="@+id/aceptar"
+                                android:layout_marginStart="50dp"
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_marginEnd="8dp"
+                                android:layout_marginTop="0dp"
+                                android:textColor="@color/letra"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintTop_toTopOf="parent"
+                                app:typeface="robotoBold" />
+
+                            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:textSize="18sp"
+                                app:typeface="robotoRegular"
+                                android:text="@string/autorizar" />
+                        </LinearLayout>
+
+
 
                     </LinearLayout>
 

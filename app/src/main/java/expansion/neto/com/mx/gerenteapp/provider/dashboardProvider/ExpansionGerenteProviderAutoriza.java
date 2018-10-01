@@ -52,12 +52,9 @@ public class ExpansionGerenteProviderAutoriza {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
-
                     Type listObject = new TypeToken<ArrayList<Autoriza>>(){}.getType();
                     autorizaCallback = gson.fromJson(jsonInString, listObject);
-
                     return autorizaCallback;
-
                 }catch (Exception e){
                     e.printStackTrace();
                     if(e.getMessage().contains("Failed to connect to")){

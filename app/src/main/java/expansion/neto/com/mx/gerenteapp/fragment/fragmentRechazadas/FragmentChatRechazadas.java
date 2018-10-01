@@ -475,7 +475,7 @@ public class FragmentChatRechazadas extends Fragment {
         consultaChatPorArea(AREA_CONSULTA_GENERAL);
 
         if(modifica==4){
-            binding.modifica.setVisibility(View.VISIBLE);
+            //binding.modifica.setVisibility(View.VISIBLE);
         }
 
 

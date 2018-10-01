@@ -22,6 +22,9 @@
     <string name="reintentar">Reintentar</string>
     <string name="reintenta">Reintente más tarde</string>
 
+    <string name="camara"> ¿De donde quieres tomar el documento?</string>
+    <string name="foto"> Tomar fotografia</string>
+    <string name="galeria"> Galeria</string>
 
     <string name="usuarioIncorrecto">Tu usuario y contraseña no son correctos</string>
     <string name="sizeContra">Usuario y contraseña debe tener más de 10 carácteres</string>
@@ -293,5 +296,6 @@
     <string name="one">1</string>
     <string name="no_esquina">NO ES ESQUINA</string>
     <string name="esquina">ES ESQUINA</string>
+    <string name="monto">Debes escribir un monto</string>
 
 </resources>
