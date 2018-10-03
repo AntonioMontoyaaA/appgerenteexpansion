@@ -99,22 +99,24 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
             @SuppressLint("DefaultLocale")
             @Override
             public void afterTextChanged(Editable editable) {
-                String texto = binding.buscar.getText().toString();
-                List<Proceso.Memoria> listaTemporal = new ArrayList<Proceso.Memoria>();
+                if(listaMemorias!=null){
+                    String texto = binding.buscar.getText().toString();
+                    List<Proceso.Memoria> listaTemporal = new ArrayList<Proceso.Memoria>();
 
-                binding.recyclerAutoriza.removeAllViews();
-                adapter.edit().removeAll().commit();
-                if (texto.equals("")) {
-                    adapter.edit().replaceAll(listaMemorias).commit();
-                    adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
-                } else {
-                    for(Proceso.Memoria memoria : listaMemorias) {
-                        if(memoria.getCreador().toLowerCase().contains(texto.toLowerCase()) || memoria.getNombresitio().toLowerCase().contains(texto.toLowerCase())) {
-                            listaTemporal.add(memoria);
+                    binding.recyclerAutoriza.removeAllViews();
+                    adapter.edit().removeAll().commit();
+                    if (texto.equals("")) {
+                        adapter.edit().replaceAll(listaMemorias).commit();
+                        adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
+                    } else {
+                        for(Proceso.Memoria memoria : listaMemorias) {
+                            if(memoria.getCreador().toLowerCase().contains(texto.toLowerCase()) || memoria.getNombresitio().toLowerCase().contains(texto.toLowerCase())) {
+                                listaTemporal.add(memoria);
+                            }
                         }
+                        adapter.edit().replaceAll(listaTemporal).commit();
+                        adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                     }
-                    adapter.edit().replaceAll(listaTemporal).commit();
-                    adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
                 }
             }
         });

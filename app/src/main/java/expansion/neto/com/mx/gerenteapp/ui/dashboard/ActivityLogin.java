@@ -16,9 +16,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.Auth;
+
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityLoginBinding;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario;
+import expansion.neto.com.mx.gerenteapp.utils.AppHelper;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
 /**
@@ -81,18 +84,13 @@ public class ActivityLogin extends AppCompatActivity {
     public void permisos(){
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) ==
                 PackageManager.PERMISSION_GRANTED &&
-
         ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED &&
-
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                        PackageManager.PERMISSION_GRANTED &&
-
+        ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                 PackageManager.PERMISSION_GRANTED &&
         ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) ==
-                PackageManager.PERMISSION_GRANTED
-
-
-                ){
+                PackageManager.PERMISSION_GRANTED){
+            signIn();
         } else {
             ActivityCompat.requestPermissions(this, new String[]{
                     Manifest.permission.READ_PHONE_STATE,
@@ -119,5 +117,17 @@ public class ActivityLogin extends AppCompatActivity {
                 }
         }
     }
+
+    private void signIn() {
+        if (AppHelper.createGoogleApliHelper().isEnabledGps()){
+            Intent singInIntent = Auth.GoogleSignInApi.getSignInIntent(AppHelper.createGoogleApliHelper().mGoogleApiClient());
+            startActivityForResult(singInIntent, RC_SIGN_IN);
+        } else {
+            Toast.makeText(getApplicationContext(), R.string.app_no_gps_desactivado_toast, Toast.LENGTH_LONG).show();
+            AppHelper.createGoogleApliHelper().buildAlertMessageNoGPS(this);
+        }
+    }
+
+    private static final int RC_SIGN_IN = 9001;
 
 }

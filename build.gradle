@@ -12,28 +12,21 @@ buildscript {
     }
 
     ext {
-
         // Sdk and tools
         minSdkVersion = 21
         targetSdkVersion = 26
         compileSdkVersion = 26
         buildToolsVersion = '26.1.0'
-
         // App dependencies
         supportLibraryVersion = '26.1.0'
-
         // Firebase
         firebaseVersion = '11.8.0'
-
         // Google Play Services
         playServicesVersion = '11.8.0'
-
         // Firebase Job Dispatcher
         jobdispatcherVersion = '0.8.5'
     }
-
 }
-
 
 allprojects {
     repositories {
@@ -42,7 +35,7 @@ allprojects {
         maven {
             url "https://maven.google.com"
         }
-
+            
         maven {
             url "https://maven.fabric.io/public"
         }

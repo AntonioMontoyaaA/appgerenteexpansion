@@ -37,9 +37,7 @@ public class CronJob extends JobService {
                 @Override
                 public void resolve(Codigos codigo) {
                     if(codigo!=null){
-                        if(codigo.getCodigo()==200){
-                            //Log.e("****", codigo.getMensaje()+"");
-                        }
+                        if(codigo.getCodigo()==200){ }
                     }
                 }
 

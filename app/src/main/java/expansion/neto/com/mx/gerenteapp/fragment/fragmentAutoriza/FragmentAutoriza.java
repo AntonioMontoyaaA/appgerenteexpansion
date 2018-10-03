@@ -167,7 +167,7 @@ public class FragmentAutoriza extends Fragment implements
     private final int MODULO_PANTALLA_7 = 7;
     private final int MODULO_GENERAL = 0;
 
-    private final int MODULO_ASIGNADAS = 8;
+    private final int MODULO_ASIGNADAS = 5;
 
     private final int SIN_AUTORIZACION = 0;
     private final int AUTORIZA_ID = 1;

@@ -8,7 +8,10 @@
     <string name="tituloAnimacion">EVALUACIÓN DE SITIOS</string>
 
 
-
+    <string name="app_no_gps_mensaje" translatable="false">El GPS se encuentra desactivado, es necesario activarlo para el funcionamiento correcto de Sistematica.</string>
+    <string name="app_no_gps_activar_btn" translatable="false">Activar GPS</string>
+    <string name="app_no_gps_cancelar_btn" translatable="false">Cancelar</string>
+    <string name="app_no_gps_desactivado_toast" translatable="false">GPS desactivado!</string>
     <!-- activity login -->
     <string name="atrasadas">1</string>
 

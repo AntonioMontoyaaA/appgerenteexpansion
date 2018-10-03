@@ -35,8 +35,8 @@ public class ReminderUtilitiesJob {
     private static final int REMINDER_INTERVAL_SECONDS = (int) (TimeUnit.MINUTES.toSeconds(REMINDER_INTERVAL_MINUTES));
     private static final int SYNC_FLEXTIME_SECONDS = REMINDER_INTERVAL_SECONDS;
 
-    private static final int testSecondsA = 1700;
-    private static final int testSecondsB = 1900;
+    private static final int testSecondsA = 50;
+    private static final int testSecondsB = 60;
 
     private static final String REMINDER_ID_JOB = "REMINDER_ID_JOB";
 

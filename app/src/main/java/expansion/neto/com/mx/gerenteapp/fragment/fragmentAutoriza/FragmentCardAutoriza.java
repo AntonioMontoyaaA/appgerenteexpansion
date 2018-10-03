@@ -15,6 +15,7 @@
  */
 package expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,7 +30,9 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.Html;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -77,27 +80,41 @@ public class FragmentCardAutoriza extends Fragment implements AutorizaHolder.Lis
 		binding.recyclerAutoriza.addItemDecoration(new GridSpacingItemDecoration(1, dpToPx(1), true));
 		binding.recyclerAutoriza.setItemAnimator(new DefaultItemAnimator());
 
-		binding.buscar.setOnClickListener(new View.OnClickListener() {
+
+
+		binding.buscar.addTextChangedListener(new TextWatcher() {
+
 			@Override
-			public void onClick(View view) {
-				String texto = binding.buscar.getText().toString();
-				List<Autorizadas.Memoria> listaTemporal = new ArrayList<Autorizadas.Memoria>();
+			public void onTextChanged(CharSequence s, int start, int before,
+									  int count) { }
 
-				binding.recyclerAutoriza.removeAllViews();
-				adapter.edit().removeAll().commit();
-				if (texto.equals("")) {
-					adapter.edit().replaceAll(listaMemorias).commit();
-					adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
-				} else {
-					for(Autorizadas.Memoria memoria : listaMemorias) {
-						if(memoria.getCreador().toLowerCase().contains(texto.toLowerCase()) || memoria.getNombresitio().toLowerCase().contains(texto.toLowerCase())) {
-							listaTemporal.add(memoria);
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+										  int after) { }
+
+			@SuppressLint("DefaultLocale")
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+				if(listaMemorias!=null){
+					String texto = binding.buscar.getText().toString();
+					List<Autorizadas.Memoria> listaTemporal = new ArrayList<Autorizadas.Memoria>();
+
+					binding.recyclerAutoriza.removeAllViews();
+					adapter.edit().removeAll().commit();
+					if (texto.equals("")) {
+						adapter.edit().replaceAll(listaMemorias).commit();
+						adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
+					} else {
+						for(Autorizadas.Memoria memoria : listaMemorias) {
+							if(memoria.getCreador().toLowerCase().contains(texto.toLowerCase()) || memoria.getNombresitio().toLowerCase().contains(texto.toLowerCase())) {
+								listaTemporal.add(memoria);
+							}
 						}
+						adapter.edit().replaceAll(listaTemporal).commit();
+						adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
 					}
-					adapter.edit().replaceAll(listaTemporal).commit();
-					adapter.notifyItemRangeRemoved(0, adapter.getItemCount());
 				}
-
 			}
 		});
 

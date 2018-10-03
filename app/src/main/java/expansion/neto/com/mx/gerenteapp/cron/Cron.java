@@ -30,7 +30,7 @@ public class Cron extends JobService {
     @Override
     public boolean onStartJob(JobParameters job) {
         getNotificaciones();
-        //Log.e("Service ejecutado!","Cron NOTIFICACIONS");
+        Log.e("Service ejecutado!","Cron NOTIFICACIONS");
         return false;
     }
 
