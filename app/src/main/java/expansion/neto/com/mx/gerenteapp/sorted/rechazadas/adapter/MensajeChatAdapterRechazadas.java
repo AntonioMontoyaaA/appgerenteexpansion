@@ -40,7 +40,7 @@ public class MensajeChatAdapterRechazadas extends RecyclerView.Adapter  {
     @Override
     public int getItemViewType(int position) {
         MensajeChat message = mMessageList.get(position);
-        tipoComentario = message.getTipocomentario();
+        tipoComentario = message.getTipoComentario();
 
         SharedPreferences preferences = mContext.getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         int usuarioId = 0;
@@ -50,7 +50,7 @@ public class MensajeChatAdapterRechazadas extends RecyclerView.Adapter  {
 
         if(tipoComentario == TIPO_COMENTARIO_EVENTOS) {
             return VIEW_TYPE_MESSAGE_EVENTOS;
-        } else if(message.getUsuarioid() == usuarioId) {
+        } else if(message.getUsuarioId() == usuarioId) {
             return VIEW_TYPE_MESSAGE_SENT;
         } else {
             return VIEW_TYPE_MESSAGE_RECEIVED;

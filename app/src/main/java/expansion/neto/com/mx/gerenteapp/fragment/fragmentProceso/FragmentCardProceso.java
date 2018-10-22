@@ -405,6 +405,8 @@ public class FragmentCardProceso extends Fragment implements ProcesoHolder.Liste
             editor.putString("mdIdterminar", model.getMemoriaid());
             editor.putString("nombreSitio", model.getNombresitio());
             editor.putInt("atrasa", model.getAtrasada());
+            editor.putInt("estatusIds", model.getEstatusid());
+
 
             editor.apply();
             Intent main = new Intent(getContext(), ActivityProceso.class);

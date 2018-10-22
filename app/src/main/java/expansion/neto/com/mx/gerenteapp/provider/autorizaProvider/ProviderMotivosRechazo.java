@@ -22,6 +22,7 @@ public class ProviderMotivosRechazo {
     String respuesta;
     MotivosRechazo usuarioCallback = null;
     private final String TIPO_MODULO_RECHAZA_GERENTE = "1";
+    private final String TIPO_MODULO_RECHAZA_STATUS = "2";
 
     public ProviderMotivosRechazo() {}
 
@@ -33,7 +34,7 @@ public class ProviderMotivosRechazo {
         return instance;
     }
 
-    public void obtenerMotivosRechazo(final String modulo, final ProviderMotivosRechazo.ConsultaMotivosRechazo promise){
+    public void obtenerMotivosRechazo(final String modulo, final String usuario, final int status, final ProviderMotivosRechazo.ConsultaMotivosRechazo promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, MotivosRechazo>() {
             @Override
@@ -42,6 +43,8 @@ public class ProviderMotivosRechazo {
                 try {
 
                     FormBody.Builder formBuilder = new FormBody.Builder()
+                            .add("usuarioId", usuario)
+                            .add("nivelEvaluacion", String.valueOf(status))
                             .add("modulo", modulo)
                             .add("tipomodulo", TIPO_MODULO_RECHAZA_GERENTE);
 

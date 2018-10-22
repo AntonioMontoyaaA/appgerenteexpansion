@@ -30,15 +30,51 @@ public class ChatProceso implements SortedListAdapter.ViewModel {
     @SerializedName("comentarios")
     @Expose
     private List<MensajeChat> comentarios = null;
-    @SerializedName("mtvRechazoid")
-    @Expose
-    private int mtvRechazoid;
     @SerializedName("mtvRechazo")
     @Expose
     private String mtvRechazo;
+    @SerializedName("mtvRechazoid")
+    @Expose
+    private String mtvRechazoid;
     @SerializedName("recDefinitivo")
     @Expose
-    private int recDefinitivo;
+    private String recDefinitivo;
+    @SerializedName("correccionesMaximas")
+    @Expose
+    private String correccionesMaximas;
+
+
+    public String getCorreccionesMaximas() {
+        return correccionesMaximas;
+    }
+
+    public void setCorreccionesMaximas(String correccionesMaximas) {
+        this.correccionesMaximas = correccionesMaximas;
+    }
+
+    public String getMtvRechazo() {
+        return mtvRechazo;
+    }
+
+    public void setMtvRechazo(String mtvRechazo) {
+        this.mtvRechazo = mtvRechazo;
+    }
+
+    public String getMtvRechazoid() {
+        return mtvRechazoid;
+    }
+
+    public void setMtvRechazoid(String mtvRechazoid) {
+        this.mtvRechazoid = mtvRechazoid;
+    }
+
+    public String getRecDefinitivo() {
+        return recDefinitivo;
+    }
+
+    public void setRecDefinitivo(String recDefinitivo) {
+        this.recDefinitivo = recDefinitivo;
+    }
 
     public Integer getCodigo() {
         return codigo;
@@ -96,114 +132,109 @@ public class ChatProceso implements SortedListAdapter.ViewModel {
         this.comentarios = comentarios;
     }
 
-    public int getMtvRechazoid() {
-        return mtvRechazoid;
-    }
-
-    public void setMtvRechazoid(int mtvRechazoid) {
-        this.mtvRechazoid = mtvRechazoid;
-    }
-
-    public String getMtvRechazo() {
-        return mtvRechazo;
-    }
-
-    public void setMtvRechazo(String mtvRechazo) {
-        this.mtvRechazo = mtvRechazo;
-    }
-
-    public int getRecDefinitivo() {
-        return recDefinitivo;
-    }
-
-    public void setRecDefinitivo(int recDefinitivo) {
-        this.recDefinitivo = recDefinitivo;
-    }
-
     public static class MensajeChat  implements SortedListAdapter.ViewModel {
 
-        @SerializedName("nombreusuario")
+        @SerializedName("autor")
         @Expose
-        private String nombreusuario;
-        @SerializedName("areaid")
+        private String autor;
+        @SerializedName("puesto")
         @Expose
-        private Integer areaid;
-        @SerializedName("usuarioid")
+        private String puesto;
+        @SerializedName("areaId")
         @Expose
-        private Integer usuarioid;
-        @SerializedName("nombrefactor")
+        private Integer areaId;
+        @SerializedName("usuarioId")
         @Expose
-        private String nombrefactor;
-        @SerializedName("fecharegistro")
+        private Integer usuarioId;
+        @SerializedName("nombreFactor")
         @Expose
-        private String fecharegistro;
-        @SerializedName("factorbusquedaid")
+        private Object nombreFactor;
+        @SerializedName("area")
         @Expose
-        private Integer factorbusquedaid;
-        @SerializedName("tipocomentario")
+        private String area;
+        @SerializedName("factorBusquedaId")
         @Expose
-        private Integer tipocomentario;
+        private Integer factorBusquedaId;
+        @SerializedName("fecha")
+        @Expose
+        private String fecha;
+        @SerializedName("tipoComentario")
+        @Expose
+        private Integer tipoComentario;
         @SerializedName("comentario")
         @Expose
         private String comentario;
-        @SerializedName("nombrearea")
-        @Expose
-        private String nombrearea;
 
-        public String getNombreusuario() {
-            return nombreusuario;
+        public String getAutor() {
+            return autor;
         }
 
-        public void setNombreusuario(String nombreusuario) {
-            this.nombreusuario = nombreusuario;
+        public void setAutor(String autor) {
+            this.autor = autor;
         }
 
-        public Integer getAreaid() {
-            return areaid;
+        public String getPuesto() {
+            return puesto;
         }
 
-        public void setAreaid(Integer areaid) {
-            this.areaid = areaid;
+        public void setPuesto(String puesto) {
+            this.puesto = puesto;
         }
 
-        public Integer getUsuarioid() {
-            return usuarioid;
+        public Integer getAreaId() {
+            return areaId;
         }
 
-        public void setUsuarioid(Integer usuarioid) {
-            this.usuarioid = usuarioid;
+        public void setAreaId(Integer areaId) {
+            this.areaId = areaId;
         }
 
-        public String getNombrefactor() {
-            return nombrefactor;
+        public Integer getUsuarioId() {
+            return usuarioId;
         }
 
-        public void setNombrefactor(String nombrefactor) {
-            this.nombrefactor = nombrefactor;
+        public void setUsuarioId(Integer usuarioId) {
+            this.usuarioId = usuarioId;
         }
 
-        public String getFecharegistro() {
-            return fecharegistro;
+        public Object getNombreFactor() {
+            return nombreFactor;
         }
 
-        public void setFecharegistro(String fecharegistro) {
-            this.fecharegistro = fecharegistro;
+        public void setNombreFactor(Object nombreFactor) {
+            this.nombreFactor = nombreFactor;
         }
 
-        public Integer getFactorbusquedaid() {
-            return factorbusquedaid;
+        public String getArea() {
+            return area;
         }
 
-        public void setFactorbusquedaid(Integer factorbusquedaid) {
-            this.factorbusquedaid = factorbusquedaid;
+        public void setArea(String area) {
+            this.area = area;
         }
 
-        public Integer getTipocomentario() {
-            return tipocomentario;
+        public Integer getFactorBusquedaId() {
+            return factorBusquedaId;
         }
 
-        public void setTipocomentario(Integer tipocomentario) {
-            this.tipocomentario = tipocomentario;
+        public void setFactorBusquedaId(Integer factorBusquedaId) {
+            this.factorBusquedaId = factorBusquedaId;
+        }
+
+        public String getFecha() {
+            return fecha;
+        }
+
+        public void setFecha(String fecha) {
+            this.fecha = fecha;
+        }
+
+        public Integer getTipoComentario() {
+            return tipoComentario;
+        }
+
+        public void setTipoComentario(Integer tipoComentario) {
+            this.tipoComentario = tipoComentario;
         }
 
         public String getComentario() {
@@ -214,12 +245,116 @@ public class ChatProceso implements SortedListAdapter.ViewModel {
             this.comentario = comentario;
         }
 
-        public String getNombrearea() {
-            return nombrearea;
-        }
 
-        public void setNombrearea(String nombrearea) {
-            this.nombrearea = nombrearea;
-        }
+//        @SerializedName("nombreusuario")
+//        @Expose
+//        private String nombreusuario;
+//        @SerializedName("areaid")
+//        @Expose
+//        private Integer areaid;
+//        @SerializedName("usuarioid")
+//        @Expose
+//        private Integer usuarioid;
+//        @SerializedName("nombrefactor")
+//        @Expose
+//        private String nombrefactor;
+//        @SerializedName("fecharegistro")
+//        @Expose
+//        private String fecharegistro;
+//        @SerializedName("factorbusquedaid")
+//        @Expose
+//        private Integer factorbusquedaid;
+//        @SerializedName("tipocomentario")
+//        @Expose
+//        private Integer tipocomentario;
+//        @SerializedName("comentario")
+//        @Expose
+//        private String comentario;
+//        @SerializedName("nombrearea")
+//        @Expose
+//        private String nombrearea;
+//        @SerializedName("correccionesMD")
+//        @Expose
+//        private String correccionesMD;
+//
+//        public String getCorreccionesMD() {
+//            return correccionesMD;
+//        }
+//
+//        public void setCorreccionesMD(String correccionesMD) {
+//            this.correccionesMD = correccionesMD;
+//        }
+//
+//        public String getNombreusuario() {
+//            return nombreusuario;
+//        }
+//
+//        public void setNombreusuario(String nombreusuario) {
+//            this.nombreusuario = nombreusuario;
+//        }
+//
+//        public Integer getAreaid() {
+//            return areaid;
+//        }
+//
+//        public void setAreaid(Integer areaid) {
+//            this.areaid = areaid;
+//        }
+//
+//        public Integer getUsuarioid() {
+//            return usuarioid;
+//        }
+//
+//        public void setUsuarioid(Integer usuarioid) {
+//            this.usuarioid = usuarioid;
+//        }
+//
+//        public String getNombrefactor() {
+//            return nombrefactor;
+//        }
+//
+//        public void setNombrefactor(String nombrefactor) {
+//            this.nombrefactor = nombrefactor;
+//        }
+//
+//        public String getFecharegistro() {
+//            return fecharegistro;
+//        }
+//
+//        public void setFecharegistro(String fecharegistro) {
+//            this.fecharegistro = fecharegistro;
+//        }
+//
+//        public Integer getFactorbusquedaid() {
+//            return factorbusquedaid;
+//        }
+//
+//        public void setFactorbusquedaid(Integer factorbusquedaid) {
+//            this.factorbusquedaid = factorbusquedaid;
+//        }
+//
+//        public Integer getTipocomentario() {
+//            return tipocomentario;
+//        }
+//
+//        public void setTipocomentario(Integer tipocomentario) {
+//            this.tipocomentario = tipocomentario;
+//        }
+//
+//        public String getComentario() {
+//            return comentario;
+//        }
+//
+//        public void setComentario(String comentario) {
+//            this.comentario = comentario;
+//        }
+//
+//        public String getNombrearea() {
+//            return nombrearea;
+//        }
+//
+//        public void setNombrearea(String nombrearea) {
+//            this.nombrearea = nombrearea;
+//        }
     }
 }

@@ -16,6 +16,7 @@ import expansion.neto.com.mx.gerenteapp.databinding.ActivityProcesoBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentChat;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentTiempos;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.chat.FragmentGrupos;
 
 public class ActivityProceso extends AppCompatActivity {
     private ActivityProcesoBinding binding;
@@ -92,7 +93,7 @@ public class ActivityProceso extends AppCompatActivity {
                 case 0:
                     return FragmentTiempos.newInstance(PANTALLA_EN_PROCESO);
                 case 1:
-                    return FragmentChat.newInstance();
+                    return FragmentGrupos.newInstance(PANTALLA_EN_PROCESO);
                 default:
                     return null;
             }
@@ -106,12 +107,12 @@ public class ActivityProceso extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        } else {
+        //if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+        //    getSupportFragmentManager().popBackStack();
+        //} else {
             FragmentManager fm = getSupportFragmentManager();
             FragmentDialogCancelarMdProceso dFragment = new FragmentDialogCancelarMdProceso();
             dFragment.show(fm, "Dialog Fragment");
-        }
+       // }
     }
 }

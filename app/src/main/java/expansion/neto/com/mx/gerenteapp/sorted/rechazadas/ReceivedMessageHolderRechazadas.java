@@ -34,16 +34,16 @@ public class ReceivedMessageHolderRechazadas extends RecyclerView.ViewHolder {
 
     public void bind(ChatProceso.MensajeChat message, Context context, int tipoComentario) {
         if(tipoComentario == TIPO_COMENTARIO_EVALUACIONES) {
-            messageText.setText("En " + message.getNombrefactor() + ". " + message.getComentario());
+            messageText.setText("En " + message.getNombreFactor() + ". " + message.getComentario());
         } else if(tipoComentario == TIPO_COMENTARIO_GENERAL || tipoComentario == TIPO_COMENTARIO_AREA)  {
             messageText.setText(message.getComentario());
         }
-        timeText.setText(message.getFecharegistro());
-        nameText.setText(message.getNombrearea());
+        timeText.setText(message.getFecha());
+        nameText.setText(message.getArea());
 
         final Resources resource = context.getResources();
 
-        switch (message.getAreaid()) {
+        switch (message.getAreaId()) {
             case AREA_EXPANSION:
                 profileImage.setImageDrawable(resource.getDrawable(R.drawable.expansioazul));
                 break;

@@ -19,6 +19,6 @@ public class EventoMessageHolderRechazadas extends RecyclerView.ViewHolder {
     }
 
     public void bind(ChatProceso.MensajeChat message, Context context) {
-        messageText.setText(message.getComentario() + " - " + message.getFecharegistro());
+        messageText.setText(message.getComentario() + " - " + message.getFecha());
     }
 }

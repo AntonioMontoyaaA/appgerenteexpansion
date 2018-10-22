@@ -14,6 +14,7 @@
     <string name="app_no_gps_desactivado_toast" translatable="false">GPS desactivado!</string>
     <!-- activity login -->
     <string name="atrasadas">1</string>
+    <string name="nada"></string>
 
     <string name="tituloLogin">ADMINISTRA TUS MD</string>
     <string name="usuarioLogin">Usuario</string>
@@ -134,7 +135,7 @@
     <string name="micro_ub">MACRO UBICACION</string>
 
     <string name="accion_hoy">Hoy</string>
-    <string name="accion_ver">Ver 1.2.1</string>
+    <string name="accion_ver">Ver 1.2.3</string>
     <string name="accion_tres">Ver 3 días</string>
     <string name="accion_semana">Ver la semana</string>
     <string name="calendario">Calendario</string>
@@ -300,5 +301,6 @@
     <string name="no_esquina">NO ES ESQUINA</string>
     <string name="esquina">ES ESQUINA</string>
     <string name="monto">Debes escribir un monto</string>
+    <string name="intenta">Revisa tu conexión de internet e intenta nuevamente</string>
 
 </resources>

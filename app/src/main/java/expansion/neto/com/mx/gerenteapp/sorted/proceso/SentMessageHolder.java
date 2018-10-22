@@ -23,11 +23,11 @@ public class SentMessageHolder extends RecyclerView.ViewHolder {
 
     public void bind(ChatProceso.MensajeChat message, Context context, int tipoComentario) {
         if(tipoComentario == TIPO_COMENTARIO_EVALUACIONES) {
-            messageText.setText("En " + message.getNombrefactor() + ". " + message.getComentario());
+            messageText.setText("En " + message.getNombreFactor() + ". " + message.getComentario());
         } else if(tipoComentario == TIPO_COMENTARIO_GENERAL) {
             messageText.setText(message.getComentario());
         }
         messageText.setText(message.getComentario());
-        timeText.setText(message.getFecharegistro());
+        timeText.setText(message.getFecha());
     }
 }

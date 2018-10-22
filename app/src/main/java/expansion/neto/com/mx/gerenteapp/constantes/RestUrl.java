@@ -5,19 +5,24 @@ package expansion.neto.com.mx.gerenteapp.constantes;
  * Created by marcosmarroquin on 21/03/18.
  */
 public class RestUrl {
+
+    public static String dominioFileDes = "voksedesfiles"; // desarrollo
+
+    //public static String dominioFileProd = "voksefiles"; // produccion
+
     //358781
     //289106
-    public static String ip = "206.189.68.177"; //desarrollo
-    //public static String ip = "167.99.102.173"; // QA
+    //public static String ip = "206.189.68.177"; //desarrollo
+    public static String ip = "167.99.102.173"; // QA
     //public static String ip = "206.189.223.154"; // produccion
 
     //cuando se finalice aparesca progress dialog de finalizado, cuando damos aceptar menu documentos
 
-    public static String dominio = "voksedesapi"; // desarrollo
-    //public static String dominio = "vokseqaapi"; // QA
+    //public static String dominio = "voksedesapi"; // desarrollo
+    public static String dominio = "vokseqaapi"; // QA
     //public static String dominio = "vokseapi"; // produccion
 
-    public static String VERSION_APP = "1.2.1";
+    public static String VERSION_APP = "1.2.3";
 
     public static String NUM_TELEFONO = "0";
 
@@ -60,8 +65,6 @@ public class RestUrl {
     public static String REST_ACTION_CONSULTAR_AUTORIZADAS_LISTA = "http://"+ ip +"/"+ dominio +"/consultamdxestatus/";
 
     public static String FORMATO_FOTO = "png";
-
-    public static String REST_ACTION_CONSULTAR_DATOS_COMPETENCIA_CLOUDINARY = "http://"+ ip +"/"+ dominio +"/cloudinaryset/";
 
     public static String REST_ACTION_CONSULTA_HORAS_PEATONAL = "http://"+ ip +"/"+ dominio +"/obtienedetallefactor/";
 
@@ -129,6 +132,15 @@ public class RestUrl {
 
     public static String REST_CONSULTA_MONTO = "http://"+ ip +"/"+ dominio +"/guardadocsmontos/";
 
+    public static String REST_ACTION_GUARDA_TODO_TIPO_DOCUMENTO = "http://"+ ip +"/"+ dominioFileDes +"/cloudinaryset/";
+
+    public static String REST_ACTION_NUM_MENSAJES = "http://"+ ip +"/"+ dominio +"/obtienenummensajes/";
+
+    public static String REST_ACTION_CONSULTAR_CHAT_ESTATUS = "http://"+ ip +"/"+ dominio +"/obtienemensajes/";
+
+    public static String REST_ACTION_GUARDAR_CHAT_EN_STATUS = "http://"+ ip +"/"+ dominio +"/agregamensajenivelestatus/";
+
+    public static String REST_ACTION_GUARDAR_VALIDACION = "http://"+ ip +"/"+ dominio +"/validacionmensajes/";
 
 }
 

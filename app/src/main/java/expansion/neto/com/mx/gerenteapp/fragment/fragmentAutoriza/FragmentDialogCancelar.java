@@ -72,8 +72,10 @@ public class FragmentDialogCancelar extends DialogFragment {
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         moduloSeleccionado = preferences.getInt("moduloAutorizaRechaza",0);
+        String usuario = preferences.getString("usuario","");
+        int estatus = preferences.getInt("estatusId", 0);
 
-        ProviderMotivosRechazo.getInstance(getContext()).obtenerMotivosRechazo(String.valueOf(moduloSeleccionado), new ProviderMotivosRechazo.ConsultaMotivosRechazo() {
+        ProviderMotivosRechazo.getInstance(getContext()).obtenerMotivosRechazo(String.valueOf(moduloSeleccionado), usuario, estatus, new ProviderMotivosRechazo.ConsultaMotivosRechazo() {
             @Override
             public void resolve(MotivosRechazo motivosRechazo) {
 

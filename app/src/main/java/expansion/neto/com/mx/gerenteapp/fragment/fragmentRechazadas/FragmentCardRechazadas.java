@@ -524,6 +524,9 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
         editor.putString("mdIdterminar", model.getMemoriaid());
         editor.putInt("estatusId", model.getEstatusid());
         editor.putString("nombreSitio", model.getNombresitio());
+        editor.putString("nombreSitio", model.getNombresitio());
+        editor.putInt("estatusIds", model.getEstatusid());
+
         editor.apply();
 
         Intent main = new Intent(getContext(), ActivityRechazadas.class);

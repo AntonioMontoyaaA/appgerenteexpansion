@@ -1,68 +1,61 @@
 package expansion.neto.com.mx.gerenteapp.ui.documentos;
+
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.drawable.VectorDrawable;
+import android.graphics.Typeface;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
 import android.widget.Toast;
 
-import com.google.android.gms.maps.model.BitmapDescriptor;
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.squareup.picasso.Picasso;
 
-import java.io.ByteArrayOutputStream;
+import org.w3c.dom.Text;
+
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Type;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityDocumentosBinding;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FragmentDialogFinalizar;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialogCancelarMdRechazadas;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialogTerminaDocumentacion;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentDocumentos.FragmentInicioDocumentos;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
 import expansion.neto.com.mx.gerenteapp.modelView.documentosModel.Doctos;
@@ -70,11 +63,8 @@ import expansion.neto.com.mx.gerenteapp.modelView.documentosModel.Documentos;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutorizaFinal;
 import expansion.neto.com.mx.gerenteapp.provider.documentosProvider.ProviderDocumentos;
 import expansion.neto.com.mx.gerenteapp.provider.documentosProvider.ProviderGuardarDocumentos;
-import expansion.neto.com.mx.gerenteapp.provider.loginProvider.ProviderObtenerUrl;
-import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
+import expansion.neto.com.mx.gerenteapp.provider.documentosProvider.ProviderObtenerUrl;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
-
-import static java.security.AccessController.getContext;
 
 public class ActivityDocumentos extends AppCompatActivity {
 
@@ -130,7 +120,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 public void resolve(Codigos codigo) {
                                     if (codigo != null) {
                                         loadingProgress(progressDialog, 1);
-                                        Toast.makeText(getApplicationContext(), codigo.getMensaje() + " Fotos guardados correctamente",
+                                        Toast.makeText(getApplicationContext(), codigo.getMensaje() + " archivos guardados correctamente",
                                                 Toast.LENGTH_LONG).show();
                                     } else {
                                         loadingProgress(progressDialog, 1);
@@ -153,10 +143,11 @@ public class ActivityDocumentos extends AppCompatActivity {
                     binding.btnFinalizar.setEnabled(false);
                     binding.btnFinalizar.setAlpha(.4f);
                 }
-
             }
-
         });
+
+        binding.nombreMD.setText(preferences.getString("nombreSitio", ""));
+        binding.nombreMD.setTypeface(null, Typeface.BOLD);
 
         binding.btnFinalizar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -278,14 +269,10 @@ public class ActivityDocumentos extends AppCompatActivity {
                             FragmentDialogTerminaDocumentacion dFragment = new FragmentDialogTerminaDocumentacion();
                             dFragment.show(fm, "Dialog Fragment");
 
-
                         } else {
-
                             loadingProgressDocumentos(progressDialog, 1, autorizaResponse.getMensaje() + "");
-
                         }
                     }
-
                     @Override
                     public void reject(Exception e) {
                         loadingProgressDocumentos(progressDialog, 1, "Error al conectarse al servicio que autoriza/rechaza la pantalla: ");
@@ -356,7 +343,6 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                 fcurl1s.add(fcurl1);
                                                 documentacion.setFcurl1(fcurl1s);
                                                 cantidad.setVisibility(View.VISIBLE);
-
                                             } else {
                                                 // cantidad.setVisibility(View.GONE);
                                                 fcurl1s.add(fcurl1);
@@ -903,70 +889,40 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 public void onClick(View view) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityDocumentos.this, R.style.AlertDialogCustom);
                                     builder.setMessage(resource.getString(R.string.camara))
-                                            .setCancelable(false)
-                                            .setPositiveButton(resource.getString(R.string.galeria), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    Intent intent = new Intent();
-                                                    intent.setType("image/*");
-                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
-                                                    startActivityForResult(Intent.createChooser(intent, "Select Imagen"),
-                                                            Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                    sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
-                                                    banderaCam = 0;
-                                                    masFotos.setVisibility(View.VISIBLE);
-                                                }
-                                            })
-                                            .setNegativeButton(resource.getString(R.string.foto), new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int id) {
-                                                    Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                                                    if (pictureIntent.resolveActivity(getPackageManager()) != null) {
-                                                        File photoFile = null;
-                                                        try {
-                                                            photoFile = createImageFile(ActivityDocumentos.this);
-                                                        } catch (IOException ex) {
-                                                        }
-                                                        if (photoFile != null) {
-                                                            Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
-                                                            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                                            startActivityForResult(pictureIntent,
-                                                                    Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
-
-                                                            banderaCam = 0;
-                                                        }
-                                                    }
-                                                    masFotos.setVisibility(View.VISIBLE);
-                                                }
-                                            });
-                                    AlertDialog alert = builder.create();
-                                    alert.setTitle("Documentos");
-                                    alert.show();
-
-
-
-
-                                }
-                            });
-
-
-                            final int finalI1 = i;
-                            masFotos.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-
-                                    sumSize(size, documentos.getDatos().get(finalI1).getDocumentoId());
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityDocumentos.this, R.style.AlertDialogCustom);
-                                    builder.setMessage(resource.getString(R.string.camara))
-                                            .setCancelable(false)
+                                            .setCancelable(true)
                                             .setPositiveButton(resource.getString(R.string.galeria), new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int id) {
                                                     Intent intent = new Intent();
                                                     intent.setType("image/*");
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
                                                     startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                    banderaCam = 1;
+                                                    sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                    setImage(masFotos);
+                                                    banderaCam = 0;
+                                                }
+                                            })
+                                            .setNeutralButton("PDF", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                    Intent intent = new Intent();
+                                                    intent.setType("application/pdf");
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    if (intent.resolveActivity(getPackageManager()) != null) {
+                                                        File photoFile = null;
+                                                        try {
+                                                            photoFile = createPdfFile(ActivityDocumentos.this);
+                                                        } catch (IOException ex) {
+                                                        }
+                                                        if (photoFile != null) {
+                                                            Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
+                                                            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                                            startActivityForResult(intent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
+                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            banderaCam = 0;
+                                                            setImage(masFotos);
+                                                        }
+                                                    }
                                                 }
                                             })
                                             .setNegativeButton(resource.getString(R.string.foto), new DialogInterface.OnClickListener() {
@@ -982,6 +938,74 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                             Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
                                                             pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                                             startActivityForResult(pictureIntent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
+                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            banderaCam = 0;
+                                                            setImage(masFotos);
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                    AlertDialog alert = builder.create();
+                                    alert.setTitle("Documentos");
+                                    alert.show();
+                                }
+                            });
+                            final int finalI1 = i;
+                            masFotos.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(ActivityDocumentos.this, R.style.AlertDialogCustom);
+                                    builder.setMessage(resource.getString(R.string.camara))
+                                            .setCancelable(false)
+                                            .setPositiveButton(resource.getString(R.string.galeria), new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    Intent intent = new Intent();
+                                                    intent.setType("image/*");
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    startActivityForResult(Intent.createChooser(intent, "ChooseFile"), Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
+                                                    sumSize(size, documentos.getDatos().get(finalI1).getDocumentoId());
+                                                    banderaCam = 1;
+                                                }
+                                            })
+                                            .setNeutralButton("PDF", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialogInterface, int i) {
+
+                                                    Intent intent = new Intent();
+                                                    intent.setType("application/pdf");
+                                                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                                                    if (intent.resolveActivity(getPackageManager()) != null) {
+                                                        File photoFile = null;
+                                                        try {
+                                                            photoFile = createPdfFile(ActivityDocumentos.this);
+                                                        } catch (IOException ex) {
+                                                        }
+                                                        if (photoFile != null) {
+                                                            Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
+                                                            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                                            startActivityForResult(intent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
+                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            banderaCam = 1;
+                                                        }
+                                                        masFotos.setVisibility(View.VISIBLE);
+                                                    }
+                                                }
+                                            })
+                                            .setNegativeButton(resource.getString(R.string.foto), new DialogInterface.OnClickListener() {
+                                                public void onClick(DialogInterface dialog, int id) {
+                                                    Intent pictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                                    if (pictureIntent.resolveActivity(getPackageManager()) != null) {
+                                                        File photoFile = null;
+                                                        try {
+                                                            photoFile = createImageFile(ActivityDocumentos.this);
+                                                        } catch (IOException ex) {
+                                                        }
+                                                        if (photoFile != null) {
+                                                            Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
+                                                            pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                                            startActivityForResult(pictureIntent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
+                                                            sumSize(size, documentos.getDatos().get(finalI1).getDocumentoId());
                                                             banderaCam = 1;
                                                         }
                                                     }
@@ -990,18 +1014,14 @@ public class ActivityDocumentos extends AppCompatActivity {
                                     AlertDialog alert = builder.create();
                                     alert.setTitle("Documentos");
                                     alert.show();
-
                                     masFotos.setVisibility(View.VISIBLE);
                                     cantidad.setVisibility(View.VISIBLE);
                                 }
                             });
-
                             plomoTable.addView(tbrow);
                             plomoTable.addView(cantidad);
                             plomoTable.addView(size);
                         }
-
-
                         for (int i = 0; i < docto.getDatos().size(); i++) {
                             if (docto.getDatos().get(i).getOpcional().equals("0")) {
                                 if (!documentacion.getFcurl1().isEmpty() &&
@@ -1016,7 +1036,6 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 }
                             }
                         }
-
                         if (permisos[0]) {
                             binding.btnFinalizar.setEnabled(true);
                             binding.btnFinalizar.setAlpha(1);
@@ -1028,11 +1047,9 @@ public class ActivityDocumentos extends AppCompatActivity {
                     } else {
                         loadingProgress(progressDialog, 1);
                     }
-
                 } else {
                     loadingProgress(progressDialog, 1);
                 }
-
             }
 
             @Override
@@ -1040,6 +1057,12 @@ public class ActivityDocumentos extends AppCompatActivity {
                 loadingProgress(progressDialog, 1);
             }
         });
+    }
+
+    TextView masFotosP;
+    public void setImage(TextView image){
+        masFotosP = new TextView(this);
+        this.masFotosP = image;
     }
 
     TextView sizeBandera;
@@ -1105,12 +1128,16 @@ public class ActivityDocumentos extends AppCompatActivity {
     private int CAMERA_ESTADO_CUENTA = 8;
     private int CAMERA_COMPROBANTE_DOMICILIO = 9;
     private int CAMERA_ACTA_MATRIMONIO = 10;
-    private int CAMERA_CONSTITUTIVA = 11;
+    private int CAMERA_ACTA_CONSTITUTIVA = 11;
     private int CAMERA_CARTA_PODER_REPRESENTANTE = 12;
-    private int ID_DEL_REPRE = 13;
+    private int CAMERA_ID_REPRESENTANTE = 13;
 
     String imageFilePath;
     String nombreImagen;
+
+    String imageFilePathPdf;
+    String nombreImagenPdf;
+
     private File createImageFile(Context c) throws IOException {
         String timeStamp =
                 new SimpleDateFormat("yyyyMMdd_HHmmss",
@@ -1119,16 +1146,71 @@ public class ActivityDocumentos extends AppCompatActivity {
         File storageDir = c.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
                 imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
+                ".png",         /* suffix */
                 storageDir      /* directory */
         );
-
         nombreImagen = imageFileName;
         imageFilePath = image.getAbsolutePath();
         return image;
     }
 
+
+    private File createPdfFile(Context c) throws IOException {
+        String timeStamp =
+                new SimpleDateFormat("yyyyMMdd_HHmmss",
+                        Locale.getDefault()).format(new Date());
+        String imageFileName = "PDF_" + timeStamp + "_";
+        File storageDir = c.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".pdf",         /* suffix */
+                storageDir      /* directory */
+        );
+        nombreImagenPdf = imageFileName;
+        imageFilePathPdf = image.getAbsolutePath();
+        return image;
+    }
+
     int banderaCam = 0;
+
+    public String getPDFPath(Uri uri) {
+
+        final String id = DocumentsContract.getDocumentId(uri);
+        final Uri contentUri = ContentUris.withAppendedId(
+                Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
+
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getContentResolver().query(contentUri, projection, null, null, null);
+        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
+
+    private String saveFile(Uri pdfUri, String nombreImagenPdf) {
+        try {
+            InputStream is = getContentResolver().openInputStream(pdfUri);
+            byte[] bytesArray = new byte[is.available()];
+            int read = is.read(bytesArray);
+            //write to sdcard
+
+            File dir = new File(Environment.getExternalStorageDirectory(), "/pdfneto");
+            boolean mkdirs = dir.mkdirs();
+            File myPdf = new File(Environment.getExternalStorageDirectory(), "/pdfneto/" + nombreImagenPdf + ".pdf");
+            if (read == -1 && mkdirs) {
+
+            }
+            FileOutputStream fos = new FileOutputStream(myPdf.getPath());
+            fos.write(bytesArray);
+            fos.close();
+            //            System.out.println(fileString);
+            return myPdf.getPath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     /**
      * método para realizar la respuesta de cada intent que se hace en la actividad (ver pdf, tomar foto)
@@ -1145,295 +1227,243 @@ public class ActivityDocumentos extends AppCompatActivity {
         String mdid = preferences.getString("mdId", "");
 
         if (requestCode == CAMERA_CONTRATO && resultCode == -1) {
-            if (resultCode == 0) {
 
+            nombreImagen = Util.random() + "CAMERA_CONTRATO";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_CONTRATO";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
+
+
         } else if (requestCode == CAMERA_TITULO_PROPIEDAD && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_TITULO_PROPIEDAD";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_TITULO_PROPIEDAD";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_IDENTIFICACION_OFICIAL && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_IDENTIFICACION_OFICIAL";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_IDENTIFICACION_OFICIAL";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_PREDIAL && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_PREDIAL";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_PREDIAL";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_RECIBO_LUZ && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_RECIBO_LUZ";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_RECIBO_LUZ";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_RECIBO_AGUA && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_RECIBO_AGUA";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_RECIBO_AGUA";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
-
         } else if (requestCode == CAMERA_RFC_R1 && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_RFC_R1";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_RFC_R1";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_ESTADO_CUENTA && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_ESTADO_CUENTA";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_ESTADO_CUENTA";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_COMPROBANTE_DOMICILIO && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_COMPROBANTE_DOMICILIO";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_COMPROBANTE_DOMICILIO";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
         } else if (requestCode == CAMERA_ACTA_MATRIMONIO && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_ACTA_MATRIMONIO";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_ACTA_MATRIMONIO";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-
             }
-        } else if (requestCode == CAMERA_CONSTITUTIVA && resultCode == -1) {
-            if (resultCode == 0) {
-
+        } else if (requestCode == CAMERA_ACTA_CONSTITUTIVA && resultCode == -1) {
+            nombreImagen = Util.random() + "CAMERA_ACTA_CONSTITUTIVA";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_CONSTITUTIVA";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                        Uri filePath = data.getData();
-                        try {
-                            //Cómo obtener el mapa de bits de la Galería
-                            Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                            String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                            obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
         } else if (requestCode == CAMERA_CARTA_PODER_REPRESENTANTE && resultCode == -1) {
-            if (resultCode == 0) {
-
+            nombreImagen = Util.random() + "CAMERA_CARTA_PODER_REPRESENTANTE";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
-                nombreImagen = Util.random() + "CAMERA_CARTA_PODER_REPRESENTANTE";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
-                }
-
-            }
-        } else if (requestCode == ID_DEL_REPRE && resultCode == -1) {
-            if (resultCode == 0) {
-
-            } else {
-                //TODO MAKE A CONDITION IF PHOTO FROM GALLERY
-                nombreImagen = Util.random() + "ID_DEL_REPRE";
-                if (getBitmap(imageFilePath) != null) {
-                    Bitmap bitfromPath = getBitmap(imageFilePath);
-                    String base64 = getStringImage(compressImage(bitfromPath, 1000));
-                    obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                } else {
-
-                    Uri filePath = data.getData();
-                    try {
-                        //Cómo obtener el mapa de bits de la Galería
-                        Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                        String base64 = getStringImage(compressImage(bitfromPath, 1200));
-                        obtenerUrl(nombreImagen, base64, String.valueOf(mdid));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
             }
+        } else if (requestCode == CAMERA_ID_REPRESENTANTE && resultCode == -1) {
+            nombreImagen = Util.random() + "CAMERA_ID_REPRESENTANTE";
+            if (getBitmap(imageFilePath) != null) {
+                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
+            } else {
+                Uri filePath = data.getData();
+                String filePathUri = saveFile(filePath, nombreImagenPdf);
+                try {
+                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
+                    if (bitfromPath != null) {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
+                    } else {
+                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
         } else if (resultCode == 0) {
 
 
@@ -1486,224 +1516,128 @@ public class ActivityDocumentos extends AppCompatActivity {
 
     ProgressDialog progressDialog;
 
-    public void obtenerUrl(String foto, String b64, String mdId) {
+    public void obtenerUrl(final String mdId, final String nombreImg, final String formato, final String tipoArchivo, final Uri uri) {
         loadingProgress(progressDialog, 0);
-        ProviderObtenerUrl.getInstance(ActivityDocumentos.this).obtenerUrl(mdId, foto, b64, new ProviderObtenerUrl.ConsultaUrl() {
+        ProviderObtenerUrl.getInstance(ActivityDocumentos.this).obtenerUrl(mdId, nombreImg, formato, tipoArchivo, uri, new ProviderObtenerUrl.ConsultaUrl() {
             @Override
             public void resolve(Codigos codigo) {
-                if (codigo != null) {
+                if (codigo != null && codigo.getCodigo() == 200) {
                     final Boolean[] permisos = {false};
-                    if (codigo.getResultado().getSecureUrl() != null) {
+                    if (codigo.getResultado() != null) {
+                        imageFilePath = "";
                         if (codigo.getResultado().getSecureUrl().contains("CAMERA_CONTRATO")) {
-
                             if (banderaCam == 0) {
-
                                 fcurl1s.clear();
                                 fcurl1 = new Doctos.Fcurl1(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl1s.add(fcurl1);
                                 documentacion.setFcurl1(fcurl1s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_CONTRATO));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
-
                                 fcurl1 = new Doctos.Fcurl1(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl1s.add(fcurl1);
                                 documentacion.setFcurl1(fcurl1s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_CONTRATO));
-
                             }
-
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
 
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_TITULO_PROPIEDAD")) {
-
                             if (banderaCam == 0) {
-
                                 fcurl2s.clear();
                                 fcurl2 = new Doctos.Fcurl2(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl2s.add(fcurl2);
                                 documentacion.setFcurl2(fcurl2s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_TITULO_PROPIEDAD));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl2 = new Doctos.Fcurl2(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl2s.add(fcurl2);
                                 documentacion.setFcurl2(fcurl2s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_TITULO_PROPIEDAD));
-
                             }
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_IDENTIFICACION_OFICIAL")) {
-
                             if (banderaCam == 0) {
                                 fcurl3s.clear();
                                 fcurl3 = new Doctos.Fcurl3(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl3s.add(fcurl3);
                                 documentacion.setFcurl3(fcurl3s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_IDENTIFICACION_OFICIAL));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl3 = new Doctos.Fcurl3(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl3s.add(fcurl3);
                                 documentacion.setFcurl3(fcurl3s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_IDENTIFICACION_OFICIAL));
-
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_PREDIAL")) {
-
-
                             if (banderaCam == 0) {
                                 fcurl4s.clear();
                                 fcurl4 = new Doctos.Fcurl4(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl4s.add(fcurl4);
                                 documentacion.setFcurl4(fcurl4s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_PREDIAL));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl4 = new Doctos.Fcurl4(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl4s.add(fcurl4);
                                 documentacion.setFcurl4(fcurl4s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_PREDIAL));
-
                             }
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RECIBO_LUZ")) {
-
                             if (banderaCam == 0) {
                                 fcurl5s.clear();
                                 fcurl5 = new Doctos.Fcurl5(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl5s.add(fcurl5);
                                 documentacion.setFcurl5(fcurl5s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_LUZ));
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl5 = new Doctos.Fcurl5(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl5s.add(fcurl5);
                                 documentacion.setFcurl5(fcurl5s);
-
-                                String json = new Gson().toJson(documentacion);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_LUZ));
-
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RECIBO_AGUA")) {
-
                             if (banderaCam == 0) {
                                 fcurl6s.clear();
                                 fcurl6 = new Doctos.Fcurl6(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl6s.add(fcurl6);
                                 documentacion.setFcurl6(fcurl6s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_AGUA));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl6 = new Doctos.Fcurl6(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl6s.add(fcurl6);
                                 documentacion.setFcurl6(fcurl6s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_AGUA));
-
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RFC_R1")) {
-
                             if (banderaCam == 0) {
                                 fcurl7s.clear();
                                 fcurl7 = new Doctos.Fcurl7(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl7s.add(fcurl7);
                                 documentacion.setFcurl7(fcurl7s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RFC_R1));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl7 = new Doctos.Fcurl7(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl7s.add(fcurl7);
                                 documentacion.setFcurl7(fcurl7s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_RFC_R1));
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ESTADO_CUENTA")) {
                             if (banderaCam == 0) {
                                 fcurl8s.clear();
@@ -1711,24 +1645,15 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 fcurl8s.add(fcurl8);
                                 documentacion.setFcurl8(fcurl8s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_ESTADO_CUENTA));
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl8 = new Doctos.Fcurl8(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl8s.add(fcurl8);
                                 documentacion.setFcurl8(fcurl8s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_ESTADO_CUENTA));
                             }
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_COMPROBANTE_DOMICILIO")) {
                             if (banderaCam == 0) {
                                 fcurl9s.clear();
@@ -1736,88 +1661,49 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 fcurl9s.add(fcurl9);
                                 documentacion.setFcurl9(fcurl9s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_COMPROBANTE_DOMICILIO));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl9 = new Doctos.Fcurl9(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl9s.add(fcurl9);
                                 documentacion.setFcurl9(fcurl9s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_COMPROBANTE_DOMICILIO));
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ACTA_MATRIMONIO")) {
-
                             if (banderaCam == 0) {
                                 fcurl10s.clear();
                                 fcurl10 = new Doctos.Fcurl10(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl10s.add(fcurl10);
                                 documentacion.setFcurl10(fcurl10s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_MATRIMONIO));
-
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl10 = new Doctos.Fcurl10(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl10s.add(fcurl10);
                                 documentacion.setFcurl10(fcurl10s);
-
                                 sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_MATRIMONIO));
-
-
                             }
-
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
 
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_CONSTITUTIVA")) {
+                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ACTA_CONSTITUTIVA")) {
 
                             if (banderaCam == 0) {
                                 fcurl11s.clear();
                                 fcurl11 = new Doctos.Fcurl11(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl11s.add(fcurl11);
                                 documentacion.setFcurl11(fcurl11s);
-
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CONSTITUTIVA));
-
-
+                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_CONSTITUTIVA));
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl11 = new Doctos.Fcurl11(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl11s.add(fcurl11);
                                 documentacion.setFcurl11(fcurl11s);
-
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CONSTITUTIVA));
-
-
+                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_CONSTITUTIVA));
                             }
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
-
                         } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_CARTA_PODER_REPRESENTANTE")) {
 
                             if (banderaCam == 0) {
@@ -1826,7 +1712,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 fcurl12s.add(fcurl12);
                                 documentacion.setFcurl12(fcurl12s);
                                 sumSize(sizeBandera, String.valueOf(CAMERA_CARTA_PODER_REPRESENTANTE));
-
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl12 = new Doctos.Fcurl12(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl12s.add(fcurl12);
@@ -1834,52 +1720,37 @@ public class ActivityDocumentos extends AppCompatActivity {
                                 sumSize(sizeBandera, String.valueOf(CAMERA_CARTA_PODER_REPRESENTANTE));
 
                             }
-
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
-
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
 
-                        } else if (codigo.getResultado().getSecureUrl().contains("ID_DEL_REPRE")) {
+                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ID_REPRESENTANTE")) {
 
                             if (banderaCam == 0) {
                                 fcurl13s.clear();
                                 fcurl13 = new Doctos.Fcurl13(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl13s.add(fcurl13);
                                 documentacion.setFcurl13(fcurl13s);
-                                sumSize(sizeBandera, String.valueOf(ID_DEL_REPRE));
-
-
+                                sumSize(sizeBandera, String.valueOf(CAMERA_ID_REPRESENTANTE));
+                                masFotosP.setVisibility(View.VISIBLE);
                             } else {
                                 fcurl13 = new Doctos.Fcurl13(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
                                 fcurl13s.add(fcurl13);
                                 documentacion.setFcurl13(fcurl13s);
-                                sumSize(sizeBandera, String.valueOf(ID_DEL_REPRE));
+                                sumSize(sizeBandera, String.valueOf(CAMERA_ID_REPRESENTANTE));
 
                             }
-                            permisos[0] = getObligatorios();
-
-                            if (permisos[0]) {
-                                binding.btnFinalizar.setAlpha(1);
-                                binding.btnFinalizar.setEnabled(true);
-                            } else {
-                                binding.btnFinalizar.setAlpha(.4f);
-                                binding.btnFinalizar.setEnabled(false);
-                            }
+                            botonFinaliza();
                             loadingProgress(progressDialog, 1);
 
                         } else {
                             loadingProgress(progressDialog, 1);
                         }
+                    } else {
+                        loadingProgress(progressDialog, 1);
                     }
-
+                } else {
+                    loadingProgress(progressDialog, 1);
+                    Toast.makeText(ActivityDocumentos.this, R.string.intenta, Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -1889,7 +1760,6 @@ public class ActivityDocumentos extends AppCompatActivity {
             }
         });
     }
-
 
     public static void loadingProgress(final ProgressDialog progressDialog, int i) {
         if (i == 0) {
@@ -1929,15 +1799,16 @@ public class ActivityDocumentos extends AppCompatActivity {
         }
     }
 
-    public static String getStringImage(Bitmap bmp) {
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
-        return encodedImage;
+    public void botonFinaliza() {
+        permisos[0] = getObligatorios();
+        if (permisos[0]) {
+            binding.btnFinalizar.setAlpha(1);
+            binding.btnFinalizar.setEnabled(true);
+        } else {
+            binding.btnFinalizar.setAlpha(.4f);
+            binding.btnFinalizar.setEnabled(false);
+        }
     }
-
-
 }
 
 

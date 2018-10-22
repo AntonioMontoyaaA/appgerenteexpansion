@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityRechazadasBinding;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.chat.FragmentGrupos;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentChatRechazadas;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentDialogCancelarMdDocumentos;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentTiemposRechazadas;
@@ -94,7 +95,7 @@ public class ActivityRechazadas extends AppCompatActivity {
                 case 0:
                     return FragmentTiemposRechazadas.newInstance(PANTALLA_RECHAZADAS);
                 case 1:
-                    return FragmentChatRechazadas.newInstance(PANTALLA_RECHAZADAS);
+                    return FragmentGrupos.newInstance(PANTALLA_RECHAZADAS);
                 default:
                     return null;
             }
@@ -108,13 +109,13 @@ public class ActivityRechazadas extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
-            getSupportFragmentManager().popBackStack();
-        } else {
+       // if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
+       //     getSupportFragmentManager().popBackStack();
+      //  } else {
             FragmentManager fm = getSupportFragmentManager();
             FragmentDialogCancelarMdDocumentos dFragment = new FragmentDialogCancelarMdDocumentos();
             dFragment.show(fm, "Dialog Fragment");
-        }
+      //  }
     }
 
 }

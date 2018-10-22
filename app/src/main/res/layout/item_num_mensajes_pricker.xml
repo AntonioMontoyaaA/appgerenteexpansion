@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="listener"
+            type="expansion.neto.com.mx.gerenteapp.sorted.chat.NumMensajesHolder.Listener"/>
+
+        <variable
+            name="autorizaModel"
+            type="expansion.neto.com.mx.gerenteapp.modelView.procesoModel.ChatNumMensajes.Comentario"/>
+
+        <variable
+            name="numero"
+            type="String"/>
+
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_marginTop="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{view -> listener.onAutorizaSelect(autorizaModel)}">
+
+        <Button
+            android:clickable="false"
+            android:id="@+id/image"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_marginStart="8dp"
+            android:textColor="@color/blanco"
+            android:textSize="16sp"
+            app:typeface="robotoBold"
+            android:gravity="center"
+            android:paddingTop="7dp"
+            android:layout_gravity="center"
+            android:text="@{autorizaModel.estatusEvaluacion == -1 ? @string/nada : String.valueOf(autorizaModel.numero)}"
+            android:background="@{autorizaModel.estatusEvaluacion == -1 ? @drawable/general_chat : @drawable/rounded_boton}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/nombreEstatus"
+            android:layout_width="220dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginBottom="16dp"
+            android:background="@android:color/transparent"
+            android:text="@{String.valueOf(autorizaModel.estatus)}"
+            android:textColor="@color/azultaco"
+            android:textSize="11sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.333"
+            app:typeface="robotoBold" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/ultimoMensaje"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            android:background="@android:color/transparent"
+            android:textColor="@color/grisetxt"
+            android:textSize="10sp"
+            android:text="@{String.valueOf(autorizaModel.mensaje)}"
+            app:layout_constraintStart_toEndOf="@+id/image"
+            app:layout_constraintTop_toBottomOf="@+id/nombreEstatus"
+            app:typeface="robotoRegular" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/horaUltimo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="13dp"
+            android:layout_marginEnd="8dp"
+            android:background="@android:color/transparent"
+            android:text="@{String.valueOf(autorizaModel.fechaMensaje)}"
+            android:textColor="@color/grisetxt"
+            android:textSize="9sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:typeface="robotoBold" />
+
+        <Button
+            android:clickable="false"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:id="@+id/porLeer"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginEnd="8dp"
+            android:textColor="@color/blanco"
+            android:layout_marginBottom="8dp"
+            tools:text="1"
+            android:textSize="9sp"
+            android:visibility="@{autorizaModel.numMensajesNuevos == 0 ? View.INVISIBLE : View.VISIBLE}"
+            android:text="@{String.valueOf(autorizaModel.numMensajesNuevos)}"
+            android:background="@drawable/rounded_boton_pendientes"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/horaUltimo"
+            app:layout_constraintVertical_bias="1.0" />
+
+
+    </android.support.constraint.ConstraintLayout>
+
+    <!--android:text="@{String.valueOf(autorizaModel.numMensajesNuevos)}"-->
+
+
+</layout>

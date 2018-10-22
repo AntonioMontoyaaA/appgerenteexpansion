@@ -38,13 +38,13 @@ public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
 
     public void bind(ChatProceso.MensajeChat message, Context context, int tipoComentario) {
 
-        if(message.getNombrearea()==null){
-            message.setNombrefactor(context.getString(R.string.general));
+        if(message.getArea()==null){
+            message.setNombreFactor(context.getString(R.string.general));
         }
 
         if(tipoComentario == TIPO_COMENTARIO_EVALUACIONES) {
 
-            String nombreArea = message.getNombrearea();
+            String nombreArea = message.getArea();
             nombreArea = nombreArea.substring(0,1).toUpperCase() + nombreArea.substring(1).toLowerCase();
             nombreArea = nombreArea+": "+" \n"+message.getComentario();
             SpannableString ss1 =  new SpannableString(nombreArea);
@@ -55,7 +55,7 @@ public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
 
         } else if(tipoComentario == TIPO_COMENTARIO_GENERAL || tipoComentario == TIPO_COMENTARIO_AREA)  {
 
-            String nombreArea = message.getNombrearea();
+            String nombreArea = message.getArea();
             nombreArea = nombreArea.substring(0,1).toUpperCase() + nombreArea.substring(1).toLowerCase();
             nombreArea = nombreArea+": "+" \n"+message.getComentario();
             SpannableString ss1 =  new SpannableString(nombreArea);
@@ -66,12 +66,12 @@ public class ReceivedMessageHolder extends RecyclerView.ViewHolder {
 
         }
 
-        timeText.setText(message.getFecharegistro());
-        nameText.setText(message.getNombrearea());
+        timeText.setText(message.getFecha());
+        nameText.setText(message.getArea());
 
         final Resources resource = context.getResources();
 
-        switch (message.getAreaid()) {
+        switch (message.getAreaId()) {
             case AREA_EXPANSION:
                 profileImage.setImageDrawable(resource.getDrawable(R.drawable.expansioazul));
                 break;

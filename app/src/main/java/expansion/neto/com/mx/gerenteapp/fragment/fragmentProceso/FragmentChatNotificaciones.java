@@ -458,10 +458,10 @@ public class FragmentChatNotificaciones extends Fragment {
                         if(chat.getCodigo() == 200) {
                             ChatProceso.MensajeChat mensaje = new ChatProceso.MensajeChat();
                             mensaje.setComentario(binding.edittextChatbox.getText().toString());
-                            mensaje.setTipocomentario(TIPO_COMENTARIO_CHAT_GRAL);
-                            mensaje.setUsuarioid(Integer.parseInt(usuarioId));
+                            mensaje.setTipoComentario(TIPO_COMENTARIO_CHAT_GRAL);
+                            mensaje.setUsuarioId(Integer.parseInt(usuarioId));
                             SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-                            mensaje.setFecharegistro(sdf.format(new Date()));
+                            mensaje.setFecha(sdf.format(new Date()));
                             listaMensajes.add(mensaje);
 
                             mMessageRecycler.removeAllViews();

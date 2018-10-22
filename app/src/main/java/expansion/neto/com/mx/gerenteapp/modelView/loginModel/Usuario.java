@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -21,8 +22,11 @@ import java.util.ArrayList;
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityLoginBinding;
 import expansion.neto.com.mx.gerenteapp.provider.loginProvider.ExpansionGerenteProviderLogin;
+import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityLogin;
 import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
+
+import static expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityLogin.canGetLocation;
 
 /**
  * Created by marcosmarroquin on 21/03/18.
@@ -77,26 +81,35 @@ public class Usuario {
      */
     public void onClickEntrar(String usuario, String contra) {
         blockUI();
-        if(usuario.length() > 0 && contra.length() > 0){
-            binding.entrar.setAlpha(0.45f);
-            binding.entrar.setEnabled(false);
-            Usuario user = new Usuario(usuario, contra, context, binding);
-            compruebaUsuario(user);
+
+
+        boolean act = canGetLocation(context);
+        if(act){
+            if(usuario.length() > 0 && contra.length() > 0){
+                binding.entrar.setAlpha(0.45f);
+                binding.entrar.setEnabled(false);
+                Usuario user = new Usuario(usuario, contra, context, binding);
+                compruebaUsuario(user);
+            }else{
+                binding.entrar.setEnabled(true);
+                binding.entrar.setAlpha(1f);
+                Snackbar snackbar = Snackbar.make(binding.container,
+                        Html.fromHtml("<b><font color=\"#254581\">" +
+                                context.getString(R.string.sizeContra) +
+                                "</font></b>"), Snackbar.LENGTH_SHORT);
+                View snackBarView = snackbar.getView();
+                snackBarView.setBackgroundColor(context.getResources().getColor(R.color.snackBar)); // snackbar background color
+                snackbar.show();
+                unblockUI();
+            }
         }else{
-            binding.entrar.setEnabled(true);
-            binding.entrar.setAlpha(1f);
-            Snackbar snackbar = Snackbar.make(binding.container,
-                    Html.fromHtml("<b><font color=\"#254581\">" +
-                            context.getString(R.string.sizeContra) +
-                            "</font></b>"), Snackbar.LENGTH_SHORT);
-            View snackBarView = snackbar.getView();
-            snackBarView.setBackgroundColor(context.getResources().getColor(R.color.snackBar)); // snackbar background color
-            snackbar.show();
             unblockUI();
+            Toast.makeText(context, "Por favor activa tu gps para poder accesar", Toast.LENGTH_SHORT).show();
+            context.startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
         }
     }
-    ArrayList<Permiso> permisos;
 
+    ArrayList<Permiso> permisos;
     /**
      * Método que regresa el objeto usuario según se encuentre en la BD, también existe condición para saber si el usuario tiene acceso
      * @param usuario
