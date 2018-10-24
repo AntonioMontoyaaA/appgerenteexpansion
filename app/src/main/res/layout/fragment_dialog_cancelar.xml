@@ -37,6 +37,7 @@
 
 
         <Spinner
+            android:text="SELECCIONA UN MOTIVO"
             android:id="@+id/motivos_rechazo_spinner"
             android:layout_marginStart="18dp"
             android:layout_marginEnd="18dp"
