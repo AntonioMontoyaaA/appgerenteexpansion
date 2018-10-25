@@ -106,9 +106,11 @@ public class FragmentGruposBack extends Fragment implements NumMensajesHolder.Li
                         comentarios = new ArrayList<>();
 
                         for(int i = 0;i<tiempos.getComentarios().size();i++){
-                            if(tiempos.getComentarios().get(i).getEstatusId()!=2){
-                                comentarios.add(tiempos.getComentarios().get(i));
-                            }
+                          //  if(tiempos.getComentarios().get(i).getEstatusId()!=2 ){
+                                if(tiempos.getComentarios().get(i).getEstatusEvaluacion()!=0){
+                                    comentarios.add(tiempos.getComentarios().get(i));
+                                }
+                          //  }
                         }
 
                         for(int j=0;j<comentarios.size();j++){

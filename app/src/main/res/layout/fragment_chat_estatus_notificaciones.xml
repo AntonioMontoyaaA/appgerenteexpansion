@@ -12,76 +12,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical">
-        <!--            android:visibility="gone" -->
+
         <LinearLayout
-            android:visibility="gone"
-            android:background="@drawable/estilo_boton_blanco"
-            android:id="@+id/rechazo"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="4dp"
-            android:layout_marginBottom="2dp">
-
-            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="4dp"
-                android:layout_marginEnd="4dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:text="Motivo de rechazo:"
-                android:textAlignment="center"
-                android:textColor="@color/azultaco"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:typeface="robotoRegular" />
-
-            <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                android:id="@+id/motivo_rechazo_general"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginStart="5dp"
-                android:layout_marginEnd="5dp"
-                android:layout_marginBottom="4dp"
-                android:layout_weight="1"
-                android:background="@android:color/transparent"
-                android:gravity="center"
-                android:textAlignment="center"
-                android:textColor="@color/azultaco"
-                android:textSize="12sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:typeface="robotoRegular"
-                tools:text="---" />
-
-            <Button
-                android:id="@+id/modifica"
-                android:layout_width="109dp"
-                android:layout_height="20dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="2dp"
-                android:layout_marginBottom="4dp"
-                android:background="@drawable/estilo_boton_azul_claro"
-                android:text="@string/modificar"
-                android:textColor="@color/blanco"
-                android:textSize="10dp" />
-
+            android:id="@+id/toolbar">
+            <include
+                android:id="@+id/tol"
+                layout="@layout/toolbar_autoriza"
+                />
         </LinearLayout>
 
         <LinearLayout
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="0dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
 
             <LinearLayout
+                android:padding="12dp"
                 android:id="@+id/body"
-                android:background="@drawable/background"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <android.support.constraint.ConstraintLayout
@@ -96,13 +50,8 @@
                         android:layout_width="25dp"
                         android:layout_height="30dp"
                         android:layout_gravity="end"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="8dp"
-                        app:layout_constraintBottom_toTopOf="@+id/reyclerview_message_list"
-                        app:layout_constraintStart_toStartOf="@+id/line"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.055">
+                        android:visibility="gone"
+                        tools:layout_editor_absoluteY="2dp">
 
                         <ImageView
                             android:layout_width="17dp"
@@ -120,25 +69,27 @@
                     </LinearLayout>
 
                     <LinearLayout
+
                         android:id="@+id/line"
                         android:layout_width="match_parent"
-                        android:layout_height="34dp"
+                        android:layout_height="38dp"
                         android:layout_marginTop="5dp"
                         android:orientation="horizontal"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <Button
+
                             android:id="@+id/image"
                             android:layout_width="30dp"
                             android:layout_height="30dp"
                             android:layout_alignParentStart="true"
                             android:layout_centerInParent="true"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginStart="34dp"
+                            android:layout_marginStart="8dp"
                             android:alpha=".4"
-                            android:textSize="14sp"
-                            android:textColor="@color/blanco"
                             android:background="@drawable/rounded_boton"
+                            android:textColor="@color/blanco"
+                            android:textSize="14sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -159,7 +110,7 @@
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/reyclerview_message_list"
                         android:layout_width="match_parent"
-                        android:layout_height="440dp"
+                        android:layout_height="470dp"
                         android:layout_marginStart=".001dp"
                         android:layout_marginEnd=".001dp"
                         android:background="@drawable/bg_chat_autorizar"
@@ -171,13 +122,13 @@
                         app:layout_constraintVertical_bias="0.904" />
 
                     <!--<View-->
-                        <!--android:id="@+id/view3"-->
-                        <!--android:layout_width="0dp"-->
-                        <!--android:layout_height="2dp"-->
-                        <!--android:background="#dfdfdf"-->
-                        <!--app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"-->
-                        <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                        <!--app:layout_constraintRight_toRightOf="parent" />-->
+                    <!--android:id="@+id/view3"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="2dp"-->
+                    <!--android:background="#dfdfdf"-->
+                    <!--app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"-->
+                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                    <!--app:layout_constraintRight_toRightOf="parent" />-->
 
                     <LinearLayout
                         android:id="@+id/layout_chatbox"

@@ -2,8 +2,8 @@ package expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.chat;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,44 +23,31 @@ import java.util.Date;
 import java.util.List;
 
 import expansion.neto.com.mx.gerenteapp.R;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentChatEstatusBinding;
+import expansion.neto.com.mx.gerenteapp.databinding.FragmentChatEstatusNotificacionesBinding;
 import expansion.neto.com.mx.gerenteapp.modelView.procesoModel.ChatGuardaProceso;
 import expansion.neto.com.mx.gerenteapp.modelView.procesoModel.ChatProceso;
 import expansion.neto.com.mx.gerenteapp.provider.procesoProvider.chat.ProviderChatProcesoEstatus;
 import expansion.neto.com.mx.gerenteapp.provider.procesoProvider.chat.ProviderGuardaMensaje;
 import expansion.neto.com.mx.gerenteapp.sorted.proceso.adapter.MensajeChatAdapter;
+import expansion.neto.com.mx.gerenteapp.ui.agenda.ActivityNotificaciones;
 
 import static expansion.neto.com.mx.gerenteapp.fragment.fragmentDetalle.FragmentDetalle.loadingProgress;
 
-public class FragmentEstatusChat extends Fragment {
+public class FragmentEstatusChatNotificaciones extends Fragment {
 
     SharedPreferences preferences = null;
     private View view = null;
     private String mdId = null;
-    private FragmentChatEstatusBinding binding;
+    private FragmentChatEstatusNotificacionesBinding binding;
 
     List<ChatProceso.MensajeChat> listaMensajes = null;
-    private int areaSeleccionada = 0;
-
-    private final String CATEGORIA_A = "A";
-    private final String CATEGORIA_B = "B";
-    private final String CATEGORIA_C = "C";
-
-    private final int AREA_CONSULTA_GENERAL = 0;
-    private final int AREA_CONSULTA_GERENTE = 111;
-    private final int AREA_CONSULTA_EXPANSION = 1;
-    private final int AREA_CONSULTA_GESTORIA = 2;
-    private final int AREA_CONSULTA_CONSTRUCCION = 3;
-    private final int AREA_CONSULTA_OPERACIONES = 5;
-    private final int AREA_CONSULTA_AUDITORIA = 4;
-
 
     private static final int TIPO_COMENTARIO_CHAT_GRAL = 1;
 
+
     private MensajeChatAdapter mMessageAdapter;
-    int index;
-    public static FragmentEstatusChat newInstance() {
-        FragmentEstatusChat fragmentChat = new FragmentEstatusChat();
+    public static FragmentEstatusChatNotificaciones newInstance() {
+        FragmentEstatusChatNotificaciones fragmentChat = new FragmentEstatusChatNotificaciones();
         Bundle args = new Bundle();
         fragmentChat.setArguments(args);
         return fragmentChat;
@@ -70,7 +57,7 @@ public class FragmentEstatusChat extends Fragment {
     @Override
     public void onResume(){
         super.onResume();
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 
     }
 
@@ -80,24 +67,34 @@ public class FragmentEstatusChat extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
-    // Inflate the view for the fragment based on layout XML
+    // Inflate the view for the fragent based on layout XML
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chat_estatus,container,false);
+        binding = DataBindingUtil.inflate(inflater,R.layout.fragment_chat_estatus_notificaciones,container,false);
         view = binding.getRoot();
+        binding.edittextChatbox.requestFocus();
 
-        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String idEstatus = preferences.getString("estatusId", "");
         String numero = preferences.getString("num", "");
+        binding.tol.agregar.setVisibility(View.GONE);
+        binding.tol.nombreTitulo.setText(getString(R.string.chat));
+
+        binding.tol.back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), ActivityNotificaciones.class);
+                startActivity(intent);
+            }
+        });
 
         binding.buttonChat.setEnabled(false);
         binding.chat.setVisibility(View.VISIBLE);
-
-        Resources resource = getContext().getResources();
 
         if(numero.equals("0")){
             binding.image.setText("");
@@ -108,17 +105,7 @@ public class FragmentEstatusChat extends Fragment {
 
         }
 
-        binding.backFragment.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                binding.chat.setVisibility(View.GONE);
-                FragmentGruposBack fragment = new FragmentGruposBack();
-                FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-                transaction.replace(R.id.body, fragment);
-                transaction.addToBackStack(null);
-                transaction.commit();
-            }
-        });
+
 
         binding.edittextChatbox.addTextChangedListener(new TextWatcher() {
             @Override
@@ -186,7 +173,6 @@ public class FragmentEstatusChat extends Fragment {
         consultaChatPorArea(Integer.parseInt(idEstatus));
         return view;
     }
-
     ProgressDialog progressDialog;
 
     public void consultaChatPorArea(int areaId) {
@@ -207,6 +193,7 @@ public class FragmentEstatusChat extends Fragment {
                     binding.reyclerviewMessageList.setAdapter(mMessageAdapter);
                     binding.reyclerviewMessageList.setLayoutManager(new LinearLayoutManager(getContext()));
                     binding.reyclerviewMessageList.scrollToPosition(listaMensajes.size() - 1);
+
 
 
                 } else {

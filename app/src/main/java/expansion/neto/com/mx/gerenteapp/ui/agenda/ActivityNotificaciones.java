@@ -21,6 +21,7 @@ import java.util.Comparator;
 import java.util.Date;
 
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentChatNotificaciones;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.chat.FragmentEstatusChatNotificaciones;
 import expansion.neto.com.mx.gerenteapp.modelView.agendaModel.GuardarNotificacion;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
 import expansion.neto.com.mx.gerenteapp.provider.agendaProvider.ProviderNotificacionVisto;
@@ -42,7 +43,7 @@ public class ActivityNotificaciones extends AppCompatActivity {
     AgendaEventosNotificacionesHolder.Listener listener = new AgendaEventosNotificacionesHolder.Listener() {
         @Override
         public void onAgendaSelect(Notificaciones.Notificacione model) {
-            goIntent(model.getTipoNotificacion(), model.getMdId());
+            goIntent(model.getTipoNotificacion(), model.getMdId(), model.getEstatus());
             notificacionVista(model);
         }
     };
@@ -76,7 +77,6 @@ public class ActivityNotificaciones extends AppCompatActivity {
                 startActivity(main);
             }
         });
-
     }
 
     private void initDataBinding() {
@@ -133,30 +133,40 @@ public class ActivityNotificaciones extends AppCompatActivity {
 
     Bundle args = new Bundle();
     Intent main;
-    public void goIntent(String tipoNotificacion, String mdId){
+    public void goIntent(String tipoNotificacion, String mdId, String estatus){
         SharedPreferences preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         Fragment navFragment = null;;
         switch (tipoNotificacion){
             case "1":
-                navFragment = new FragmentChatNotificaciones();
+                editor.putString("mdIdterminar", mdId);
+                editor.putString("estatusId", estatus);
+                editor.putString("num", getString(R.string.zero));
+                editor.putString("estatusNombre", getString(R.string.general));
+                editor.apply();
+                navFragment = new FragmentEstatusChatNotificaciones();
                 args.putInt("index", 1);
                 navFragment.setArguments(args);
                 break;
             case "2":
-                editor.putString("mdId", mdId);
+                editor.putString("mdIdterminar", mdId);
                 editor.apply();
                 main = new Intent(getApplicationContext(), ActivityDetalleNotificaciones.class);
                 startActivity(main);
                 break;
             case "3":
-                editor.putString("mdId", mdId);
+                editor.putString("mdIdterminar", mdId);
                 editor.apply();
                 main = new Intent(getApplicationContext(), ActivityDetalleNotificaciones.class);
                 startActivity(main);
                 break;
             case "4":
-                navFragment = new FragmentChatNotificaciones();
+                editor.putString("mdIdterminar", mdId);
+                editor.putString("estatusId", estatus);
+                editor.putString("num", getString(R.string.zero));
+                editor.putString("estatusNombre", getString(R.string.genera));
+                editor.apply();
+                navFragment = new FragmentEstatusChatNotificaciones();
                 args = new Bundle();
                 args.putInt("index", 1);
                 navFragment.setArguments(args);
