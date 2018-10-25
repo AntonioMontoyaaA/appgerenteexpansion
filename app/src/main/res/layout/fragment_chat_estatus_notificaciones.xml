@@ -10,7 +10,7 @@
     <LinearLayout
         android:background="@drawable/background"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <LinearLayout
@@ -27,7 +27,7 @@
         <LinearLayout
             android:layout_marginTop="0dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
 
@@ -50,8 +50,7 @@
                         android:layout_width="25dp"
                         android:layout_height="30dp"
                         android:layout_gravity="end"
-                        android:visibility="gone"
-                        tools:layout_editor_absoluteY="2dp">
+                        android:visibility="gone">
 
                         <ImageView
                             android:layout_width="17dp"
@@ -113,22 +112,13 @@
                         android:layout_height="470dp"
                         android:layout_marginStart=".001dp"
                         android:layout_marginEnd=".001dp"
-                        android:background="@drawable/bg_chat_autorizar"
+                        android:background="@drawable/bg_chat_jefe"
                         app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/line"
                         app:layout_constraintVertical_bias="0.904" />
-
-                    <!--<View-->
-                    <!--android:id="@+id/view3"-->
-                    <!--android:layout_width="0dp"-->
-                    <!--android:layout_height="2dp"-->
-                    <!--android:background="#dfdfdf"-->
-                    <!--app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"-->
-                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
-                    <!--app:layout_constraintRight_toRightOf="parent" />-->
 
                     <LinearLayout
                         android:id="@+id/layout_chatbox"
@@ -179,6 +169,70 @@
                         </LinearLayout>
 
                     </LinearLayout>
+
+                    <!--<View-->
+                    <!--android:id="@+id/view3"-->
+                    <!--android:layout_width="0dp"-->
+                    <!--android:layout_height="2dp"-->
+                    <!--android:background="#dfdfdf"-->
+                    <!--app:layout_constraintBottom_toTopOf="@+id/layout_chatbox"-->
+                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                    <!--app:layout_constraintRight_toRightOf="parent" />-->
+
+                    <!--<RelativeLayout-->
+                    <!--android:id="@+id/layout_chatbox"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:background="#ffffff"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                    <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                    <!--app:layout_constraintRight_toRightOf="parent"-->
+                    <!--app:layout_constraintTop_toBottomOf="@+id/reyclerview_message_list">-->
+
+
+                    <!--<EditText-->
+                    <!--android:id="@+id/edittext_chatbox"-->
+                    <!--android:layout_width="316dp"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginLeft="16dp"-->
+                    <!--android:layout_marginRight="16dp"-->
+                    <!--android:layout_weight="1"-->
+                    <!--android:background="@android:color/transparent"-->
+                    <!--android:hint="@string/escribir"-->
+                    <!--android:maxLines="4"-->
+                    <!--android:scrollbarSize="0dp"-->
+                    <!--android:scrollbarStyle="insideInset"-->
+                    <!--android:scrollbars="vertical"-->
+                    <!--android:textSize="15dp"-->
+                    <!--android:verticalScrollbarPosition="right" />-->
+
+                    <!--<LinearLayout-->
+
+                    <!--android:layout_toLeftOf="@+id/edittext_chatbox"-->
+
+                    <!--android:layout_alignParentEnd="true"-->
+                    <!--android:id="@+id/button_chat"-->
+                    <!--android:layout_width="50dp"-->
+                    <!--android:layout_height="50dp"-->
+                    <!--android:enabled="false">-->
+
+                    <!--<Button-->
+                    <!--android:id="@+id/button_chatbox_send"-->
+                    <!--android:layout_width="28dp"-->
+                    <!--android:layout_height="28dp"-->
+                    <!--android:layout_gravity="center"-->
+                    <!--android:layout_marginEnd="15dp"-->
+                    <!--android:alpha="0.3"-->
+                    <!--android:background="@drawable/sendjefe"-->
+                    <!--android:clickable="false"-->
+                    <!--android:enabled="false"-->
+                    <!--android:gravity="center" />-->
+                    <!--</LinearLayout>-->
+
+                    <!--</RelativeLayout >-->
 
                 </android.support.constraint.ConstraintLayout>
 

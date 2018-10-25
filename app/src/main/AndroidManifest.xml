@@ -77,7 +77,9 @@
         <activity android:name=".ui.rechazadas.ActivityRechazadas" android:screenOrientation="portrait"/>
         <activity android:name=".fragment.fragmentRechazadas.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
         <activity android:name=".ui.detalle.ActivityDetalleRechazadas" android:screenOrientation="portrait"/>
-
+        <activity android:name=".fragment.fragmentProceso.chat.FragmentEstatusChatNotificaciones" android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible"
+            />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="14ffbeefd4223817d96c8d7a06cb75e87b0075c1" />
