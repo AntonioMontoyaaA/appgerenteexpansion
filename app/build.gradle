@@ -8,7 +8,7 @@ android {
         applicationId "expansion.neto.com.mx.gerenteapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 14
+        versionCode 16
         versionName "1.2.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
