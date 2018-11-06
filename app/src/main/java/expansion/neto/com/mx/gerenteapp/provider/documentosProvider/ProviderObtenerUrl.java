@@ -132,7 +132,7 @@ public class ProviderObtenerUrl {
             }
             // guardamos el archivo temporal
             String extr = Environment.getExternalStorageDirectory().toString();
-            File mFolder = new File(extr + "/myTmpDir");
+            File mFolder = new File(extr + "/tiendasNeto");
             if (!mFolder.exists()) {
                 mFolder.mkdir();
             }

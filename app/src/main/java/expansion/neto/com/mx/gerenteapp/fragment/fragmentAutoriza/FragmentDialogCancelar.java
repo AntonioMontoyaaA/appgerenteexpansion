@@ -313,17 +313,19 @@ public class FragmentDialogCancelar extends DialogFragment {
                             ProviderAutorizaModulo.getInstance(getContext()).autorizaModulo(mdId, usuario, moduloSeleccionado, VALIDACION_RECHAZA, motivoSeleccionadoId, binding.comentario.getText().toString(), new ProviderAutorizaModulo.AutorizaModulo() {
                                 @Override
                                 public void resolve(AutorizaResponse autorizaResponse) {
-                                    if(autorizaResponse.getCodigo() == 200) {
-                                        listener.onModuloRechazado(moduloSeleccionado);
-                                        dismiss();
-                                        loadingProgress(progressDialog, 1);
+                                    if(autorizaResponse!=null){
+                                        if(autorizaResponse.getCodigo() == 200) {
+                                            listener.onModuloRechazado(moduloSeleccionado);
+                                            dismiss();
+                                            loadingProgress(progressDialog, 1);
 
-                                    } else {
-                                        Toast.makeText(getContext(), getString(R.string.autorizar_modulo) + autorizaResponse.getMensaje(),
-                                                Toast.LENGTH_LONG).show();
-                                        dismiss();
-                                        loadingProgress(progressDialog, 1);
+                                        } else {
+                                            Toast.makeText(getContext(), getString(R.string.autorizar_modulo) + autorizaResponse.getMensaje(),
+                                                    Toast.LENGTH_LONG).show();
+                                            dismiss();
+                                            loadingProgress(progressDialog, 1);
 
+                                        }
                                     }
                                 }
                                 @Override

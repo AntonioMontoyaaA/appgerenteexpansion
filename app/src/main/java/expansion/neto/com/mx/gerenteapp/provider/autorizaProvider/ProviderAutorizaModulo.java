@@ -20,7 +20,6 @@ public class ProviderAutorizaModulo {
     Context context;
     String respuesta;
     AutorizaResponse usuarioCallback = null;
-    private final String TIPO_MODULO_RECHAZA_GERENTE = "1";
 
     public ProviderAutorizaModulo() {}
 
