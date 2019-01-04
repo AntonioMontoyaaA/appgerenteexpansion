@@ -16,8 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
 import expansion.neto.com.mx.gerenteapp.utils.ServicioRutas;
-import io.fabric.sdk.android.Fabric;
-import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
@@ -47,7 +45,6 @@ public class ActivitySplashScreen extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Fabric.with(this, new Crashlytics());
 		getWindow().requestFeature(Window.FEATURE_NO_TITLE);
 		binding  = DataBindingUtil.setContentView(this, R.layout.activity_splash_screen);
 

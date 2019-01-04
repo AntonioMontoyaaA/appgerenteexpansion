@@ -50,6 +50,7 @@ public class ProviderDatosDashboard {
 //    @usuarioId
     public void obtenerDatosAutorizadas(final String semana,
                                         final String mes,
+                                        final String anio,
                                         final String usuarioId,
                                         final String area, final ConsultaDatosDashboard promise){
         final OkHttpClient client = new OkHttpClient();
@@ -60,14 +61,13 @@ public class ProviderDatosDashboard {
                 try {
 
                     Calendar fecha = Calendar.getInstance();
-                    int anio = fecha.get(Calendar.YEAR);
 
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("estatus", ESTATUS_DASHBOARD_APP_GERENTE)
                             .add("area", area)
                             .add("mes", mes)
                             .add("semana", semana)
-                            .add("anio", String.valueOf(anio))
+                            .add("anio", anio)
                             .add("tipoapp", TIPO_APP)
                             .add("tipoconsulta", TIPO_CONSULTA_DASHBOARD_APP_GERENTE)
                             .add("usuarioId", usuarioId);

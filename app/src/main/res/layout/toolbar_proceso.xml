@@ -17,8 +17,9 @@
         android:minHeight="?attr/actionBarSize"
         app:icon="@drawable/ic_account_circle_black_24dp"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        and:theme="@style/ThemeOverlay.AppCompat.Dark">
-
+        app:theme="@style/ThemeOverlay.AppCompat.Dark"
+        >
+<!--and:theme="@style/ThemeOverlay.AppCompat.Dark"-->
 
         <LinearLayout
             android:layout_width="match_parent"

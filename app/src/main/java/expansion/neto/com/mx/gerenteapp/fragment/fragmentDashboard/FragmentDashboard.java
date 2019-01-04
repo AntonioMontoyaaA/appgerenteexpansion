@@ -40,12 +40,20 @@ import expansion.neto.com.mx.gerenteapp.modelView.loginModel.UsuarioLogin;
 import expansion.neto.com.mx.gerenteapp.provider.dashboardProvider.ProviderDatosDashboard;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
+
 public class FragmentDashboard extends Fragment {
 
     FragmentDashboardBinding binding;
     String mes;
     String semana;
     UsuarioLogin.Perfil perfil = new UsuarioLogin.Perfil();
+
+    int anio = Calendar.getInstance().get(Calendar.YEAR) ;
+    String anioString;
+    int totalDaysInYear;
+    int totalWeeks;
 
     private static final int MODULO_DASHBOARD = 7;
     private static final int MODULO_POR_AUTORIZAR_ID = 7;
@@ -59,6 +67,12 @@ public class FragmentDashboard extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_dashboard,container,false);
         View v = binding.getRoot();
+
+        Calendar mCalendar = new GregorianCalendar(TimeZone.getDefault());
+        mCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+        mCalendar.set(anio,Calendar.DECEMBER,31);
+        totalDaysInYear = mCalendar.get(Calendar.DAY_OF_YEAR);
+        totalWeeks = totalDaysInYear / 7;
 
         Calendar fecha = Calendar.getInstance();
         final int meses = fecha.get(Calendar.MONTH) + 1;
@@ -75,6 +89,7 @@ public class FragmentDashboard extends Fragment {
         String mese = getMes(meses);
         binding.setSemana("Semana "+semana);
         binding.setMes(mese);
+        binding.setAnioString(" "+anioString);
 
         binding.derMes.setEnabled(false);
         binding.derSemana.setEnabled(false);
@@ -142,31 +157,15 @@ public class FragmentDashboard extends Fragment {
                 binding.derSemana.setAlpha(1.0f);
                 if(semanaRestaInt!=0){
                     binding.izqSemana.setEnabled(true);
-                    if(bandera==0){
-                        semanaRestaInt = Integer.valueOf(getMesSemana())-1;
-                        semanaResta = String.valueOf(semanaRestaInt);
-                        getDatos("0", semanaResta);
-                        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorDashboard = preferences.edit();
-                        editorDashboard.putString("mesConsulta", "0");
-                        editorDashboard.putString("semanaConsulta", String.valueOf(semanaResta));
-                        editorDashboard.apply();
-                        binding.setSemana("Semana "+semanaResta);
-                        bandera = 1;
-                    }else{
-                        semanaRestaInt = (semanaRestaInt)-1;
-                        if(semanaRestaInt==0){
-
-                        }else{
-                            getDatos("0", String.valueOf(semanaRestaInt));
-                            SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editorDashboard = preferences.edit();
-                            editorDashboard.putString("mesConsulta", "0");
-                            editorDashboard.putString("semanaConsulta", String.valueOf(semanaRestaInt));
-                            editorDashboard.apply();
-                            binding.setSemana("Semana "+String.valueOf(semanaRestaInt));
-                        }
-                    }
+                    semanaRestaInt--;
+                    semanaResta = String.valueOf(semanaRestaInt);
+                    getDatos("0", semanaResta);
+                    SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editorDashboard = preferences.edit();
+                    editorDashboard.putString("mesConsulta", "0");
+                    editorDashboard.putString("semanaConsulta", String.valueOf(semanaResta));
+                    editorDashboard.apply();
+                    binding.setSemana("Semana "+semanaResta);
                 }else{
                     binding.izqSemana.setEnabled(false);
                 }
@@ -178,6 +177,14 @@ public class FragmentDashboard extends Fragment {
             public void onClick(View view) {
                 binding.izqSemana.setEnabled(true);
                 semanaRestaInt = (semanaRestaInt)+1;
+
+                if(mesRestaInt==13){
+                    mesRestaInt=1;
+                    anio++;
+                    anioString = String.valueOf(anio);
+                    binding.setAnioString(" "+anioString);
+                }
+
                 int semanaActual = Integer.parseInt(getMesSemana());
                 if(semanaRestaInt==semanaActual){
                     getDatos("0", String.valueOf(semanaRestaInt));
@@ -210,40 +217,31 @@ public class FragmentDashboard extends Fragment {
             public void onClick(View view) {
                 binding.derMes.setEnabled(true);
                 binding.derMes.setAlpha(1.0f);
-                if(mesRestaInt!=0){
-                    binding.izqMes.setEnabled(true);
-                    if(banderaMes==0){
-                        Calendar fecha = Calendar.getInstance();
-                        final int meses = fecha.get(Calendar.MONTH) + 1;
-                        mesRestaInt = meses-1;
-                        mesResta = String.valueOf(mesRestaInt);
-                        getDatos(mesResta, "0");
-                        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorDashboard = preferences.edit();
-                        editorDashboard.putString("mesConsulta", String.valueOf(mesResta));
-                        editorDashboard.putString("semanaConsulta", "0");
-                        editorDashboard.apply();
-                        String nombreMes = getMes(mesRestaInt);
-                        binding.setMes(nombreMes);
-                        banderaMes = 1;
-                    }else{
-                        mesRestaInt = (mesRestaInt)-1;
-                        if(mesRestaInt==0){
-
-                        }else{
-                            getDatos(String.valueOf(mesRestaInt), "0");
-                            SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                            SharedPreferences.Editor editorDashboard = preferences.edit();
-                            editorDashboard.putString("mesConsulta", String.valueOf(mesRestaInt));
-                            editorDashboard.putString("semanaConsulta", "0");
-                            editorDashboard.apply();
-                            String nombreMes = getMes(mesRestaInt);
-                            binding.setMes(nombreMes);
-                        }
+                binding.izqMes.setEnabled(true);
+                Calendar fecha = Calendar.getInstance();
+                final int meses = fecha.get(Calendar.MONTH) + 1;
+                if(mesRestaInt==0){
+                    mesRestaInt = meses-1;
+                    if(mesRestaInt == 0) {
+                        mesRestaInt = 12;
+                        anio--;
+                        anioString = String.valueOf(anio);
+                        binding.setAnioString(" "+anioString);
                     }
                 }else{
-                    binding.izqMes.setEnabled(false);
+                    mesRestaInt--;
                 }
+                mesResta = String.valueOf(mesRestaInt);
+                getDatos(mesResta, "0");
+                String nombreMes = getMes(mesRestaInt);
+                binding.setMes(nombreMes);
+
+                SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editorDashboard = preferences.edit();
+                editorDashboard.putString("mesConsulta", String.valueOf(mesResta));
+                editorDashboard.putString("semanaConsulta", "0");
+                editorDashboard.apply();
+
             }
         });
 
@@ -253,9 +251,16 @@ public class FragmentDashboard extends Fragment {
                 binding.izqMes.setEnabled(true);
                 mesRestaInt = (mesRestaInt)+1;
 
+                if(mesRestaInt==13 ){
+                    mesRestaInt=1;
+                    anio++;
+                    anioString = String.valueOf(anio);
+                    binding.setAnioString(" "+anioString);
+                }
+
                 Calendar fecha = Calendar.getInstance();
                 int mesActual = fecha.get(Calendar.MONTH) + 1;
-                if(mesRestaInt==mesActual){
+                if(mesRestaInt==mesActual && anio == Calendar.getInstance().get(Calendar.YEAR)){
                     getDatos(String.valueOf(mesRestaInt), "0");
                     SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editorDashboard = preferences.edit();
@@ -288,16 +293,15 @@ public class FragmentDashboard extends Fragment {
         return v;
     }
 
-    int bandera = 0;
     int semanaRestaInt = 1;
     String semanaResta;
 
-    int banderaMes = 0;
-    int mesRestaInt = 1;
+    int mesRestaInt = 0;
     String mesResta;
 
     public String getMesSemana(){
         Date date = new Date();
+        anioString = String.valueOf(anio);
         mes  = (String)
                 DateFormat.format("MMMM",  date); // Jun
         mes = mes.substring(0,1).toUpperCase() + mes.substring(1).toLowerCase();
@@ -396,7 +400,30 @@ public class FragmentDashboard extends Fragment {
 
         getPermisos(permisos, binding);
 
-        ProviderDatosDashboard.getInstance(getContext()).obtenerDatosAutorizadas(semanas, buscaMes, usuarioId,
+        int semana = Integer.valueOf(semanas);
+        int mesSolicitud = Integer.valueOf(buscaMes);
+        if(mesSolicitud > 0 ){
+            buscaMes = String.valueOf(--mesSolicitud);
+        }else if(semana > totalWeeks){
+            semanas = "1";
+            anio++;
+            anioString = String.valueOf(anio);
+            binding.setAnioString(" "+anioString);
+
+        }else if (semana == 0){
+            anio--;
+            anioString = String.valueOf(anio);
+            binding.setAnioString(" "+anioString);
+            Calendar mCalendar = new GregorianCalendar(TimeZone.getDefault());
+            mCalendar.setFirstDayOfWeek(Calendar.MONDAY);
+            mCalendar.set(anio,Calendar.DECEMBER,31);
+            totalDaysInYear = mCalendar.get(Calendar.DAY_OF_YEAR);
+            totalWeeks = totalDaysInYear / 7;
+            semanas = String.valueOf(totalWeeks);
+        }
+        String anio2 = String.valueOf(anio);
+
+        ProviderDatosDashboard.getInstance(getContext()).obtenerDatosAutorizadas(semanas, buscaMes,anio2, usuarioId,
                 area, new ProviderDatosDashboard.ConsultaDatosDashboard() {
             @Override
             public void resolve(Dashboard dashboard) {
