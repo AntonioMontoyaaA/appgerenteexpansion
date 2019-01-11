@@ -141,12 +141,15 @@ public class Usuario {
                                     for(int i=0;i<usuarioLogin.getPerfil().getPerfilesxusuario().get(0).getPermisos().size();i++){
                                         permisos.add(usuarioLogin.getPerfil().getPerfilesxusuario().get(0).getPermisos().get(i));
                                     }
-
+                                    String puestoId = usuarioLogin.getPerfil().getPuestoId();
+                                    int areaId = usuarioLogin.getPerfil().getAreasxpuesto().get(0).getAreaId();
                                     preferences = context.getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editor = preferences.edit();
                                     Gson gson = new Gson();
                                     String json = gson.toJson(permisos);
                                     editor.putString("permisos", json);
+                                    editor.putString("puestoId", puestoId);
+                                    editor.putString("areaId", areaId+"");
                                     editor.commit();
 
 

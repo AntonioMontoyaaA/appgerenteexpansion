@@ -78,6 +78,53 @@ public class ProviderGuardarDocumentos {
             }
         }).execute();
     }
+    public void guardarDocumentos1(final String usuario, final String mdId,final String tipoServicio, final String json, final String fecha,
+                                  final InterfaceGuardarDocumentos promise){
+        final OkHttpClient client = new OkHttpClient();
+        (new AsyncTask<Void, Void, Codigos>() {
+            @Override
+            protected Codigos doInBackground(Void... voids) {
+                //TODO CONNECT AND GET DATA
+                try {
+
+                    FormBody.Builder formBuilder = new FormBody.Builder()
+                            .add("usuarioId", usuario)
+                            .add("mdId", mdId)
+                            .add("tipoServicio", tipoServicio)
+                            .add("fecha", fecha)
+                            .add("documentos", json);
+
+                    RequestBody formBody = formBuilder.build();
+                    Request request = new Request.Builder()
+                            .url(RestUrl.REST_ACTION_GUARDAR_DOCUMENTOS)
+                            .post(formBody)
+                            .build();
+
+                    Response response = client.newCall(request).execute();
+                    respuesta = response.body().string();
+                    Gson gson = new Gson();
+                    String jsonInString = respuesta;
+                    return codigo = gson.fromJson(jsonInString, Codigos.class);
+
+                }catch (Exception e){
+                    e.printStackTrace();
+                    if(e.getMessage().contains("Failed to connect to")){
+                        codigo = new Codigos();
+                        codigo.setCodigo(1);
+                        return codigo;
+                    }else{
+                        codigo = new Codigos();
+                        codigo.setCodigo(404);
+                        return codigo;
+                    }
+                }
+            }
+            @Override
+            protected void onPostExecute(Codigos returncodigo){
+                promise.resolve(returncodigo);
+            }
+        }).execute();
+    }
 
     public interface InterfaceGuardarDocumentos{
         void resolve(Codigos codigo);

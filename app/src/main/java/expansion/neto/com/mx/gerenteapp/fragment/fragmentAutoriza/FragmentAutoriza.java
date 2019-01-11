@@ -10,26 +10,22 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.SystemClock;
-import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.text.InputFilter;
-import android.text.style.UnderlineSpan;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -38,10 +34,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -55,20 +49,15 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.jaredrummler.materialspinner.MaterialSpinner;
 import com.mancj.slideup.SlideUp;
-import com.mancj.slideup.SlideUpBuilder;
-import com.squareup.picasso.Picasso;
 
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -79,26 +68,19 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import expansion.neto.com.mx.gerenteapp.R;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza1Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza2Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza3Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza4Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza5Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza6Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaConstruccionBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaEditar6Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza7Binding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutoriza8Binding;
-import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaGenBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaPropietarioBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSitioBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSuperficieBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaZonificacionBinding;
-import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentInicioProceso;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FechaApertura.FechaAperturaListener;
+import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AnalistaCalidadOperativa;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
-import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Autorizadas;
-import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPredial;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
@@ -114,7 +96,7 @@ import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.Zonificacion;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.CrearPeatonal;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Permiso;
-import expansion.neto.com.mx.gerenteapp.modelView.procesoModel.Proceso;
+import expansion.neto.com.mx.gerenteapp.provider.analistaCalidadOperatiavaProvider.ProviderAnalistaCalidadOperativa;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutorizaFinal;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderConsultaFinaliza;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderCrearMonto;
@@ -128,15 +110,12 @@ import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosS
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosSuperficie;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderDatosZonificacion;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderHorasPeatonales;
-import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterAutoriza;
-import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterAutorizaCompetencia;
+import expansion.neto.com.mx.gerenteapp.provider.documentosProvider.ProviderGuardarDocumentos;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterAutorizaPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterListaHoras;
-import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AdapterListaHorasGestoria;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.AutorizaHolderPeatonal;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaCompetencia;
 import expansion.neto.com.mx.gerenteapp.sorted.autoriza.adapter.AdapterListaGeneradores;
-import expansion.neto.com.mx.gerenteapp.ui.dashboard.ActivityMain;
 import expansion.neto.com.mx.gerenteapp.utils.CustomTextWatcher;
 import expansion.neto.com.mx.gerenteapp.utils.ServicioGPS;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
@@ -144,11 +123,8 @@ import expansion.neto.com.mx.gerenteapp.utils.desing.MainSliderAdapter;
 import expansion.neto.com.mx.gerenteapp.utils.desing.PicassoImageLoadingService;
 import ss.com.bannerslider.Slider;
 
-import static android.media.MediaRecorder.VideoSource.CAMERA;
 
-
-public class FragmentAutoriza extends Fragment implements
-         AutorizaHolderPeatonal.Listener {
+public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal.Listener {
 
     private View view;
     private static final String ARG_POSITION = "position";
@@ -184,7 +160,7 @@ public class FragmentAutoriza extends Fragment implements
     private OnMapReadyCallback onMapReadyCallback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            if(lat!=null){
+            if (lat != null) {
 
                 preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
@@ -196,7 +172,7 @@ public class FragmentAutoriza extends Fragment implements
                 LatLng md = new LatLng(lat, lot);
                 googleMap.addMarker(new MarkerOptions().position(md)
                         .title("")
-                .icon(icon));
+                        .icon(icon));
 
                 googleMap.moveCamera(CameraUpdateFactory.newLatLng(md));
                 googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(md, 15));
@@ -210,8 +186,8 @@ public class FragmentAutoriza extends Fragment implements
                         .tilt(0)
                         .build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-            }else{
-              //  Toast.makeText(getContext(), "Error al cargar los datos",
+            } else {
+                //  Toast.makeText(getContext(), "Error al cargar los datos",
                 //        Toast.LENGTH_SHORT).show();
             }
 
@@ -224,43 +200,43 @@ public class FragmentAutoriza extends Fragment implements
         @Override
         public void onMapReady(GoogleMap googleMap) {
 
-            if(puntosCompentencias!=null){
+            if (puntosCompentencias != null) {
 
-                for(int i = 0;i<puntosCompentencias.size();i++){
+                for (int i = 0; i < puntosCompentencias.size(); i++) {
 
-                    if(puntosCompentencias.get(i).getIcono()==1){
+                    if (puntosCompentencias.get(i).getIcono() == 1) {
                         icon = getBitmapDescriptor(R.drawable.bbb);
-                    }else if(puntosCompentencias.get(i).getIcono()==2){
+                    } else if (puntosCompentencias.get(i).getIcono() == 2) {
                         icon = getBitmapDescriptor(R.drawable.oxxo);
-                    }else if(puntosCompentencias.get(i).getIcono()==3){
+                    } else if (puntosCompentencias.get(i).getIcono() == 3) {
                         icon = getBitmapDescriptor(R.drawable.bodegaa);
-                    }else if(puntosCompentencias.get(i).getIcono()==4){
+                    } else if (puntosCompentencias.get(i).getIcono() == 4) {
                         icon = getBitmapDescriptor(R.drawable.abarrotes);
-                    }else if(puntosCompentencias.get(i).getIcono()==5){
+                    } else if (puntosCompentencias.get(i).getIcono() == 5) {
                         icon = getBitmapDescriptor(R.drawable.g_iglesia);
-                    }else if(puntosCompentencias.get(i).getIcono()==6){
+                    } else if (puntosCompentencias.get(i).getIcono() == 6) {
                         icon = getBitmapDescriptor(R.drawable.g_mercado);
-                    }else if(puntosCompentencias.get(i).getIcono()==7){
+                    } else if (puntosCompentencias.get(i).getIcono() == 7) {
                         icon = getBitmapDescriptor(R.drawable.escuela);
-                    }else if(puntosCompentencias.get(i).getIcono()==8){
+                    } else if (puntosCompentencias.get(i).getIcono() == 8) {
                         icon = getBitmapDescriptor(R.drawable.g_busstop);
-                    }else if(puntosCompentencias.get(i).getIcono()==9){
+                    } else if (puntosCompentencias.get(i).getIcono() == 9) {
                         icon = getBitmapDescriptor(R.drawable.otros);
-                    }else if(puntosCompentencias.get(i).getIcono()==10){
+                    } else if (puntosCompentencias.get(i).getIcono() == 10) {
                         icon = getBitmapDescriptor(R.drawable.neto);
-                    }else if(puntosCompentencias.get(i).getIcono()==11){
+                    } else if (puntosCompentencias.get(i).getIcono() == 11) {
                         icon = getBitmapDescriptor(R.drawable.g_recauderia);
-                    }else if(puntosCompentencias.get(i).getIcono()==12){
+                    } else if (puntosCompentencias.get(i).getIcono() == 12) {
                         icon = getBitmapDescriptor(R.drawable.g_comida);
-                    }else if(puntosCompentencias.get(i).getIcono()==13){
+                    } else if (puntosCompentencias.get(i).getIcono() == 13) {
                         icon = getBitmapDescriptor(R.drawable.g_mercado);
-                    }else if(puntosCompentencias.get(i).getIcono()==14){
+                    } else if (puntosCompentencias.get(i).getIcono() == 14) {
                         icon = getBitmapDescriptor(R.drawable.g_tianguis);
-                    }else if(puntosCompentencias.get(i).getIcono()==15){
+                    } else if (puntosCompentencias.get(i).getIcono() == 15) {
                         icon = getBitmapDescriptor(R.drawable.g_tortilleria);
-                    }else if(puntosCompentencias.get(i).getIcono()==16){
+                    } else if (puntosCompentencias.get(i).getIcono() == 16) {
                         icon = getBitmapDescriptor(R.drawable.g_carniceria);
-                    }else if(puntosCompentencias.get(i).getIcono()==17){
+                    } else if (puntosCompentencias.get(i).getIcono() == 17) {
                         icon = getBitmapDescriptor(R.drawable.metro);
                     }
 
@@ -296,9 +272,9 @@ public class FragmentAutoriza extends Fragment implements
                         .build();
                 googleMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
-            }else{
-               // Toast.makeText(getContext(), "Error al cargar los datos",
-                 //       Toast.LENGTH_SHORT).show();
+            } else {
+                // Toast.makeText(getContext(), "Error al cargar los datos",
+                //       Toast.LENGTH_SHORT).show();
             }
 
         }
@@ -477,25 +453,20 @@ public class FragmentAutoriza extends Fragment implements
 
                                                                     @Override
                                                                     public void reject(Exception e) {
-
                                                                     }
                                                                 }
-
                                                         );
                                                     }
                                                 } else {
                                                     Toast.makeText(getContext(), codigo.getMensaje(),
                                                             Toast.LENGTH_LONG).show();
                                                 }
-
                                             }
 
                                             @Override
                                             public void reject(Exception e) {
-
                                             }
                                         }
-
                                 );
                             } else {
                                 Toast.makeText(getContext(), getString(R.string.monto) + "",
@@ -503,6 +474,59 @@ public class FragmentAutoriza extends Fragment implements
                             }
                         }
                     });
+                }else if (estatus == 16) {
+                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                    String fechaAperturaText = preferences.getString("fechaApertura" + mdId, "");
+                    if (fechaAperturaText.equals("")) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
+                        Date date = new Date();
+                        String fecha = dateFormat.format(date);
+                        binding.fechaapertura.setText(fecha);
+                    } else {
+                        binding.fechaapertura.setText(fechaAperturaText);
+                    }
+                    binding.inicio.setVisibility(View.VISIBLE);
+                    binding.inicioenvia.setVisibility(View.VISIBLE);
+                    binding.inicio.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            FragmentManager fm = getChildFragmentManager();
+                            FechaApertura fechaApertura = new FechaApertura();
+                            fechaApertura.setFechaAperturaListener(new FechaAperturaListener() {
+                                @Override
+                                public void ActualizaFecha(String fecha) {
+                                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                    binding.fechaapertura.setText(fecha);
+                                }
+                            });
+                            fechaApertura.show(fm, "Dialog Fragment");
+                        }
+                    });
+                    binding.enviarfecha.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            ProviderGuardarDocumentos.getInstance(getContext()).guardarDocumentos1(usuarioId, mdId, "13", "", binding.fechaapertura.getText().toString() + " 00:00:00",
+                                    new ProviderGuardarDocumentos.InterfaceGuardarDocumentos() {
+                                        @Override
+                                        public void resolve(Codigos codigo) {
+                                            if (codigo.getCodigo() == 200) {
+                                                Toast.makeText(getContext(), "Fecha guadada correctamente", Toast.LENGTH_SHORT).show();
+                                                final SharedPreferences.Editor editor =preferences.edit();
+                                                editor.putString(mdId+"fechaApertura", "true");
+                                                editor.apply();
+                                            }else {
+                                                Toast.makeText(getContext(), codigo.getMensaje(), Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                        @Override
+                                        public void reject(Exception e) {
+                                            Toast.makeText(getContext(), "Ocurrio un problema al guardar la fecha", Toast.LENGTH_SHORT).show();
+
+                                        }
+                                    });
+                        }
+                    });
+
                 } else {
                     binding.enviarmonto.setVisibility(View.GONE);
                     binding.nombreStatus.setVisibility(View.GONE);
@@ -516,13 +540,13 @@ public class FragmentAutoriza extends Fragment implements
                     binding.simbolo.setVisibility(View.GONE);
                     binding.nombreppo.setVisibility(View.GONE);
                     binding.nombreppa.setVisibility(View.GONE);
+                    binding.inicio.setVisibility(View.GONE);
+                    binding.inicioenvia.setVisibility(View.GONE);
                     atrasadasAutoriza = false;
                     autoriza.putBoolean("goneAutoriza", false);
                     autoriza.apply();
                 }
-
             }
-
 
             if (atrasadasAutoriza) {
                 binding.autorizalayout.setVisibility(View.GONE);
@@ -590,8 +614,6 @@ public class FragmentAutoriza extends Fragment implements
 //                                            .placeholder(R.drawable.aprovado)
 //                                            .into(binding.aceptar);
 //
-
-
 
 
                                     binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
@@ -729,8 +751,6 @@ public class FragmentAutoriza extends Fragment implements
             }
 
 
-
-
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             String mdId = preferences.getString("mdId", "");
             String usuarioId = preferences.getString("usuario", "");
@@ -782,7 +802,8 @@ public class FragmentAutoriza extends Fragment implements
                         }
 
                         @Override
-                        public void reject(Exception e) { }
+                        public void reject(Exception e) {
+                        }
                     });
 
             binding.aceptar.setOnClickListener(new View.OnClickListener() {
@@ -2412,98 +2433,156 @@ public class FragmentAutoriza extends Fragment implements
 
     String horaInicio, horaFinal;
 
-    public void autorizaRechazaMD(final int tipoAccion, final FragmentAutoriza8Binding binding, final Resources resource ) {
+    public void autorizaRechazaMD(final int tipoAccion, final FragmentAutoriza8Binding binding, final Resources resource) {
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        final String mdId = preferences.getString("mdId","");
-        final String usuarioId = preferences.getString("usuario","");
+        final String mdId = preferences.getString("mdId", "");
+        final String usuarioId = preferences.getString("usuario", "");
 
 
-        if(tipoAccion == RECHAZA_MD) {
+        if (tipoAccion == RECHAZA_MD) {
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             SharedPreferences.Editor editorFinalizar = preferences.edit();
             editorFinalizar.putInt("moduloAutorizaRechaza", MODULO_GENERAL);
             editorFinalizar.apply();
 
             FragmentDialogCancelar a = new FragmentDialogCancelar();
-            a.show(getChildFragmentManager(),"child");
+            a.show(getChildFragmentManager(), "child");
 
             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                 @Override
                 public void onModuloRechazado(int modulo) {
 
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                    int motivoId = preferences.getInt("MODULO_GENERAL_TIPO_AUTORIZACION_MOTIVO",0);
-                    String comentarios = preferences.getString("MODULO_GENERAL_COMENTARIO","");
+                    int motivoId = preferences.getInt("MODULO_GENERAL_TIPO_AUTORIZACION_MOTIVO", 0);
+                    String motivoIdS = String.valueOf(motivoId);
+                    String comentarios = preferences.getString("MODULO_GENERAL_COMENTARIO", "");
+                    int estatus = preferences.getInt("estatusId", 0);
+                    if (estatus == 16) {
+                        String puestoId = preferences.getString("puestoId", "");
+                        String areaId = preferences.getString("areaId", "");
+                        ProviderAnalistaCalidadOperativa.getInstance(getContext()).AnalistaCalidadOperativa(usuarioId, mdId, "7", "0", motivoIdS, comentarios, "1", puestoId, areaId, new ProviderAnalistaCalidadOperativa.AnalistaCalidadOperativaInterface() {
+                            @Override
+                            public void resolve(AnalistaCalidadOperativa analistaCalidadOperativa) {
+                                if(analistaCalidadOperativa.getCodigo()==200){
+                                    preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                    SharedPreferences.Editor editorFinalizar = preferences.edit();
+                                    editorFinalizar.putString("tituloFinalizar", "MD Rechazada");
+                                    editorFinalizar.putString("descripcionFinalizar", "Se ha rechazado esta MD");
+                                    editorFinalizar.apply();
+                                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
+                                    binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                    FragmentDialogFinalizar a = new FragmentDialogFinalizar();
+                                    a.show(getChildFragmentManager(), "child");
+                                }else {
+                                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                                    Toast.makeText(getContext(), "Error al autorizar el módulo: " + analistaCalidadOperativa.getMensaje(),  Toast.LENGTH_LONG).show();
+                                }
+                            }
 
-                    ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId,
-                            tipoAccion, motivoId, comentarios, new ProviderAutorizaFinal.AutorizaFinal() {
+                            @Override
+                            public void reject(Exception ex) {
+                                binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                                Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ", Toast.LENGTH_LONG).show();
+                            }
+                        });
+
+                    } else {
+                        ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId,
+                                tipoAccion, motivoId, comentarios, new ProviderAutorizaFinal.AutorizaFinal() {
+                                    @Override
+                                    public void resolve(AutorizaResponse autorizaResponse) {
+                                        if (autorizaResponse.getCodigo() == 200) {
+                                            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                                            SharedPreferences.Editor editorFinalizar = preferences.edit();
+                                            editorFinalizar.putString("tituloFinalizar", "MD Rechazada");
+                                            editorFinalizar.putString("descripcionFinalizar", "Se ha rechazado esta MD");
+                                            editorFinalizar.apply();
+                                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
+                                            binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                            FragmentDialogFinalizar a = new FragmentDialogFinalizar();
+                                            a.show(getChildFragmentManager(), "child");
+                                        } else {
+                                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                                            Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),  Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                    @Override
+                                    public void reject(Exception e) {
+                                        binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                                        Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+                    }
+                }
+            });
+        } else {
+            int estatus = preferences.getInt("estatusId", 0);
+            if (estatus == 16) {
+                String fechaAperturaTextGuardada = preferences.getString(mdId+"fechaApertura","");
+
+                if (fechaAperturaTextGuardada.equals("")) {
+                    Toast.makeText(getContext(), "Por favor pon una fecha de apertura en '1.DATOS DEL SITIO'", Toast.LENGTH_LONG).show();
+                } else {
+                    String puestoId = preferences.getString("puestoId", "");
+                    String areaId = preferences.getString("areaId", "");
+                    ProviderAnalistaCalidadOperativa.getInstance(getContext()).AnalistaCalidadOperativa(usuarioId, mdId, "7", "1", "0", " ", "1", puestoId, areaId, new ProviderAnalistaCalidadOperativa.AnalistaCalidadOperativaInterface() {
                         @Override
-                        public void resolve(AutorizaResponse autorizaResponse) {
-                            if(autorizaResponse.getCodigo() == 200) {
-
+                        public void resolve(AnalistaCalidadOperativa analistaCalidadOperativa) {
+                            if (analistaCalidadOperativa.getCodigo() == 200) {
                                 preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                                 SharedPreferences.Editor editorFinalizar = preferences.edit();
-                                editorFinalizar.putString("tituloFinalizar", "MD Rechazada");
-                                editorFinalizar.putString("descripcionFinalizar", "Se ha rechazado esta MD");
+                                editorFinalizar.putString("tituloFinalizar", "MD Aceptada");
+                                editorFinalizar.putString("descripcionFinalizar", "Se ha autorizado esta MD");
                                 editorFinalizar.apply();
-                                binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.rechazado));
-                                binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
-
+                                binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                                binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
                                 FragmentDialogFinalizar a = new FragmentDialogFinalizar();
-                                a.show(getChildFragmentManager(),"child");
+                                a.show(getChildFragmentManager(), "child");
                             } else {
                                 binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
-
-                                Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
-                                        Toast.LENGTH_LONG).show();
+                                binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                                Toast.makeText(getContext(), "Error al autorizar el módulo: " + analistaCalidadOperativa.getMensaje(), Toast.LENGTH_LONG).show();
                             }
                         }
 
                         @Override
-                        public void reject(Exception e) {
-                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                        public void reject(Exception ex) {
 
-                            Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
-                                    Toast.LENGTH_LONG).show();
                         }
                     });
                 }
-            });
-        } else {
-            ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId, tipoAccion, 0, "", new ProviderAutorizaFinal.AutorizaFinal() {
-                @Override
-                public void resolve(AutorizaResponse autorizaResponse) {
-                    if(autorizaResponse.getCodigo() == 200) {
 
-                        preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-                        SharedPreferences.Editor editorFinalizar = preferences.edit();
-                        editorFinalizar.putString("tituloFinalizar", "MD Aceptada");
-                        editorFinalizar.putString("descripcionFinalizar", "Se ha autorizado esta MD");
-                        editorFinalizar.apply();
+            } else {
+                ProviderAutorizaFinal.getInstance(getContext()).autorizaFinal(mdId, usuarioId, tipoAccion, 0, "", new ProviderAutorizaFinal.AutorizaFinal() {
+                    @Override
+                    public void resolve(AutorizaResponse autorizaResponse) {
+                        if (autorizaResponse.getCodigo() == 200) {
+                            preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                            SharedPreferences.Editor editorFinalizar = preferences.edit();
+                            editorFinalizar.putString("tituloFinalizar", "MD Aceptada");
+                            editorFinalizar.putString("descripcionFinalizar", "Se ha autorizado esta MD");
+                            editorFinalizar.apply();
+                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                            binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
+                            FragmentDialogFinalizar a = new FragmentDialogFinalizar();
+                            a.show(getChildFragmentManager(), "child");
+                        } else {
+                            binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
+                            binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
+                            Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(), Toast.LENGTH_LONG).show();
+                        }
+                    }
 
-                        binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
-                        binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
-
-                        FragmentDialogFinalizar a = new FragmentDialogFinalizar();
-                        a.show(getChildFragmentManager(),"child");
-                    } else {
+                    @Override
+                    public void reject(Exception e) {
                         binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                         binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
 
-                        Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),
+                        Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
                                 Toast.LENGTH_LONG).show();
                     }
-                }
-
-                @Override
-                public void reject(Exception e) {
-                    binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
-                    binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
-
-                    Toast.makeText(getContext(), "Error al conectarse al servicio que autoriza/rechaza la pantalla: ",
-                            Toast.LENGTH_LONG).show();
-                }
-            });
+                });
+            }
         }
     }
 
@@ -2512,7 +2591,7 @@ public class FragmentAutoriza extends Fragment implements
         TableLayout ll = binding.tablaResumen;
         TableRow row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         TableRow.LayoutParams lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         TableRow.LayoutParams lpImg = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lpImg.height = 40;
@@ -2558,16 +2637,15 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION",0);
+        int modulo1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION", 0);
         int motivoId1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo1 = preferences.getInt("MODULO_1_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
-
 
 
         TextView sitioText = new TextView(getContext());
@@ -2579,7 +2657,7 @@ public class FragmentAutoriza extends Fragment implements
         sitioText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor = new ImageView(getContext());
-        if(modulo1 == AUTORIZA_ID) {
+        if (modulo1 == AUTORIZA_ID) {
 
             imgSubfactor.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
@@ -2593,8 +2671,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor.setLayoutParams(lpImg);
 
         ImageView imgSubfactor1 = new ImageView(getContext());
-        if(modulo1 == RECHAZA_ID) {
-            if(rechazoDefinitivo1 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo1 == RECHAZA_ID) {
+            if (rechazoDefinitivo1 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor1.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2610,7 +2688,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor1.setColorFilter(ContextCompat.getColor(getContext(), R.color.blanco), android.graphics.PorterDuff.Mode.SRC_IN);
         }
 
-        if(modulo1 == SIN_AUTORIZACION) {
+        if (modulo1 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
 
@@ -2624,25 +2702,25 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo2 = preferences.getInt("MODULO_2_TIPO_AUTORIZACION",0);
+        int modulo2 = preferences.getInt("MODULO_2_TIPO_AUTORIZACION", 0);
         int motivoId2 = preferences.getInt("MODULO_2_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo2 = preferences.getInt("MODULO_2_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo3 = preferences.getInt("MODULO_3_TIPO_AUTORIZACION",0);
+        int modulo3 = preferences.getInt("MODULO_3_TIPO_AUTORIZACION", 0);
         int motivoId3 = preferences.getInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo3 = preferences.getInt("MODULO_3_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
@@ -2655,7 +2733,7 @@ public class FragmentAutoriza extends Fragment implements
         superficieText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor5 = new ImageView(getContext());
-        if(modulo3 == AUTORIZA_ID) {
+        if (modulo3 == AUTORIZA_ID) {
             imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor5.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor5.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2667,8 +2745,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor5.setLayoutParams(lpImg);
 
         ImageView imgSubfactor6 = new ImageView(getContext());
-        if(modulo3 == RECHAZA_ID) {
-            if(rechazoDefinitivo3 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo3 == RECHAZA_ID) {
+            if (rechazoDefinitivo3 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor6.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2680,7 +2758,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor6.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
 
-        if(modulo3 == SIN_AUTORIZACION) {
+        if (modulo3 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
         imgSubfactor6.setPadding(0, 0, 5, 1);
@@ -2694,13 +2772,13 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo4 = preferences.getInt("MODULO_4_TIPO_AUTORIZACION",0);
+        int modulo4 = preferences.getInt("MODULO_4_TIPO_AUTORIZACION", 0);
         int motivoId4 = preferences.getInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo4 = preferences.getInt("MODULO_4_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
@@ -2713,7 +2791,7 @@ public class FragmentAutoriza extends Fragment implements
         zonificacionText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor7 = new ImageView(getContext());
-        if(modulo4 == AUTORIZA_ID) {
+        if (modulo4 == AUTORIZA_ID) {
             imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor7.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor7.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2725,8 +2803,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor7.setLayoutParams(lpImg);
 
         ImageView imgSubfactor8 = new ImageView(getContext());
-        if(modulo4 == RECHAZA_ID) {
-            if(rechazoDefinitivo4 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo4 == RECHAZA_ID) {
+            if (rechazoDefinitivo4 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor8.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2738,7 +2816,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor8.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
 
-        if(modulo4 == SIN_AUTORIZACION) {
+        if (modulo4 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
         imgSubfactor8.setPadding(0, 0, 5, 1);
@@ -2751,13 +2829,13 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo5 = preferences.getInt("MODULO_5_TIPO_AUTORIZACION",0);
+        int modulo5 = preferences.getInt("MODULO_5_TIPO_AUTORIZACION", 0);
         int motivoId5 = preferences.getInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo5 = preferences.getInt("MODULO_5_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
@@ -2770,7 +2848,7 @@ public class FragmentAutoriza extends Fragment implements
         construccionText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor9 = new ImageView(getContext());
-        if(modulo5 == AUTORIZA_ID) {
+        if (modulo5 == AUTORIZA_ID) {
             imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor9.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor9.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2782,8 +2860,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor9.setLayoutParams(lpImg);
 
         ImageView imgSubfactor10 = new ImageView(getContext());
-        if(modulo5 == RECHAZA_ID) {
-            if(rechazoDefinitivo5 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo5 == RECHAZA_ID) {
+            if (rechazoDefinitivo5 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor10.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2795,7 +2873,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor10.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
 
-        if(modulo5 == SIN_AUTORIZACION) {
+        if (modulo5 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
         imgSubfactor10.setPadding(0, 0, 5, 1);
@@ -2808,13 +2886,13 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo6 = preferences.getInt("MODULO_6_TIPO_AUTORIZACION",0);
+        int modulo6 = preferences.getInt("MODULO_6_TIPO_AUTORIZACION", 0);
         int motivoId6 = preferences.getInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo6 = preferences.getInt("MODULO_6_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
@@ -2827,7 +2905,7 @@ public class FragmentAutoriza extends Fragment implements
         generalidadesText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor11 = new ImageView(getContext());
-        if(modulo6 == AUTORIZA_ID) {
+        if (modulo6 == AUTORIZA_ID) {
             imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor11.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor11.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2839,8 +2917,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor11.setLayoutParams(lpImg);
 
         ImageView imgSubfactor12 = new ImageView(getContext());
-        if(modulo6 == RECHAZA_ID) {
-            if(rechazoDefinitivo6 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo6 == RECHAZA_ID) {
+            if (rechazoDefinitivo6 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
                 imgSubfactor12.setColorFilter(ContextCompat.getColor(getContext(), R.color.rojo), android.graphics.PorterDuff.Mode.MULTIPLY);
@@ -2852,7 +2930,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor12.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
 
-        if(modulo6 == SIN_AUTORIZACION) {
+        if (modulo6 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
         imgSubfactor12.setPadding(0, 0, 5, 1);
@@ -2865,13 +2943,13 @@ public class FragmentAutoriza extends Fragment implements
 
         row = new TableRow(getContext());
         row.setGravity(Gravity.CENTER_HORIZONTAL);
-        row.setPadding(0,10,0,0);
+        row.setPadding(0, 10, 0, 0);
         lp = new TableRow.LayoutParams(TableRow.LayoutParams.MATCH_PARENT);
         lp.height = 85;
         row.setLayoutParams(lp);
 
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        int modulo7 = preferences.getInt("MODULO_7_TIPO_AUTORIZACION",0);
+        int modulo7 = preferences.getInt("MODULO_7_TIPO_AUTORIZACION", 0);
         int motivoId7 = preferences.getInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
         int rechazoDefinitivo7 = preferences.getInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
 
@@ -2884,7 +2962,7 @@ public class FragmentAutoriza extends Fragment implements
         peatonalText.setGravity(Gravity.LEFT);
 
         ImageView imgSubfactor13 = new ImageView(getContext());
-        if(modulo7 == AUTORIZA_ID) {
+        if (modulo7 == AUTORIZA_ID) {
             imgSubfactor13.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
             imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.MULTIPLY);
             imgSubfactor13.setColorFilter(ContextCompat.getColor(getContext(), R.color.event_color_03), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -2895,8 +2973,8 @@ public class FragmentAutoriza extends Fragment implements
         imgSubfactor13.setLayoutParams(lpImg);
 
         ImageView imgSubfactor14 = new ImageView(getContext());
-        if(modulo7 == RECHAZA_ID) {
-            if(rechazoDefinitivo7 == RECHAZO_DEFINITIVO_ID) {
+        if (modulo7 == RECHAZA_ID) {
+            if (rechazoDefinitivo7 == RECHAZO_DEFINITIVO_ID) {
                 imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.ic_cancel));
             } else {
 
@@ -2910,7 +2988,7 @@ public class FragmentAutoriza extends Fragment implements
             imgSubfactor14.setImageDrawable(resource.getDrawable(R.drawable.background_blanco));
         }
 
-        if(modulo7 == SIN_AUTORIZACION) {
+        if (modulo7 == SIN_AUTORIZACION) {
             esPantallaSinValidar = true;
         }
         imgSubfactor14.setPadding(0, 0, 5, 1);
@@ -2921,12 +2999,12 @@ public class FragmentAutoriza extends Fragment implements
         row.addView(imgSubfactor14);
         ll.addView(row, 6);
 
-        if(esPantallaSinValidar) {
+        if (esPantallaSinValidar) {
             binding.rechazaBoton.setEnabled(false);
             binding.autorizaBoton.setEnabled(false);
             binding.rechazaBoton.setAlpha(0.4f);
             binding.autorizaBoton.setAlpha(0.4f);
-        } else if(rechazoDefinitivo1 == 1 || rechazoDefinitivo2 == 1 || rechazoDefinitivo3 == 1 || rechazoDefinitivo4 == 1 ||
+        } else if (rechazoDefinitivo1 == 1 || rechazoDefinitivo2 == 1 || rechazoDefinitivo3 == 1 || rechazoDefinitivo4 == 1 ||
                 rechazoDefinitivo5 == 1 || rechazoDefinitivo6 == 1 || rechazoDefinitivo7 == 1) {
             binding.layoutNomenclatura.setVisibility(View.VISIBLE);
             binding.rechazaBoton.setEnabled(true);
@@ -2945,7 +3023,7 @@ public class FragmentAutoriza extends Fragment implements
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_usuario, menu);
-        menu.add(0,1,1, Util.menuIcon(getResources().getDrawable(R.drawable.ic_vpn_key_black_24dp),
+        menu.add(0, 1, 1, Util.menuIcon(getResources().getDrawable(R.drawable.ic_vpn_key_black_24dp),
                 getResources().getString(R.string.cambiarContra)));
         menu.add(0, 2, 2, Util.menuIcon(getResources().getDrawable(R.drawable.ic_exit_to_app_black_24dp),
                 getResources().getString(R.string.salir)));
@@ -2953,6 +3031,7 @@ public class FragmentAutoriza extends Fragment implements
 
     /**
      * Método que tiene la acción del menu posterior derecha
+     *
      * @param item
      * @return
      */
@@ -2960,7 +3039,7 @@ public class FragmentAutoriza extends Fragment implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        switch (id){
+        switch (id) {
             case 1:
                 return true;
             case 2:
@@ -2975,13 +3054,13 @@ public class FragmentAutoriza extends Fragment implements
     ArrayList<Peatonal> peatonales;
     AdapterListaHoras adapterHoras;
 
-    public void listaPeatonal(final FragmentAutorizaEditar6Binding binding){
+    public void listaPeatonal(final FragmentAutorizaEditar6Binding binding) {
 
         final Resources resource = getContext().getResources();
         final ArrayList<String> horarios = new ArrayList<>();
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        String mdId = preferences.getString("mdId","");
-        String usuarioId = preferences.getString("usuario","");
+        String mdId = preferences.getString("mdId", "");
+        String usuarioId = preferences.getString("usuario", "");
 
         ProviderDatosPeatonal.getInstance(getContext()).obtenerDatosPeatonal(mdId, usuarioId, new ProviderDatosPeatonal.ConsultaPeatonal() {
             @Override
@@ -2989,21 +3068,21 @@ public class FragmentAutoriza extends Fragment implements
 
                 peatonales = new ArrayList<>();
 
-                if(peatonal!=null && peatonal.getCodigo()==200){
-                   // int sumaPuntuacion = 0;
+                if (peatonal != null && peatonal.getCodigo() == 200) {
+                    // int sumaPuntuacion = 0;
 
-                    for(int i = 0; i < peatonal.getConteos().size(); i++){
-                        for(int j=0;j<peatonal.getConteos().get(i).getDetalle().size();j++){
+                    for (int i = 0; i < peatonal.getConteos().size(); i++) {
+                        for (int j = 0; j < peatonal.getConteos().get(i).getDetalle().size(); j++) {
 
                             peatonales.add(new Peatonal(j,
                                     peatonal.getConteos().get(i).getDetalle().get(j).getFecha(),
                                     Integer.valueOf(peatonal.getConteos().get(i).getDetalle().get(j).getValor()),
-                                    0.0,0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
+                                    0.0, 0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
                         }
-                       // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
+                        // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
                     }
 
-                    if(peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
+                    if (peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
                         binding.promedio.setText("Promedio: " + peatonal.getConteos().get(0).getPromedioPeatonal());
                     } else {
                         binding.promedio.setText("Promedio: 0");
@@ -3017,10 +3096,10 @@ public class FragmentAutoriza extends Fragment implements
 
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editorPeatonales = preferences.edit();
-                   // editorPeatonales.putInt("puntajePeatonales", sumaPuntuacion);
-                   // editorPeatonales.putInt("puntajeTotalPeatonales", peatonal.getPuntoFac() != null ? Integer.parseInt(peatonal.getPuntoFac()) : 0);
-                    if(peatonal.getValidado() == 1) {
-                        if(peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                    // editorPeatonales.putInt("puntajePeatonales", sumaPuntuacion);
+                    // editorPeatonales.putInt("puntajeTotalPeatonales", peatonal.getPuntoFac() != null ? Integer.parseInt(peatonal.getPuntoFac()) : 0);
+                    if (peatonal.getValidado() == 1) {
+                        if (peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
                             binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
                             binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", AUTORIZA_ID);
@@ -3040,9 +3119,9 @@ public class FragmentAutoriza extends Fragment implements
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                     }
-                    if(peatonal.getTip().size() > 0) {
+                    if (peatonal.getTip().size() > 0) {
                         StringBuffer tipMod7 = new StringBuffer("");
-                        for(Peatonales.Tip tip : peatonal.getTip()) {
+                        for (Peatonales.Tip tip : peatonal.getTip()) {
                             tipMod7.append(tip.getDetalle() + "\n");
                         }
                         editorPeatonales.putString("tip_modulo_7", tipMod7.toString());
@@ -3051,7 +3130,7 @@ public class FragmentAutoriza extends Fragment implements
                     }
                     editorPeatonales.apply();
 
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Error al obtener los datos",
                             Toast.LENGTH_LONG).show();
                 }
@@ -3064,13 +3143,13 @@ public class FragmentAutoriza extends Fragment implements
         });
     }
 
-    public void listaPeatonal(final FragmentAutoriza6Binding binding){
+    public void listaPeatonal(final FragmentAutoriza6Binding binding) {
         final Resources resource = getContext().getResources();
         final ArrayList<String> horarios = new ArrayList<>();
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        String mdId = preferences.getString("mdId","");
-        String usuarioId = preferences.getString("usuario","");
-        final String nombreSitio = preferences.getString("nombreSitio","");
+        String mdId = preferences.getString("mdId", "");
+        String usuarioId = preferences.getString("usuario", "");
+        final String nombreSitio = preferences.getString("nombreSitio", "");
 
         ProviderDatosPeatonal.getInstance(getContext()).obtenerDatosPeatonal(mdId, usuarioId, new ProviderDatosPeatonal.ConsultaPeatonal() {
             @Override
@@ -3078,21 +3157,21 @@ public class FragmentAutoriza extends Fragment implements
 
                 peatonales = new ArrayList<>();
 
-                if(peatonal!=null && peatonal.getCodigo()==200){
+                if (peatonal != null && peatonal.getCodigo() == 200) {
                     //int sumaPuntuacion = 0;
 
-                    for(int i = 0; i < peatonal.getConteos().size(); i++){
-                        for(int j=0;j<peatonal.getConteos().get(i).getDetalle().size();j++){
+                    for (int i = 0; i < peatonal.getConteos().size(); i++) {
+                        for (int j = 0; j < peatonal.getConteos().get(i).getDetalle().size(); j++) {
 
                             peatonales.add(new Peatonal(j,
                                     peatonal.getConteos().get(i).getDetalle().get(j).getFecha(),
                                     Integer.valueOf(peatonal.getConteos().get(i).getDetalle().get(j).getValor()),
-                                    0.0,0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
+                                    0.0, 0.0, peatonal.getConteos().get(i).getDetalle().get(j).getNombreGenerador()));
                         }
-                       // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
+                        // sumaPuntuacion += peatonal.getConteos().get(i).getPuntuacion();
                     }
 
-                    if(peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
+                    if (peatonal.getConteos() != null && peatonal.getConteos().size() > 0) {
                         binding.promedioPeatonal.setText("Promedio: " + peatonal.getConteos().get(0).getPromedioPeatonal());
                     } else {
                         binding.promedioPeatonal.setText("Promedio: 0");
@@ -3106,10 +3185,10 @@ public class FragmentAutoriza extends Fragment implements
 
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     SharedPreferences.Editor editorPeatonales = preferences.edit();
-                   // editorPeatonales.putInt("puntajePeatonales", sumaPuntuacion);
+                    // editorPeatonales.putInt("puntajePeatonales", sumaPuntuacion);
                     //editorPeatonales.putInt("puntajeTotalPeatonales", peatonal.getPuntoFac() != null ? Integer.parseInt(peatonal.getPuntoFac()) : 0);
-                    if(peatonal.getValidado() == 1) {
-                        if(peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
+                    if (peatonal.getValidado() == 1) {
+                        if (peatonal.getDetallesValidacion() != null && peatonal.getDetallesValidacion().size() > 0 && peatonal.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
                             binding.aceptar.setImageDrawable(resource.getDrawable(R.drawable.aprovado));
                             binding.cancelar.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
                             editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION", AUTORIZA_ID);
@@ -3129,9 +3208,9 @@ public class FragmentAutoriza extends Fragment implements
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO", 0);
                         editorPeatonales.putInt("MODULO_7_TIPO_AUTORIZACION_MOTIVO_DEFINITIVO", 0);
                     }
-                    if(peatonal.getTip().size() > 0) {
+                    if (peatonal.getTip().size() > 0) {
                         StringBuffer tipMod7 = new StringBuffer("");
-                        for(Peatonales.Tip tip : peatonal.getTip()) {
+                        for (Peatonales.Tip tip : peatonal.getTip()) {
                             tipMod7.append(tip.getDetalle() + "\n");
                         }
                         editorPeatonales.putString("tip_modulo_7", tipMod7.toString());
@@ -3140,7 +3219,7 @@ public class FragmentAutoriza extends Fragment implements
                     }
                     editorPeatonales.apply();
 
-                }else{
+                } else {
                     Toast.makeText(getContext(), "Error al obtener los datos",
                             Toast.LENGTH_LONG).show();
                 }
@@ -3238,7 +3317,7 @@ public class FragmentAutoriza extends Fragment implements
 
     private void showElapsedTime(FragmentAutorizaEditar6Binding binding) {
         long elapsedMillis = SystemClock.elapsedRealtime() - binding.peatonalConteo.chronometer1.getBase();
-        tiempo = elapsedMillis/1000;
+        tiempo = elapsedMillis / 1000;
     }
 
     Boolean permisoP1 = false;
@@ -3266,71 +3345,71 @@ public class FragmentAutoriza extends Fragment implements
 
 
     public static boolean isHourInInterval(String target, String start, String end) {
-        return ((target.compareTo(start) >= 0)&& (target.compareTo(end) <= 0));
+        return ((target.compareTo(start) >= 0) && (target.compareTo(end) <= 0));
     }
 
-    public void setPermisos(ArrayList<Permiso> permisos, String tipoPantalla){
-        if(permisos!=null){
-            for(int i=0;i<permisos.size();i++){
-                if(permisos.get(i).getFimoduloid()==MODULO_ASIGNADAS){
-                    if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
+    public void setPermisos(ArrayList<Permiso> permisos, String tipoPantalla) {
+        if (permisos != null) {
+            for (int i = 0; i < permisos.size(); i++) {
+                if (permisos.get(i).getFimoduloid() == MODULO_ASIGNADAS) {
+                    if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP1 = true;
 
-                        if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
+                        if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
                                 && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                                && permisos.get(i).getPermiteeditar()==1){
+                                && permisos.get(i).getPermiteeditar() == 1) {
                             permisoEditar1 = true;
                             break;
                         }
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP2 = true;
 
-                        if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
+                        if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
                                 && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                                && permisos.get(i).getPermiteeditar()==1){
+                                && permisos.get(i).getPermiteeditar() == 1) {
                             permisoEditar2 = true;
                             break;
                         }
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_3))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_3))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP3 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_4))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_4))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP4 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_5))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_5))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP5 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP6 = true;
-                        if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
+                        if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
                                 && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                                && permisos.get(i).getPermiteeditar()==1){
+                                && permisos.get(i).getPermiteeditar() == 1) {
                             permisoEditar6 = true;
                             break;
                         }
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiteautorizar()==1){
+                            && permisos.get(i).getPermiteautorizar() == 1) {
                         permisoP7 = true;
 
-                        if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
+                        if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
                                 && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                                && permisos.get(i).getPermiteeditar()==1){
+                                && permisos.get(i).getPermiteeditar() == 1) {
                             permisoEditar7 = true;
                             break;
                         }
@@ -3342,48 +3421,48 @@ public class FragmentAutoriza extends Fragment implements
     }
 
 
-    public void setPermisosRechazar(ArrayList<Permiso> permisos, String tipoPantalla){
-        if(permisos!=null){
-            for(int i=0;i<permisos.size();i++){
-                if(permisos.get(i).getFimoduloid()==MODULO_ASIGNADAS){
-                    if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
+    public void setPermisosRechazar(ArrayList<Permiso> permisos, String tipoPantalla) {
+        if (permisos != null) {
+            for (int i = 0; i < permisos.size(); i++) {
+                if (permisos.get(i).getFimoduloid() == MODULO_ASIGNADAS) {
+                    if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_1))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP1 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_2))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP2 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_3))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_3))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP3 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_4))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_4))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP4 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_5))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_5))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP5 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_6))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP6 = true;
                         break;
-                    }else if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
+                    } else if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
                             && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                            && permisos.get(i).getPermiterechazar()==1){
+                            && permisos.get(i).getPermiterechazar() == 1) {
                         permisoRechazarP7 = true;
 
-                        if(tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
+                        if (tipoPantalla.equals(String.valueOf(MODULO_PANTALLA_7))
                                 && tipoPantalla.equals(String.valueOf(permisos.get(i).getFisubmodulo()))
-                                && permisos.get(i).getPermiteeditar()==1){
+                                && permisos.get(i).getPermiteeditar() == 1) {
                             permisoRechazarEditar7 = true;
                             break;
                         }
@@ -3397,22 +3476,22 @@ public class FragmentAutoriza extends Fragment implements
     ArrayList<DatosPuntuacion.Factore> factoresMacro;
     ArrayList<DatosPuntuacion.Factore> factoresMicro;
 
-    public void getDatos(final FragmentAutoriza7Binding binding){
+    public void getDatos(final FragmentAutoriza7Binding binding) {
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mdid = preferences.getString("mdId", "");
         String usuario = preferences.getString("usuario", "");
 
-        int atrasa = preferences.getInt("atrasa",0);
-        if(atrasa==1){
+        int atrasa = preferences.getInt("atrasa", 0);
+        if (atrasa == 1) {
             binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
-        }else{
+        } else {
             binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
         }
 
         ProviderConsultaFinaliza.getInstance(getContext()).obtenerPuntos(mdid, usuario, new ProviderConsultaFinaliza.ConsultaPuntos() {
             @Override
             public void resolve(DatosPuntuacion datosPuntuacion) {
-                if(datosPuntuacion.getCodigo()==200){
+                if (datosPuntuacion.getCodigo() == 200) {
                     factoresMacro = new ArrayList<>();
                     factoresMicro = new ArrayList<>();
 
@@ -3426,13 +3505,13 @@ public class FragmentAutoriza extends Fragment implements
                     }
 
                     for (int i = 0; i < datosPuntuacion.getFactores().size(); i++) {
-                        if(datosPuntuacion.getFactores().get(i).getRangoubica()!=null){
+                        if (datosPuntuacion.getFactores().get(i).getRangoubica() != null) {
                             if (datosPuntuacion.getFactores().get(i).getRangoubica().equals(getString(R.string.micro_ub))) {
                                 factoresMacro.add(datosPuntuacion.getFactores().get(i));
-                            } else{
+                            } else {
                                 factoresMicro.add(datosPuntuacion.getFactores().get(i));
                             }
-                        }else{
+                        } else {
                             factoresMicro.add(datosPuntuacion.getFactores().get(i));
                         }
                     }
@@ -3464,7 +3543,7 @@ public class FragmentAutoriza extends Fragment implements
         });
     }
 
-    public void generarDetallesMacro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
+    public void generarDetallesMacro(FragmentAutoriza7Binding binding, ArrayList<DatosPuntuacion.Factore> datosPuntuacion) {
 
         Resources resource = this.getResources();
         binding.factores.removeAllViews();
@@ -3473,45 +3552,45 @@ public class FragmentAutoriza extends Fragment implements
         int paddingDp = 2;
 
         float density = getResources().getDisplayMetrics().density;
-        int paddingPixel = (int)(paddingDp * density);
+        int paddingPixel = (int) (paddingDp * density);
 
-        for(int i = 0; i < datosPuntuacion.size(); i ++){
+        for (int i = 0; i < datosPuntuacion.size(); i++) {
 
             TableRow tbrow = new TableRow(getContext());
             tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
-            t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
+            t1v1.setText(datosPuntuacion.get(i).getNombrenivel() + "");
             t1v1.setTextColor(resource.getColor(R.color.grisetxt));
-            t1v1.setPadding(0, paddingPixel,0,5);
+            t1v1.setPadding(0, paddingPixel, 0, 5);
             t1v1.setGravity(Gravity.START);
 
-            t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t1v1.setLayoutParams(new TableRow.LayoutParams(660,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t1v1);
 
             TextView t3v1 = new TextView(getContext());
             t3v1.setTextSize(12);
-            t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
+            t3v1.setText(datosPuntuacion.get(i).getPuntuacion() + "");
             t3v1.setTextColor(resource.getColor(R.color.grisetxt));
             t3v1.setGravity(Gravity.RIGHT);
-            t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t3v1.setLayoutParams(new TableRow.LayoutParams(50,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t3v1);
 
 
             TextView t3v2 = new TextView(getContext());
             t3v2.setTextSize(12);
-            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
-                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-            }else{
+            if (datosPuntuacion.get(i).getTotalxfactor() != null) {
+                t3v2.setText("/" + datosPuntuacion.get(i).getTotalxfactor() + "");
+            } else {
                 binding.tituloMacro.setVisibility(View.GONE);
                 binding.tituloMicro.setVisibility(View.GONE);
             }
             t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
-            t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t3v2.setLayoutParams(new TableRow.LayoutParams(75,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t3v2);
 
 
@@ -3519,7 +3598,7 @@ public class FragmentAutoriza extends Fragment implements
         }
     }
 
-    public void generarDetallesMicro(FragmentAutoriza7Binding binding,  ArrayList<DatosPuntuacion.Factore> datosPuntuacion){
+    public void generarDetallesMicro(FragmentAutoriza7Binding binding, ArrayList<DatosPuntuacion.Factore> datosPuntuacion) {
 
         Resources resource = this.getResources();
         binding.factoresMicro.removeAllViews();
@@ -3528,44 +3607,44 @@ public class FragmentAutoriza extends Fragment implements
         int paddingDp = 2;
 
         float density = getResources().getDisplayMetrics().density;
-        int paddingPixel = (int)(paddingDp * density);
+        int paddingPixel = (int) (paddingDp * density);
 
-        for(int i = 0; i < datosPuntuacion.size(); i ++){
+        for (int i = 0; i < datosPuntuacion.size(); i++) {
 
             TableRow tbrow = new TableRow(getContext());
             tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
             TextView t1v1 = new TextView(getContext());
             t1v1.setTextSize(12);
-            t1v1.setText(datosPuntuacion.get(i).getNombrenivel()+"");
+            t1v1.setText(datosPuntuacion.get(i).getNombrenivel() + "");
             t1v1.setTextColor(resource.getColor(R.color.grisetxt));
-            t1v1.setPadding(0, paddingPixel,0,5);
+            t1v1.setPadding(0, paddingPixel, 0, 5);
             t1v1.setGravity(Gravity.START);
 
-            t1v1.setLayoutParams( new TableRow.LayoutParams( 660,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t1v1.setLayoutParams(new TableRow.LayoutParams(660,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t1v1);
 
             TextView t3v1 = new TextView(getContext());
             t3v1.setTextSize(12);
-            t3v1.setText(datosPuntuacion.get(i).getPuntuacion()+"");
+            t3v1.setText(datosPuntuacion.get(i).getPuntuacion() + "");
             t3v1.setTextColor(resource.getColor(R.color.grisetxt));
             t3v1.setGravity(Gravity.RIGHT);
-            t3v1.setLayoutParams( new TableRow.LayoutParams( 50,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t3v1.setLayoutParams(new TableRow.LayoutParams(50,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t3v1);
 
             TextView t3v2 = new TextView(getContext());
             t3v2.setTextSize(12);
-            if(datosPuntuacion.get(i).getTotalxfactor()!=null){
-                t3v2.setText("/"+datosPuntuacion.get(i).getTotalxfactor()+"");
-            }else{
+            if (datosPuntuacion.get(i).getTotalxfactor() != null) {
+                t3v2.setText("/" + datosPuntuacion.get(i).getTotalxfactor() + "");
+            } else {
                 binding.tituloMacro.setVisibility(View.GONE);
                 binding.tituloMicro.setVisibility(View.GONE);
             }
             t3v2.setTextColor(resource.getColor(R.color.grisetxt));
             t3v2.setGravity(Gravity.LEFT);
-            t3v2.setLayoutParams( new TableRow.LayoutParams( 75,
-                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0 ) );
+            t3v2.setLayoutParams(new TableRow.LayoutParams(75,
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
             tbrow.addView(t3v2);
 
             binding.factoresMicro.addView(tbrow);

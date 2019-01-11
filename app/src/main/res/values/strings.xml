@@ -121,7 +121,6 @@
     <string name="resumenautorizacion">Resumen Autorización</string>
 
 
-
     <!-- mapa -->
     <string name="google_maps_key">AIzaSyAo-L-dbGjebd6KJd0-UeJprGk9o6YMVqY</string>
 
@@ -308,4 +307,7 @@
     <string name="error_servicio">Error al conectarse al servicio que autoriza/rechaza la pantalla:</string>
     <string name="seleccionar_motivo">Debes seleccionar un motivo</string>
     <string name="comentario">Debes introducir un comentario</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

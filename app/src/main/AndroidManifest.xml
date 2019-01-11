@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="expansion.neto.com.mx.gerenteapp">
 
-
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -22,9 +21,6 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-
-
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -32,21 +28,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="android.support.VERSION"
             android:value="26.1.0" />
-
-
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.dashboard.ActivitySplashScreen"
+        <activity
+            android:name=".ui.dashboard.ActivitySplashScreen"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,49 +47,93 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".ui.dashboard.ActivityLogin"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.dashboard.ActivityMain"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.autoriza.ActivityAutorizar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.autoriza.ActivityListaAutoriza"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.proceso.ActivityProceso"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.ActivityCalendario"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.detalle.ActivityDetalle"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.ActivityAddEvento"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.BasicActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.ActivityCalendarioApi"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentAutoriza.FragmentInicioAutoriza"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentProceso.FragmentInicioProceso"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentRechazo.FragmentInicioRechazadas"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentAutorizadas.FragmentInicioAutorizadas"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentDocumentos.FragmentInicioDocumentos"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.documentos.ActivityDocumentos"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentAgenda.FragmentInicioAgenda"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.ActivityNotificaciones"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.agenda.ActivityDetalleNotificaciones"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.rechazadas.ActivityRechazadas"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentRechazadas.FragmentInicioRechazadas"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.detalle.ActivityDetalleRechazadas"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".fragment.fragmentProceso.chat.FragmentEstatusChatNotificaciones"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible" />
 
-        <activity android:name=".ui.dashboard.ActivityLogin" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.dashboard.ActivityMain" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.autoriza.ActivityAutorizar" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.autoriza.ActivityListaAutoriza" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.proceso.ActivityProceso" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.ActivityCalendario" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.detalle.ActivityDetalle" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.ActivityAddEvento" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.BasicActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.ActivityCalendarioApi" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentAutoriza.FragmentInicioAutoriza" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentProceso.FragmentInicioProceso" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentRechazo.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentAutorizadas.FragmentInicioAutorizadas" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentDocumentos.FragmentInicioDocumentos" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.documentos.ActivityDocumentos" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentAgenda.FragmentInicioAgenda" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.ActivityNotificaciones" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.agenda.ActivityDetalleNotificaciones" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.rechazadas.ActivityRechazadas" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentRechazadas.FragmentInicioRechazadas" android:screenOrientation="portrait"/>
-        <activity android:name=".ui.detalle.ActivityDetalleRechazadas" android:screenOrientation="portrait"/>
-        <activity android:name=".fragment.fragmentProceso.chat.FragmentEstatusChatNotificaciones" android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateVisible"
-            />
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="14ffbeefd4223817d96c8d7a06cb75e87b0075c1" />
 
         <service
             android:name=".cron.CronJob"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
+            android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
-
         <service
             android:name=".cron.Cron"
-            android:permission="android.permission.BIND_JOB_SERVICE" >
+            android:permission="android.permission.BIND_JOB_SERVICE">
             <intent-filter>
-                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE"/>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
 
@@ -104,7 +141,10 @@
             android:name=".sqlite.GerenteProvider"
             android:authorities="expansion.neto.com.mx.gerenteapp" />
 
-        <service android:name=".utils.ServicioRutas" android:label="Localizador" />
+        <service
+            android:name=".utils.ServicioRutas"
+            android:label="Localizador" />
+
         <receiver
             android:name=".utils.StartMyServiceAtBootReceiver"
             android:label="StartMyServiceAtBootReceiver">
@@ -120,7 +160,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
     </application>

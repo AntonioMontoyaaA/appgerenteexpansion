@@ -73,13 +73,14 @@ public class FragmentCardProceso extends Fragment implements ProcesoHolder.Liste
         View view = binding.getRoot();
 
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        mes = preferences.getString("mesConsulta","");
+        mes = preferences.getString("mesConsultaDasbord","");
         area = preferences.getString("areaxpuesto","");
         usuario = preferences.getString("usuario","");
         semana = preferences.getString("semanaConsulta","");
+        anio = preferences.getString("anioConsulta","");
 
-        Calendar calendar = Calendar.getInstance();
-        anio = String.valueOf(calendar.get(Calendar.YEAR));
+        /*Calendar calendar = Calendar.getInstance();
+        anio = String.valueOf(calendar.get(Calendar.YEAR));*/
 
         getListaProceso("0");
 
@@ -483,7 +484,7 @@ public class FragmentCardProceso extends Fragment implements ProcesoHolder.Liste
 
         binding.prog.setVisibility(View.VISIBLE);
 
-        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProcesos(vermas, area, mes, new ProviderDatosProceso.ConsultaDatosProceso() {
+        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProcesos(vermas, area, mes,anio, new ProviderDatosProceso.ConsultaDatosProceso() {
             @Override
             public void resolve(Proceso memorias) {
                 if(memorias!=null){
