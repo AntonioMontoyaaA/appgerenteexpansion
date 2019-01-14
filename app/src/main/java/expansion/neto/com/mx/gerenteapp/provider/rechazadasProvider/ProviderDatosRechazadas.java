@@ -46,7 +46,7 @@ public class ProviderDatosRechazadas {
     final int meses = fecha.get(Calendar.MONTH) + 1;
 
     public void obtenerDatosRechazadas(final String usuarioId,
-                                       final String area, final String mes, final ConsultaDatosRechazadas promise){
+                                       final String area, final String mes,final String anio, final ConsultaDatosRechazadas promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Proceso>() {
             @Override
@@ -54,15 +54,12 @@ public class ProviderDatosRechazadas {
                 //TODO CONNECT AND GET DATA
                 try {
 
-                    Calendar fecha = Calendar.getInstance();
-                    int anio = fecha.get(Calendar.YEAR);
-
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("estatus", ESTATUS_POR_TERMINAR)
                             .add("area", area)
                             .add("mes", mes)
                             .add("semana", TIPO_CONSULTA_SEMANA)
-                            .add("anio", String.valueOf(anio))
+                            .add("anio", anio)
                             .add("tipoapp", TIPO_APP)
                             .add("tipoconsulta", TIPO_CONSULTA_TIPO)
                             .add("usuarioId", usuarioId);

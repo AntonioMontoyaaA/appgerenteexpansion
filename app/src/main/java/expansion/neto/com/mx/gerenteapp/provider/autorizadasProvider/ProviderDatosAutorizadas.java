@@ -40,7 +40,7 @@ public class ProviderDatosAutorizadas {
     private final String SEMANA_0 = "0";
 
 
-    public void obtenerDatosAutorizadas(final String vermas, final String mes, final String usuarioId, final ConsultaDatosSitio promise){
+    public void obtenerDatosAutorizadas(final String vermas, final String mes, final String usuarioId,final String anio, final ConsultaDatosSitio promise){
         final OkHttpClient client = new OkHttpClient();
         (new AsyncTask<Void, Void, Autorizadas>() {
             @Override
@@ -48,15 +48,12 @@ public class ProviderDatosAutorizadas {
                 //TODO CONNECT AND GET DATA
                 try {
 
-                    Calendar fecha = Calendar.getInstance();
-                    int anio = fecha.get(Calendar.YEAR);
-
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("usuarioId", usuarioId)
                             .add("mes", mes)
                             .add("semana", SEMANA_0)
                             .add("vermas", vermas)
-                            .add("anio", String.valueOf(anio));
+                            .add("anio", anio);
 
                     RequestBody formBody = formBuilder.build();
                     Request request = new Request.Builder()

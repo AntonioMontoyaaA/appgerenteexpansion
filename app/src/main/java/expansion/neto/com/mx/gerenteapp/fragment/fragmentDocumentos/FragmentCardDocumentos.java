@@ -140,9 +140,10 @@ public class FragmentCardDocumentos extends Fragment implements ProcesoHolder.Li
     public void getListaProceso(UsuarioLogin.Perfil perfil){
         binding.prog.setVisibility(View.VISIBLE);
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        String mes = preferences.getString("mesConsulta","");
+        String mes = preferences.getString("mesDasbord","");
         String semana = preferences.getString("semanaConsulta","");
-        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProceso("5",semana, mes, new ProviderDatosProceso.ConsultaDatosProceso() {
+        String anio = preferences.getString("anioConsulta","");
+        ProviderDatosProceso.getInstance(getContext()).obtenerDatosProceso("5",semana, mes,anio, new ProviderDatosProceso.ConsultaDatosProceso() {
             @Override
             public void resolve(Proceso memorias) {
                 if(memorias.getCodigo()==200){

@@ -65,7 +65,7 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
         binding = DataBindingUtil.inflate(inflater, R.layout.activity_rechazadas_list,container,false);
         View view = binding.getRoot();
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
-        mes = preferences.getString("mesConsultaDasbord","");
+        mes = preferences.getString("mesDasbord","");
         area = preferences.getString("areaxpuesto","");
         usuarioId = preferences.getString("usuario","");
         anio = preferences.getString("anioConsulta","");
@@ -447,7 +447,7 @@ public class FragmentCardRechazadas extends Fragment implements ProcesoHolder.Li
 
         binding.prog.setVisibility(View.VISIBLE);
 
-        ProviderDatosRechazadas.getInstance(getContext()).obtenerDatosRechazadas(usuarioId, area, mes, new
+        ProviderDatosRechazadas.getInstance(getContext()).obtenerDatosRechazadas(usuarioId, area, mes,anio, new
                 ProviderDatosRechazadas.ConsultaDatosRechazadas() {
             @Override
             public void resolve(Proceso memorias) {
