@@ -2391,6 +2391,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
 
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             int atrasa = preferences.getInt("atrasa", 0);
+            int estatus = preferences.getInt("estatusId", 0);
 
             if (atrasa == 1) {
                 binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
@@ -2399,6 +2400,10 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
             }
 
             creaTablaResumenAutorizacion(binding);
+
+            if(estatus == 16){
+                binding.can.setVisibility(View.GONE);
+            }
 
             binding.can.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -2437,8 +2442,6 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
         preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         final String mdId = preferences.getString("mdId", "");
         final String usuarioId = preferences.getString("usuario", "");
-
-
         if (tipoAccion == RECHAZA_MD) {
             preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
             SharedPreferences.Editor editorFinalizar = preferences.edit();
@@ -2451,7 +2454,6 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
             a.setModuloCanceladoListener(new FragmentDialogCancelar.OnModuloRechazadoListener() {
                 @Override
                 public void onModuloRechazado(int modulo) {
-
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     int motivoId = preferences.getInt("MODULO_GENERAL_TIPO_AUTORIZACION_MOTIVO", 0);
                     String motivoIdS = String.valueOf(motivoId);

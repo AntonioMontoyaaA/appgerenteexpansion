@@ -75,10 +75,6 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
         usuarioId = preferences.getString("usuario","");
         anio = preferences.getString("anioConsulta","");
 
-        Calendar calendar = Calendar.getInstance();
-        anio = String.valueOf(calendar.get(Calendar.YEAR));
-
-
         getDatos();
 
         adapter = new AdapterAutorizadas(getContext(),ALPHABETICAL_COMPARATOR, this);
@@ -388,7 +384,7 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
 
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String usuario = preferences.getString("usuario", "");
-        String mes = preferences.getString("mesTaco","");
+        String mes = preferences.getString("mesDasbord","");
         loadingProgress(progressDialog, 0);
 
         ProviderDatosAutorizadas.getInstance(getContext()).obtenerDatosAutorizadas(getString(R.string.one),mes, usuario,anio,
@@ -446,7 +442,7 @@ public class FragmentCardAutorizadas extends Fragment implements AutorizadasHold
 
         SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String usuario = preferences.getString("usuario", "");
-        String mes = preferences.getString("mesConsulta","");
+        String mes = preferences.getString("mesDasbord","");
         loadingProgress(progressDialog, 0);
 
         ProviderDatosAutorizadas.getInstance(getContext()).obtenerDatosAutorizadas(getString(R.string.zero),mes, usuario,anio,

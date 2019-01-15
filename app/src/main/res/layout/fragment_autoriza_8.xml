@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
 
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -16,15 +16,13 @@
 
         <include
             android:id="@+id/toolbar"
-            layout="@layout/toolbar_autoriza"
-            />
+            layout="@layout/toolbar_autoriza" />
 
         <ScrollView
-            android:background="@drawable/background"
             android:id="@+id/scroll_bar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            >
+            android:background="@drawable/background">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -32,18 +30,18 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:background="@drawable/background"
-                    android:layout_marginTop="2dp"
-                    android:padding="18dp"
                     android:layout_width="match_parent"
                     android:layout_height="608dp"
-                    android:orientation="vertical">
+                    android:layout_marginTop="2dp"
+                    android:background="@drawable/background"
+                    android:orientation="vertical"
+                    android:padding="18dp">
 
                     <android.support.constraint.ConstraintLayout
-                        android:orientation="horizontal"
-                        android:background="@drawable/estilo_boton_blanco"
                         android:layout_width="match_parent"
-                        android:layout_height="541dp">
+                        android:layout_height="541dp"
+                        android:background="@drawable/estilo_boton_blanco"
+                        android:orientation="horizontal">
 
                         <LinearLayout
                             android:id="@+id/view3"
@@ -59,8 +57,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:layout_marginEnd="8dp"
                             android:layout_marginStart="8dp"
+                            android:layout_marginEnd="8dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent">
 
@@ -68,12 +66,12 @@
 
                         <LinearLayout
                             android:id="@+id/layout_nomenclatura"
-                            android:visibility="gone"
-                            android:layout_marginTop="2dp"
-                            android:padding="18dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:orientation="horizontal"
+                            android:padding="18dp"
+                            android:visibility="gone"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@+id/tabla_resumen">
 
@@ -81,8 +79,8 @@
                                 android:id="@+id/aceptar"
                                 android:layout_width="18dp"
                                 android:layout_height="18dp"
-                                android:layout_marginEnd="8dp"
                                 android:layout_marginTop="20dp"
+                                android:layout_marginEnd="8dp"
                                 android:background="@drawable/ic_cancel"
                                 android:text="X"
                                 android:textColor="@color/letra"
@@ -91,31 +89,31 @@
                                 app:typeface="robotoBold" />
 
                             <TextView
-                                android:textColor="@color/azul"
-                                android:text="@string/descripcion_razon_rechazo"
-                                android:paddingTop="6dp"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content" />
+                                android:layout_height="wrap_content"
+                                android:paddingTop="6dp"
+                                android:text="@string/descripcion_razon_rechazo"
+                                android:textColor="@color/azul" />
 
                         </LinearLayout>
-
-
-
                     </android.support.constraint.ConstraintLayout>
 
                     <LinearLayout
-                        android:layout_marginTop="10dp"
                         android:id="@+id/autorizalayout"
-                        android:layout_gravity="center"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:layout_marginTop="10dp"
+                        android:orientation="horizontal" >
+<!-- -->
                         <LinearLayout
+                            android:visibility="visible"
                             android:id="@+id/can"
-                            android:orientation="horizontal"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/rechazaBoton"
@@ -130,30 +128,28 @@
                                 app:typeface="robotoBold" />
 
                             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                                android:layout_marginStart="4dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="@string/rechazar"
                                 android:textColor="@color/blanco"
                                 android:textSize="18sp"
-                                app:typeface="robotoRegular"
-                                android:text="@string/rechazar"  />
-
+                                app:typeface="robotoRegular" />
                         </LinearLayout>
-
-
+<!-- android:layout_marginStart="50dp" -->
                         <LinearLayout
                             android:id="@+id/acep"
-                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
 
                             <ImageView
                                 android:id="@+id/autorizaBoton"
-                                android:layout_marginStart="50dp"
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:layout_marginEnd="8dp"
+
                                 android:layout_marginTop="0dp"
+                                android:layout_marginEnd="8dp"
                                 android:src="@drawable/aprov_blanco"
                                 android:textColor="@color/letra"
                                 app:layout_constraintEnd_toEndOf="parent"
@@ -163,24 +159,15 @@
                             <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:text="@string/autorizar"
                                 android:textColor="@color/blanco"
                                 android:textSize="18sp"
-                                app:typeface="robotoRegular"
-                                android:text="@string/autorizar" />
-
+                                app:typeface="robotoRegular" />
                         </LinearLayout>
-
                     </LinearLayout>
-
-
-
-
                 </LinearLayout>
-
             </LinearLayout>
-
         </ScrollView>
-
     </LinearLayout>
 
 </layout>
