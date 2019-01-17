@@ -31,6 +31,8 @@ import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario;
 import expansion.neto.com.mx.gerenteapp.utils.AppHelper;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
+
 /**
  * Created by marcosmarroquin on 20/03/18.
  */
@@ -59,6 +61,7 @@ public class ActivityLogin extends AppCompatActivity {
         binding.pass.setTypeface(Util.changeFont(this,1));
         binding.usuario.setTypeface(Util.changeFont(this,1));
         binding.entrar.setTypeface(Util.changeFont(this,1));
+        binding.txtAppVersion.setText(VERSION_APP);
         usuario = new Usuario("", "", this, binding);
         binding.setLoginViewModel(usuario);
         binding.entrar.setEnabled(true);
