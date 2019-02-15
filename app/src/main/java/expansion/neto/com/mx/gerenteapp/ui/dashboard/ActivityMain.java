@@ -50,8 +50,10 @@ import expansion.neto.com.mx.gerenteapp.ui.agenda.ActivityCalendario;
 import expansion.neto.com.mx.gerenteapp.ui.agenda.ActivityNotificaciones;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 import expansion.neto.com.mx.gerenteapp.utils.desing.CustomTypefaceSpan;
+import expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView;
 
 import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_NOTIFICACION;
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
 
 
 /**
@@ -71,6 +73,8 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
     Intent main;
     LinearLayout notificacion;
     TextView numNotificaciones;
+
+    RobotoTextView txt_app_version;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,6 +87,10 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
 
         notificacion = (LinearLayout) findViewById(R.id.linearNotificacion);
         numNotificaciones = (TextView) findViewById(R.id.numNotificacion);
+
+        View header = mNavigationView.getHeaderView(0);
+        txt_app_version =  header.findViewById(R.id.txt_app_version);
+        txt_app_version.setText(VERSION_APP);
 
         SharedPreferences preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
 

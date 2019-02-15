@@ -45,6 +45,7 @@
         tools:text="@string/nombreUsuario" />
 
 
+    <!-- android:text="@string/accion_ver"-->
     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
         android:id="@+id/txt_app_version"
         android:layout_width="wrap_content"
@@ -52,7 +53,6 @@
         android:layout_marginBottom="2dp"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="16dp"
-        android:text="@string/accion_ver"
         android:textColor="@color/blanco"
         android:textSize="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
