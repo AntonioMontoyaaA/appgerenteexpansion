@@ -300,6 +300,10 @@
     <string name="one">1</string>
     <string name="no_esquina">NO ES ESQUINA</string>
     <string name="esquina">ES ESQUINA</string>
+    <string name="no_drenaje">NO TIENE DRENAJE</string>
+    <string name="drenaje">CON DRENAJE</string>
+    <string name="esquinaDesc">¿Sitio en esquina?</string>
+    <string name="drenajeDesc">¿Con drenaje?</string>
     <string name="monto">Debes escribir un monto</string>
     <string name="intenta">Revisa tu conexión de internet e intenta nuevamente</string>
     <string name="rechazo_definitivo">¿Estas seguro de rechazar la MD? Esto ocasionará que el sitio sea cancelado.</string>

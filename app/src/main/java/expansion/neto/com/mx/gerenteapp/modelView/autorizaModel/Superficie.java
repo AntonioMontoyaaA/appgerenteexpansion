@@ -194,14 +194,30 @@ public class Superficie {
         @SerializedName("imgPredial")
         @Expose
         private String imgPredial;
-
-        public String getImgPredial() {
-            return imgPredial;
-        }
-
-        public void setImgPredial(String imgPredial) {
-            this.imgPredial = imgPredial;
-        }
+        @SerializedName("imgEnt1")
+        @Expose
+        private String imgEnt1;
+        @SerializedName("fecha_ent1")
+        @Expose
+        private String fecha_ent1;
+        @SerializedName("imgEnt2")
+        @Expose
+        private String imgEnt2;
+        @SerializedName("fecha_ent2")
+        @Expose
+        private String fecha_ent2;
+        @SerializedName("imgEnt3")
+        @Expose
+        private String imgEnt3;
+        @SerializedName("fecha_ent3")
+        @Expose
+        private String fecha_ent3;
+        @SerializedName("imgAgua")
+        @Expose
+        private String imgAgua;
+        @SerializedName("imgLuz")
+        @Expose
+        private String imgLuz;
 
 
         public Integer getNivel() {
@@ -268,6 +284,77 @@ public class Superficie {
             this.imgLateral1Id = imgLateral1Id;
         }
 
+        public String getImgPredial() {
+            return imgPredial;
+        }
+
+        public void setImgPredial(String imgPredial) {
+            this.imgPredial = imgPredial;
+        }
+
+        public String getImgEnt1() {
+            return imgEnt1;
+        }
+
+        public void setImgEnt1(String imgEnt1) {
+            this.imgEnt1 = imgEnt1;
+        }
+
+        public String getFecha_ent1() {
+            return fecha_ent1;
+        }
+
+        public void setFecha_ent1(String fecha_ent1) {
+            this.fecha_ent1 = fecha_ent1;
+        }
+
+        public String getImgEnt2() {
+            return imgEnt2;
+        }
+
+        public void setImgEnt2(String imgEnt2) {
+            this.imgEnt2 = imgEnt2;
+        }
+
+        public String getFecha_ent2() {
+            return fecha_ent2;
+        }
+
+        public void setFecha_ent2(String fecha_ent2) {
+            this.fecha_ent2 = fecha_ent2;
+        }
+
+        public String getImgEnt3() {
+            return imgEnt3;
+        }
+
+        public void setImgEnt3(String imgEnt3) {
+            this.imgEnt3 = imgEnt3;
+        }
+
+        public String getFecha_ent3() {
+            return fecha_ent3;
+        }
+
+        public void setFecha_ent3(String fecha_ent3) {
+            this.fecha_ent3 = fecha_ent3;
+        }
+
+        public String getImgAgua() {
+            return imgAgua;
+        }
+
+        public void setImgAgua(String imgAgua) {
+            this.imgAgua = imgAgua;
+        }
+
+        public String getImgLuz() {
+            return imgLuz;
+        }
+
+        public void setImgLuz(String imgLuz) {
+            this.imgLuz = imgLuz;
+        }
     }
 
     public class DetallesValidacion {

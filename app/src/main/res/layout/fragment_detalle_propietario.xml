@@ -164,6 +164,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/view4"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
@@ -305,6 +306,70 @@
                                         android:textSize="18sp"
                                         app:typeface="robotoBold"
                                         tools:text="C" />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/view4">
+
+                                <LinearLayout
+                                    android:layout_marginTop="14dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="4dp"
+                                    android:orientation="vertical">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold"
+                                        android:text="@string/esquinaDesc" />
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/esquinaDetalle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/grisetxt"
+                                        android:textSize="18sp"
+                                        app:typeface="robotoBold"
+                                        tools:text="-" />
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_marginTop="14dp"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="50dp"
+                                    android:orientation="vertical">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold"
+                                        android:text="@string/drenajeDesc" />
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/drenajeDetalle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/grisetxt"
+                                        android:textSize="18sp"
+                                        app:typeface="robotoBold"
+                                        tools:text="-" />
 
 
                                 </LinearLayout>

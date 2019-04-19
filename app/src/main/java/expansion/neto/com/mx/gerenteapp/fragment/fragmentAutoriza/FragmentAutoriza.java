@@ -959,6 +959,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                 int valorFrente = 0;
                                 int valorFondo = 0;
                                 int valorEsquina = 0;
+                                int valorDrenaje = 0;
 
                                 for (int i = 0; i < superficie.getNiveles().size(); i++) {
                                     if (superficie.getNiveles().get(i).getNivel() == 4 ||
@@ -975,6 +976,10 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                     if (superficie.getNiveles().get(i).getNivel() == 8) {
                                         valorEsquina = i;
                                     }
+
+                                    if (superficie.getNiveles().get(i).getNivel() == 9) {
+                                        valorDrenaje = i;
+                                    }
                                 }
 
                                 Double esquina = superficie.getNiveles().get(valorEsquina).getValorreal();
@@ -983,6 +988,13 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                     binding.escogeEsquina.setText(R.string.esquina);
                                 } else {
                                     binding.escogeEsquina.setText(R.string.no_esquina);
+                                }
+
+                                Double drenaje = superficie.getNiveles().get(valorDrenaje).getValorreal();
+                                if (drenaje == 1) {
+                                    binding.escogeDrenaje.setText(R.string.drenaje);
+                                } else {
+                                    binding.escogeDrenaje.setText(R.string.no_drenaje);
                                 }
 
                                 String superficieS = String.valueOf(superficie.getNiveles().get(valorFrente).getValorreal());
@@ -1007,7 +1019,12 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                                 superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
+                                                superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
+                                                superficie.getNiveles().get(finalValorFoto1).getImgLuz()
                                         ));
                                         slider.setSelectedSlide(0);
                                     }
@@ -3485,9 +3502,9 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
 
         int atrasa = preferences.getInt("atrasa", 0);
         if (atrasa == 1) {
-            binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
+            //binding.view3.setBackgroundColor(Color.parseColor("#E4B163"));
         } else {
-            binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
+            //binding.view3.setBackgroundColor(Color.parseColor("#D1D5DE"));
         }
 
         ProviderConsultaFinaliza.getInstance(getContext()).obtenerPuntos(mdid, usuario, new ProviderConsultaFinaliza.ConsultaPuntos() {
