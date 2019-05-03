@@ -167,7 +167,7 @@ public class FragmentDashboard extends Fragment {
                     editorDashboard.putString("mesConsulta", "0");
                     editorDashboard.putString("semanaConsulta", String.valueOf(semanaResta));
                     editorDashboard.apply();
-                    binding.setSemana("Semana "+semanaResta);
+                    //binding.setSemana("Semana "+semanaResta);
                 }else{
                     binding.izqSemana.setEnabled(false);
                 }
@@ -195,7 +195,7 @@ public class FragmentDashboard extends Fragment {
                     editorDashboard.putString("mesConsulta", "0");
                     editorDashboard.putString("semanaConsulta", String.valueOf(semanaRestaInt));
                     editorDashboard.apply();
-                    binding.setSemana("Semana "+String.valueOf(semanaRestaInt));
+                    //binding.setSemana("Semana "+String.valueOf(semanaRestaInt));
                     binding.derSemana.setAlpha(0.0f);
                     binding.derSemana.setEnabled(false);
 
@@ -206,7 +206,7 @@ public class FragmentDashboard extends Fragment {
                     editorDashboard.putString("mesConsulta", "0");
                     editorDashboard.putString("semanaConsulta", String.valueOf(semanaRestaInt));
                     editorDashboard.apply();
-                    binding.setSemana("Semana "+String.valueOf(semanaRestaInt));
+                    //binding.setSemana("Semana "+String.valueOf(semanaRestaInt));
                     binding.derSemana.setAlpha(1.0f);
                 }
             }
@@ -223,8 +223,8 @@ public class FragmentDashboard extends Fragment {
                 mesRestaInt--;
                 mesResta = String.valueOf(mesRestaInt);
                 getDatos(mesResta, "0");
-                String nombreMes = getMes(mesRestaInt);
-                binding.setMes(nombreMes);
+                //String nombreMes = getMes(mesRestaInt);
+                //binding.setMes(nombreMes);
                 editorDashboard.putString("mesConsulta", String.valueOf(mesResta));
                 editorDashboard.putString("semanaConsulta", "0");
                 editorDashboard.apply();
@@ -389,7 +389,7 @@ public class FragmentDashboard extends Fragment {
         int semana = Integer.valueOf(semanas);
         int mesSolicitud = Integer.valueOf(buscaMes);
         if(mesSolicitud > 0 ){
-            buscaMes = String.valueOf(--mesSolicitud);
+            //buscaMes = String.valueOf(--mesSolicitud);
             editorDashboard.putString("mesDasbord", String.valueOf(mesSolicitud));
         }else if(semana > totalWeeks){
             semanas = "1";
@@ -520,6 +520,12 @@ public class FragmentDashboard extends Fragment {
                         perfil.setRealSemana(realSem);
                         binding.setPerfil(perfil);
                         binding.nombreJefe.setVisibility(View.VISIBLE);
+
+                        SharedPreferences preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+                        final SharedPreferences.Editor editorExpansion = preferences.edit();
+                        editorExpansion.putString("mesDasbord", String.valueOf(dashboard.getProductividad().get(0).getMes()));
+                        editorExpansion.putString("mesTaco", String.valueOf(dashboard.getProductividad().get(0).getMes()));
+                        editorExpansion.apply();
                     }else{
                         binding.nombreJefe.setVisibility(View.GONE);
 
