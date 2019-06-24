@@ -26,6 +26,7 @@ import android.support.v7.widget.RecyclerView;
 import android.telephony.PhoneNumberUtils;
 import android.text.Html;
 import android.text.InputFilter;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -79,6 +80,8 @@ import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSitioBinding
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaSuperficieBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentAutorizaZonificacionBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.FechaApertura.FechaAperturaListener;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.slider.OnSlideChangeListener2;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentAutoriza.slider.Slider;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AnalistaCalidadOperativa;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
@@ -121,10 +124,13 @@ import expansion.neto.com.mx.gerenteapp.utils.ServicioGPS;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 import expansion.neto.com.mx.gerenteapp.utils.desing.MainSliderAdapter;
 import expansion.neto.com.mx.gerenteapp.utils.desing.PicassoImageLoadingService;
-import ss.com.bannerslider.Slider;
+//import ss.com.bannerslider.Slider;
+import ss.com.bannerslider.event.OnSlideClickListener;
 
 
 public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal.Listener {
+
+    public static final String TAG = "FragmentAutoriza";
 
     private View view;
     private static final String ARG_POSITION = "position";
@@ -474,7 +480,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                             }
                         }
                     });
-                }else if (estatus == 16) {
+                } else if (estatus == 16) {
                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                     String fechaAperturaText = preferences.getString("fechaApertura" + mdId, "");
                     if (fechaAperturaText.equals("")) {
@@ -510,14 +516,15 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                         @Override
                                         public void resolve(Codigos codigo) {
                                             if (codigo.getCodigo() == 200) {
-                                                Toast.makeText(getContext(), "Fecha guadada correctamente", Toast.LENGTH_SHORT).show();
-                                                final SharedPreferences.Editor editor =preferences.edit();
-                                                editor.putString(mdId+"fechaApertura", "true");
+                                                Toast.makeText(getContext(), "Fecha guardada correctamente", Toast.LENGTH_SHORT).show();
+                                                final SharedPreferences.Editor editor = preferences.edit();
+                                                editor.putString(mdId + "fechaApertura", "true");
                                                 editor.apply();
-                                            }else {
+                                            } else {
                                                 Toast.makeText(getContext(), codigo.getMensaje(), Toast.LENGTH_SHORT).show();
                                             }
                                         }
+
                                         @Override
                                         public void reject(Exception e) {
                                             Toast.makeText(getContext(), "Ocurrio un problema al guardar la fecha", Toast.LENGTH_SHORT).show();
@@ -1012,6 +1019,42 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                 slider = binding.map;
                                 final int finalValorFoto1 = valorFoto;
 
+                                final String[] fotos = {"Frente", "Lateral 1", "Lateral 2", "Entorno 1", "Entorno 2", "Entorno 3", "Predial", "Agua", "Luz"};
+                                binding.nombrefoto.setText(fotos[0]);
+                                slider.onSlideChangeListener2(new OnSlideChangeListener2(){
+                                    @Override
+                                    public void setOnSlideChange(int position) {
+                                        if(position-1 < fotos.length && position >= 1)
+                                        binding.nombrefoto.setText(fotos[position-1]);
+                                    }
+                                });
+
+                                slider.setAdapter(new MainSliderAdapter(
+                                        superficie.getNiveles().get(finalValorFoto1).getImgFrenteId(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgLateral1Id(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgLateral2Id(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
+                                        superficie.getNiveles().get(finalValorFoto1).getImgLuz()
+                                ));
+                                slider.setSelectedSlide(0);
+
+
+
+                                /*slider.setOnSlideClickListener(new OnSlideClickListener() {
+                                    @Override
+                                    public void onSlideClick(int position) {
+                                        binding.nombrefoto.setText(fotos[position]);
+                                        Log.d(TAG, "onImageSlideChange() called with: position = [adolfo]");
+                                    }
+                                });*/
+
+
+
+/*
                                 slider.postDelayed(new Runnable() {
                                     @Override
                                     public void run() {
@@ -1027,8 +1070,27 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                                 superficie.getNiveles().get(finalValorFoto1).getImgLuz()
                                         ));
                                         slider.setSelectedSlide(0);
+
+                                        final String[] fotos = {"Frente", "Lateral 1", "Lateral 2", "Entorno 1", "Entorno 2", "Entorno 3", "Predial", "Agua", "Luz"};
+                                        slider.setOnSlideClickListener(new OnSlideClickListener() {
+                                            @Override
+                                            public void onSlideClick(int position) {
+                                                binding.nombrefoto.setText(fotos[position]);
+                                                Log.d(TAG, "onImageSlideChange() called with: position = [adolfo]");
+                                            }
+                                        });
                                     }
                                 }, 1500);
+
+
+    /*                             binding.nombrefoto.setText(fotos[slider.selectedSlidePosition]);
+
+                             slider.setOnSlideClickListener(new OnSlideClickListener() {
+                                 @Override
+                                 public void onSlideClick(int position) {
+
+                                 }
+                             });*/
 
                                 if (superficie.getValidado() == 1) {
                                     if (superficie.getDetallesValidacion() != null && superficie.getDetallesValidacion().size() > 0 && superficie.getDetallesValidacion().get(0).getMOTIVORECHAZOID() == 0) {
@@ -2418,7 +2480,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
 
             creaTablaResumenAutorizacion(binding);
 
-            if(estatus == 16){
+            if (estatus == 16) {
                 binding.can.setVisibility(View.GONE);
             }
 
@@ -2482,7 +2544,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                         ProviderAnalistaCalidadOperativa.getInstance(getContext()).AnalistaCalidadOperativa(usuarioId, mdId, "7", "0", motivoIdS, comentarios, "1", puestoId, areaId, new ProviderAnalistaCalidadOperativa.AnalistaCalidadOperativaInterface() {
                             @Override
                             public void resolve(AnalistaCalidadOperativa analistaCalidadOperativa) {
-                                if(analistaCalidadOperativa.getCodigo()==200){
+                                if (analistaCalidadOperativa.getCodigo() == 200) {
                                     preferences = getContext().getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
                                     SharedPreferences.Editor editorFinalizar = preferences.edit();
                                     editorFinalizar.putString("tituloFinalizar", "MD Rechazada");
@@ -2492,9 +2554,9 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                     binding.autorizaBoton.setImageDrawable(resource.getDrawable(R.drawable.aprov_blanco));
                                     FragmentDialogFinalizar a = new FragmentDialogFinalizar();
                                     a.show(getChildFragmentManager(), "child");
-                                }else {
+                                } else {
                                     binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
-                                    Toast.makeText(getContext(), "Error al autorizar el módulo: " + analistaCalidadOperativa.getMensaje(),  Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(), "Error al autorizar el módulo: " + analistaCalidadOperativa.getMensaje(), Toast.LENGTH_LONG).show();
                                 }
                             }
 
@@ -2522,9 +2584,10 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                             a.show(getChildFragmentManager(), "child");
                                         } else {
                                             binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
-                                            Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(),  Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getContext(), "Error al autorizar el módulo: " + autorizaResponse.getMensaje(), Toast.LENGTH_LONG).show();
                                         }
                                     }
+
                                     @Override
                                     public void reject(Exception e) {
                                         binding.rechazaBoton.setImageDrawable(resource.getDrawable(R.drawable.recha_blanco));
@@ -2537,7 +2600,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
         } else {
             int estatus = preferences.getInt("estatusId", 0);
             if (estatus == 16) {
-                String fechaAperturaTextGuardada = preferences.getString(mdId+"fechaApertura","");
+                String fechaAperturaTextGuardada = preferences.getString(mdId + "fechaApertura", "");
 
                 if (fechaAperturaTextGuardada.equals("")) {
                     Toast.makeText(getContext(), "Por favor pon una fecha de apertura en '1.DATOS DEL SITIO'", Toast.LENGTH_LONG).show();

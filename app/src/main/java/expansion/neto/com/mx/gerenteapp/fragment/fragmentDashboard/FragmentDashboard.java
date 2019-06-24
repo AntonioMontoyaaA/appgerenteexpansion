@@ -497,7 +497,8 @@ public class FragmentDashboard extends Fragment {
                         Calendar fecha = Calendar.getInstance();
                         final int meses = fecha.get(Calendar.MONTH) + 1;
 
-                        if(meses==mesRestaInt){
+                        final int anioactual = fecha.get(Calendar.YEAR) ;
+                        if(meses==mesRestaInt && anio == anioactual){
                             binding.derMes.setEnabled(false);
                             binding.derMes.setAlpha(0.0f);
                         }else{
