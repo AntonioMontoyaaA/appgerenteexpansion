@@ -22,7 +22,7 @@ public class RestUrl {
     public static String dominio = "vokseqaapi"; // QA
     //public static String dominio = "vokseapi"; // produccion
 
-    public static String VERSION_APP = "2.0.0";
+    public static String VERSION_APP = "2.0.1";
 
     public static String NUM_TELEFONO = "0";
 

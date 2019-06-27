@@ -67,7 +67,7 @@
                     android:layout_marginTop="2dp"
                     android:padding="18dp"
                     android:layout_width="match_parent"
-                    android:layout_height="604dp"
+                    android:layout_height="674dp"
                     android:orientation="horizontal">
 
                     <android.support.constraint.ConstraintLayout
@@ -313,6 +313,7 @@
                             </LinearLayout>
 
                             <LinearLayout
+                                android:id="@+id/view5"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:orientation="horizontal"
@@ -347,37 +348,143 @@
 
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:layout_marginTop="14dp"
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/view6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:orientation="vertical"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintHorizontal_bias="0.0"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toBottomOf="@+id/view5">
+
+                                <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_marginStart="50dp"
-                                    android:orientation="vertical">
+                                    android:layout_marginLeft="10dp"
+                                    android:layout_marginTop="5dp"
+                                    android:text="CHECKLIST DEL SITIO"
+                                    android:textColor="@color/azul"
+                                    android:textSize="14sp"
+                                    app:typeface="robotoBold" />
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
 
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/aguaCheck"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
                                         android:textColor="@color/azul"
                                         android:textSize="14sp"
-                                        app:typeface="robotoBold"
-                                        android:text="@string/drenajeDesc" />
-
+                                        app:typeface="robotoBold" />
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
-                                        android:id="@+id/drenajeDetalle"
+                                        android:id="@+id/luzCheck"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/grisetxt"
-                                        android:textSize="18sp"
-                                        app:typeface="robotoBold"
-                                        tools:text="-" />
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="10dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+                                </LinearLayout>
 
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/drenajeCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/usoSueloCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
 
                                 </LinearLayout>
 
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/predialCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/escriturasCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/inahCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+                                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                                        android:id="@+id/conflictoCheck"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="10dp"
+                                        android:layout_marginTop="5dp"
+                                        android:layout_weight="1"
+                                        android:text="---"
+                                        android:textColor="@color/azul"
+                                        android:textSize="14sp"
+                                        app:typeface="robotoBold" />
+
+                                </LinearLayout>
                             </LinearLayout>
-
-
-
                         </LinearLayout>
 
                     </android.support.constraint.ConstraintLayout>

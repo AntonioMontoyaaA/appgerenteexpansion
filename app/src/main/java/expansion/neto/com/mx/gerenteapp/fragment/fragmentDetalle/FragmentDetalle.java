@@ -141,6 +141,15 @@ public class FragmentDetalle extends Fragment implements
     AdapterListaGeneradoresMercadoPublico adapterListaGeneradoresMercadoPublico;
     AdapterListaGeneradoresTianguis adapterListaGeneradoresTianguis;
 
+    private final int AGUA_ID = 6;
+    private final int LUZ_ID = 7;
+    private final int DRENAJE_ID = 8;
+    private final int USO_SUELO_ID = 9;
+    private final int PREDIAL_CORRIENTE_ID = 10;
+    private final int ESCRITURAS_PUBLICAS_ID = 11;
+    private final int INAH_ID = 12;
+    private final int CONFLICTOS_ID = 13;
+
     public static void loadingProgress(ProgressDialog progressDialog, int i){
         if(i == 0){
             progressDialog.setTitle("Enviando...");
@@ -628,12 +637,12 @@ public class FragmentDetalle extends Fragment implements
                                     bindingSuperficie.esquinaDetalle.setText("NO");
                                 }
 
-                                Double drenaje = superficie.getNiveles().get(valorDrenaje).getValorreal();
+                                /*Double drenaje = superficie.getNiveles().get(valorDrenaje).getValorreal();
                                 if(drenaje==1) {
                                     bindingSuperficie.drenajeDetalle.setText("SI");
                                 }else {
                                     bindingSuperficie.drenajeDetalle.setText("NO");
-                                }
+                                }*/
 
                                 String superficieS = String.valueOf(superficie.getNiveles().get(valorFrente).getValorreal());
                                 superficieS = superficieS.replace(" ", "");
@@ -725,6 +734,69 @@ public class FragmentDetalle extends Fragment implements
                                                                         String condicion = datosSitio.getConstruccion().get(i).getNombrenivel();
                                                                         bindingSuperficie.setCondiciones(condicion+"");
 
+                                                                    }
+
+                                                                    switch(datosSitio.getConstruccion().get(i).getNivelid()) {
+                                                                        case AGUA_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.aguaCheck.setText("\u2713" + " AGUA");
+                                                                            } else {
+                                                                                bindingSuperficie.aguaCheck.setText("\u2717 " + " AGUA");
+                                                                            }
+                                                                            break;
+                                                                        case LUZ_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.luzCheck.setText("\u2713" + " LUZ");
+                                                                            } else {
+                                                                                bindingSuperficie.luzCheck.setText("\u2717 " + " LUZ");
+                                                                            }
+                                                                            break;
+                                                                        case DRENAJE_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.drenajeCheck.setText("\u2713" + " DRENAJE");
+                                                                            } else {
+                                                                                bindingSuperficie.drenajeCheck.setText("\u2717 " + " DRENAJE");
+                                                                            }
+                                                                            break;
+                                                                        case USO_SUELO_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.usoSueloCheck.setText("\u2713" + " USO SUELO");
+                                                                            } else {
+                                                                                bindingSuperficie.usoSueloCheck.setText("\u2717 " + " USO SUELO");
+                                                                            }
+                                                                            break;
+                                                                        case PREDIAL_CORRIENTE_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.predialCheck.setText("\u2713" + " PREDIAL");
+                                                                            } else {
+                                                                                bindingSuperficie.predialCheck.setText("\u2717 " + " PREDIAL");
+                                                                            }
+                                                                            break;
+                                                                        case ESCRITURAS_PUBLICAS_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.escriturasCheck.setText("\u2713" + " ESCRITURAS");
+                                                                            } else {
+                                                                                bindingSuperficie.escriturasCheck.setText("\u2717 " + " ESCRITURAS");
+                                                                            }
+                                                                            break;
+                                                                        case INAH_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                bindingSuperficie.inahCheck.setText("\u2713" + " INAH");
+                                                                            } else {
+                                                                                bindingSuperficie.inahCheck.setText("\u2717 " + " INAH");
+                                                                            }
+                                                                            break;
+                                                                        case CONFLICTOS_ID:
+                                                                            if(datosSitio.getConstruccion().get(i).getValor().equals("1")) {
+                                                                                String conflicto = "";
+                                                                                if(datosSitio.getConstruccion().get(i).getDetalles() != null && datosSitio.getConstruccion().get(i).getDetalles().size() > 0) {
+                                                                                    conflicto = datosSitio.getConstruccion().get(i).getDetalles().get(0).getComentario();
+                                                                                }
+                                                                                bindingSuperficie.conflictoCheck.setText("\u2713" + " CONFLICTOS (" + conflicto + ")");
+                                                                            } else {
+                                                                                bindingSuperficie.conflictoCheck.setText("\u2717 " + " CONFLICTOS");
+                                                                            }
+                                                                            break;
                                                                     }
 
                                                                 }

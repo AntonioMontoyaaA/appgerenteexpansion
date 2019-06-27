@@ -93,6 +93,9 @@ public class DatosConstruccions {
         @SerializedName("detalleid")
         @Expose
         private Integer detalleid;
+        @SerializedName("comentario")
+        @Expose
+        private String comentario;
 
         public String getNombredetalle() {
             return nombredetalle;
@@ -110,6 +113,13 @@ public class DatosConstruccions {
             this.detalleid = detalleid;
         }
 
+        public String getComentario() {
+            return comentario;
+        }
+
+        public void setComentario(String comentario) {
+            this.comentario = comentario;
+        }
     }
 
     public class Construccion {
@@ -138,6 +148,9 @@ public class DatosConstruccions {
         @SerializedName("puntuacion")
         @Expose
         private String puntuacion;
+        @SerializedName("valor")
+        @Expose
+        private String valor;
 
         public String getNombrenivel() {
             return nombrenivel;
@@ -201,6 +214,14 @@ public class DatosConstruccions {
 
         public void setPuntuacion(String puntuacion) {
             this.puntuacion = puntuacion;
+        }
+
+        public String getValor() {
+            return valor;
+        }
+
+        public void setValor(String valor) {
+            this.valor = valor;
         }
     }
 
