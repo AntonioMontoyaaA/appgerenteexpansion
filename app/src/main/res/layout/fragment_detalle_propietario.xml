@@ -322,7 +322,7 @@
                                 app:layout_constraintTop_toBottomOf="@+id/view4">
 
                                 <LinearLayout
-                                    android:layout_marginTop="14dp"
+                                    android:layout_marginTop="7dp"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="4dp"
@@ -379,22 +379,22 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="10dp"
-                                        android:layout_marginTop="10dp"
+                                        android:layout_marginTop="8dp"
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                         android:id="@+id/luzCheck"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginLeft="10dp"
-                                        android:layout_marginTop="10dp"
+                                        android:layout_marginTop="8dp"
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
                                 </LinearLayout>
 
@@ -411,7 +411,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                         android:id="@+id/usoSueloCheck"
@@ -422,7 +422,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
 
                                 </LinearLayout>
@@ -440,7 +440,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                         android:id="@+id/escriturasCheck"
@@ -451,7 +451,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
 
                                 </LinearLayout>
@@ -469,7 +469,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
                                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                                         android:id="@+id/conflictoCheck"
@@ -480,7 +480,7 @@
                                         android:layout_weight="1"
                                         android:text="---"
                                         android:textColor="@color/azul"
-                                        android:textSize="14sp"
+                                        android:textSize="12sp"
                                         app:typeface="robotoBold" />
 
                                 </LinearLayout>

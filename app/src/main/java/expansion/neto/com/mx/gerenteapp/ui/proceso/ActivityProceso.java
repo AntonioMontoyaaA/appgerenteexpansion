@@ -15,6 +15,7 @@ import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityProcesoBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentChat;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogMdProceso;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentTiempos;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.chat.FragmentGrupos;
 
@@ -38,7 +39,7 @@ public class ActivityProceso extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 FragmentManager fm = getSupportFragmentManager();
-                FragmentDialogCancelarMdProceso dFragment = new FragmentDialogCancelarMdProceso();
+                FragmentDialogMdProceso dFragment = new FragmentDialogMdProceso();
                 dFragment.show(fm, "Dialog Fragment");
             }
         });

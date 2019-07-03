@@ -1028,7 +1028,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                 slider = binding.map;
                                 final int finalValorFoto1 = valorFoto;
 
-                                final String[] fotos = {"Frente", "Lateral 1", "Lateral 2", "Entorno 1", "Entorno 2", "Entorno 3", "Predial", "Agua", "Luz"};
+                                final String[] fotos = {"Frente", "Lateral 1", "Lateral 2", "Entorno 1", "Entorno 2", "Entorno 3", "Predial"};
                                 binding.nombrefoto.setText(fotos[0]);
                                 slider.onSlideChangeListener2(new OnSlideChangeListener2(){
                                     @Override
@@ -1045,9 +1045,7 @@ public class FragmentAutoriza extends Fragment implements AutorizaHolderPeatonal
                                         superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
                                         superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
                                         superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
-                                        superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
-                                        superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
-                                        superficie.getNiveles().get(finalValorFoto1).getImgLuz()
+                                        superficie.getNiveles().get(finalValorFoto1).getImgPredial()
                                 ));
                                 slider.setSelectedSlide(0);
 

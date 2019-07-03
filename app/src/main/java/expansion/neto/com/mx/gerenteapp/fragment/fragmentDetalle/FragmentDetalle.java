@@ -71,6 +71,7 @@ import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetalleGenBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetallePropietarioBinding;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentDetalleSitioBinding;
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogCancelarMdProceso;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentProceso.FragmentDialogMdProceso;
 import expansion.neto.com.mx.gerenteapp.modelView.Ubicacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosConstruccions;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.DatosPuntuacion;
@@ -463,7 +464,7 @@ public class FragmentDetalle extends Fragment implements
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
                     }else{
-                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                         a.show(getChildFragmentManager(),"child");
                     }
 
@@ -557,7 +558,7 @@ public class FragmentDetalle extends Fragment implements
                                     Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                                     startActivity(main);
                                 }else{
-                                    FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                                    FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                                     a.show(getChildFragmentManager(),"child");
                                 }
                             }
@@ -669,9 +670,7 @@ public class FragmentDetalle extends Fragment implements
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgLuz()
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
                                         ));
                                         slider.setSelectedSlide(0);
                                     }
@@ -837,7 +836,7 @@ public class FragmentDetalle extends Fragment implements
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
                     }else{
-                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                         a.show(getChildFragmentManager(),"child");
                     }
                 }
@@ -1122,7 +1121,7 @@ public class FragmentDetalle extends Fragment implements
                             Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                             startActivity(main);
                         }else{
-                            FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                            FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                             a.show(getChildFragmentManager(),"child");
                         }
                     }
@@ -1261,9 +1260,7 @@ public class FragmentDetalle extends Fragment implements
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgLuz()
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
                                         ));
                                         slider.setSelectedSlide(0);
                                     }
@@ -1362,7 +1359,7 @@ public class FragmentDetalle extends Fragment implements
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
                     }else{
-                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                         a.show(getChildFragmentManager(),"child");
                     }
                 }
@@ -1441,9 +1438,7 @@ public class FragmentDetalle extends Fragment implements
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt1(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt2(),
                                                 superficie.getNiveles().get(finalValorFoto1).getImgEnt3(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgAgua(),
-                                                superficie.getNiveles().get(finalValorFoto1).getImgLuz()
+                                                superficie.getNiveles().get(finalValorFoto1).getImgPredial()
                                         ));
                                         slider.setSelectedSlide(0);
                                     }
@@ -1466,7 +1461,7 @@ public class FragmentDetalle extends Fragment implements
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
                     }else{
-                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                         a.show(getChildFragmentManager(),"child");
                     }
                 }
@@ -1487,7 +1482,7 @@ public class FragmentDetalle extends Fragment implements
                         Intent main = new Intent(getContext(), ActivityNotificaciones.class);
                         startActivity(main);
                     }else{
-                        FragmentDialogCancelarMdProceso a = new FragmentDialogCancelarMdProceso();
+                        FragmentDialogMdProceso a = new FragmentDialogMdProceso();
                         a.show(getChildFragmentManager(),"child");
                     }
 

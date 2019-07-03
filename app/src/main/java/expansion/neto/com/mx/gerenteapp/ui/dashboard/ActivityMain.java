@@ -195,31 +195,31 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.txt_autorizar:
                 mPrevSelectedId = itemId;
-                if(permisoAutorizar){
+                //if(permisoAutorizar){
                     main = new Intent(this, FragmentInicioAutoriza.class);
                     startActivity(main);
-                }
+                //}
                 break;
             case R.id.txt_proceso:
                 mPrevSelectedId = itemId;
-                if(permisoProceso){
+                //if(permisoProceso){
                     main = new Intent(this, FragmentInicioProceso.class);
                     startActivity(main);
-                }
+                //}
                 break;
             case R.id.txt_rechazadas:
                 mPrevSelectedId = itemId;
-                if(permisoRechazadas){
+                //if(permisoRechazadas){
                     main = new Intent(this, FragmentInicioRechazadas.class);
                     startActivity(main);
-                }
+                //}
                 break;
             case R.id.txt_agenda:
                 mPrevSelectedId = itemId;
-                if(permisoAgenda){
+                //if(permisoAgenda){
                     main = new Intent(this, FragmentInicioAgenda.class);
                     startActivity(main);
-                }
+                //}
                 break;
 //            case R.id.txt_cambiar:
 //                mPrevSelectedId = itemId;

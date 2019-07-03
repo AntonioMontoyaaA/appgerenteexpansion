@@ -19,9 +19,9 @@
             android:id="@+id/txt_rechazadas"
             android:title="@string/rechazadas" />
 
-        <item
+        <!--<item
             android:id="@+id/txt_colaboradores"
-            android:title="@string/colaboradores" />
+            android:title="@string/colaboradores" />-->
 
         <item
             android:id="@+id/txt_agenda"

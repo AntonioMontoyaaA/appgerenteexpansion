@@ -15,6 +15,7 @@ import android.view.Window;
 
 import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.databinding.FragmentCancelarMdProceso2Binding;
+import expansion.neto.com.mx.gerenteapp.fragment.fragmentRechazadas.FragmentInicioRechazadas;
 
 /**
  * Created by Kevin on 26/6/2017.
@@ -44,7 +45,7 @@ public class FragmentDialogCancelarMdProceso extends DialogFragment {
             public void onClick(View view) {
 
 
-                Intent main = new Intent(getContext(), FragmentInicioProceso.class);
+                Intent main = new Intent(getContext(), FragmentInicioRechazadas.class);
                 getContext().startActivity(main);
                 cleanShared(getContext());
 
