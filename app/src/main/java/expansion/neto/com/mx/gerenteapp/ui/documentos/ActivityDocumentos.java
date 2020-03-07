@@ -25,9 +25,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,8 +35,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -50,6 +48,7 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import expansion.neto.com.mx.gerenteapp.R;
@@ -58,7 +57,7 @@ import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialo
 import expansion.neto.com.mx.gerenteapp.fragment.fragmentDashboard.FragmentDialogTerminaDocumentacion;
 import expansion.neto.com.mx.gerenteapp.modelView.autorizaModel.AutorizaResponse;
 import expansion.neto.com.mx.gerenteapp.modelView.crearModel.Codigos;
-import expansion.neto.com.mx.gerenteapp.modelView.documentosModel.Doctos;
+import expansion.neto.com.mx.gerenteapp.modelView.documentosModel.Docto;
 import expansion.neto.com.mx.gerenteapp.modelView.documentosModel.Documentos;
 import expansion.neto.com.mx.gerenteapp.provider.autorizaProvider.ProviderAutorizaFinal;
 import expansion.neto.com.mx.gerenteapp.provider.documentosProvider.ProviderDocumentos;
@@ -71,6 +70,8 @@ public class ActivityDocumentos extends AppCompatActivity {
     private ActivityDocumentosBinding binding;
     String usuario;
     String md;
+
+    int doctoSeleccionadoId = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,43 +107,32 @@ public class ActivityDocumentos extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                permiso[0] = getObligatorios();
+                String json = new Gson().toJson(listaDocumentos);
+                loadingProgress(progressDialog, 0);
 
-                if (permiso[0]) {
-
-                    String json = new Gson().toJson(documentacion);
-                    json = "[" + json + "]";
-                    loadingProgress(progressDialog, 0);
-
-                    ProviderGuardarDocumentos.getInstance(ActivityDocumentos.this).guardarDocumentos(
-                            usuario, md, json, getFechaHora(), new ProviderGuardarDocumentos.InterfaceGuardarDocumentos() {
-                                @Override
-                                public void resolve(Codigos codigo) {
-                                    if (codigo != null) {
-                                        loadingProgress(progressDialog, 1);
-                                        Toast.makeText(getApplicationContext(), codigo.getMensaje() + " archivos guardados correctamente",
-                                                Toast.LENGTH_LONG).show();
-                                    } else {
-                                        loadingProgress(progressDialog, 1);
-                                        Toast.makeText(getApplicationContext(), getString(R.string.faltan),
-                                                Toast.LENGTH_LONG).show();
-                                    }
-                                }
-
-                                @Override
-                                public void reject(Exception e) {
+                ProviderGuardarDocumentos.getInstance(ActivityDocumentos.this).guardarDocumentos(
+                        usuario, md, json, getFechaHora(), new ProviderGuardarDocumentos.InterfaceGuardarDocumentos() {
+                            @Override
+                            public void resolve(Codigos codigo) {
+                                if (codigo != null) {
+                                    loadingProgress(progressDialog, 1);
+                                    Toast.makeText(getApplicationContext(), codigo.getMensaje() + " archivos guardados correctamente",
+                                            Toast.LENGTH_LONG).show();
+                                } else {
                                     loadingProgress(progressDialog, 1);
                                     Toast.makeText(getApplicationContext(), getString(R.string.faltan),
                                             Toast.LENGTH_LONG).show();
                                 }
                             }
-                    );
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.faltan,
-                            Toast.LENGTH_LONG).show();
-                    binding.btnFinalizar.setEnabled(false);
-                    binding.btnFinalizar.setAlpha(.4f);
-                }
+
+                            @Override
+                            public void reject(Exception e) {
+                                loadingProgress(progressDialog, 1);
+                                Toast.makeText(getApplicationContext(), getString(R.string.faltan),
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+                );
             }
         });
 
@@ -155,8 +145,8 @@ public class ActivityDocumentos extends AppCompatActivity {
                 final Boolean[] permiso = {false};
                 permiso[0] = getObligatorios();
                 if (permiso[0]) {
-                    String json = new Gson().toJson(documentacion);
-                    json = "[" + json + "]";
+
+                    String json = new Gson().toJson(listaDocumentos);
                     loadingProgressDocumentos(progressDialog, 0, "");
 
                     ProviderGuardarDocumentos.getInstance(ActivityDocumentos.this).guardarDocumentos(
@@ -198,23 +188,13 @@ public class ActivityDocumentos extends AppCompatActivity {
     final Boolean[] permisos = {false};
 
     public Boolean getObligatorios() {
-        for (int i = 0; i < docto.getDatos().size(); i++) {
-            if (docto.getDatos().get(i).getOpcional().equals("0")) {
 
-                if (!documentacion.getFcurl1().isEmpty() &&
-                        !documentacion.getFcurl2().isEmpty() &&
-                        !documentacion.getFcurl3().isEmpty() &&
-                        !documentacion.getFcurl4().isEmpty() &&
-                        !documentacion.getFcurl7().isEmpty() &&
-                        !documentacion.getFcurl8().isEmpty() &&
-                        !documentacion.getFcurl9().isEmpty()) {
-                    binding.btnFinalizar.setEnabled(true);
-                    binding.btnFinalizar.setAlpha(1);
-                    return true;
-                }
+        for(int i = 0; i < listaDocumentos.size(); i++) {
+            if(listaDocumentos.get(i).getOpcional() == 0  && listaDocumentos.get(i).getDocumentos().size() == 0) {
+                return false;
             }
         }
-        return false;
+        return true;
     }
 
 
@@ -225,35 +205,7 @@ public class ActivityDocumentos extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_documentos);
     }
 
-    Doctos documentacion;
-
-    ArrayList<Doctos.Fcurl1> fcurl1s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl2> fcurl2s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl3> fcurl3s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl4> fcurl4s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl5> fcurl5s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl6> fcurl6s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl7> fcurl7s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl8> fcurl8s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl9> fcurl9s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl10> fcurl10s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl11> fcurl11s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl12> fcurl12s = new ArrayList<>();
-    ArrayList<Doctos.Fcurl13> fcurl13s = new ArrayList<>();
-
-    Doctos.Fcurl1 fcurl1;
-    Doctos.Fcurl2 fcurl2;
-    Doctos.Fcurl3 fcurl3;
-    Doctos.Fcurl4 fcurl4;
-    Doctos.Fcurl5 fcurl5;
-    Doctos.Fcurl6 fcurl6;
-    Doctos.Fcurl7 fcurl7;
-    Doctos.Fcurl8 fcurl8;
-    Doctos.Fcurl9 fcurl9;
-    Doctos.Fcurl10 fcurl10;
-    Doctos.Fcurl11 fcurl11;
-    Doctos.Fcurl12 fcurl12;
-    Doctos.Fcurl13 fcurl13;
+    List<Docto> listaDocumentos = new ArrayList<Docto>();
     Documentos docto;
 
 
@@ -291,7 +243,6 @@ public class ActivityDocumentos extends AppCompatActivity {
                     if (documentos.getCodigo() == 200) {
                         loadingProgress(progressDialog, 1);
                         docto = documentos;
-                        documentacion = new Doctos();
 
                         final Resources resource = ActivityDocumentos.this.getResources();
                         TableLayout plomoTable = (TableLayout) findViewById(R.id.plomosTable);
@@ -326,478 +277,23 @@ public class ActivityDocumentos extends AppCompatActivity {
                             cantidad.setLayoutParams(new TableRow.LayoutParams(6,
                                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
 
-
-                            switch (documentos.getDatos().get(i).getDocumentoId()) {
-                                case "1":
-
-                                    fcurl1s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl1 = new Doctos.Fcurl1(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl1s.add(fcurl1);
-                                                documentacion.setFcurl1(fcurl1s);
-                                                cantidad.setVisibility(View.VISIBLE);
-                                            } else {
-                                                // cantidad.setVisibility(View.GONE);
-                                                fcurl1s.add(fcurl1);
-                                                fcurl1s.clear();
-                                                documentacion.setFcurl1(fcurl1s);
-                                            }
-                                        }
-                                    } else {
-                                        //  cantidad.setVisibility(View.GONE);
-                                        fcurl1s.add(fcurl1);
-                                        fcurl1s.clear();
-                                        documentacion.setFcurl1(fcurl1s);
-                                    }
-
-
-                                    documentacion.setFcurl1Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl1(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-                                case "2":
-
-                                    fcurl2s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl2 = new Doctos.Fcurl2(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl2s.add(fcurl2);
-                                                documentacion.setFcurl2(fcurl2s);
-                                                cantidad.setVisibility(View.VISIBLE);
-                                            } else {
-                                                //  cantidad.setVisibility(View.GONE);
-                                                fcurl2s.add(fcurl2);
-                                                fcurl2s.clear();
-                                                documentacion.setFcurl2(fcurl2s);
-                                            }
-                                        }
-                                    } else {
-                                        //  cantidad.setVisibility(View.GONE);
-                                        fcurl2s.add(fcurl2);
-                                        fcurl2s.clear();
-                                        documentacion.setFcurl2(fcurl2s);
-                                    }
-
-
-                                    documentacion.setFcurl2Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl2(documentos.getDatos().get(i).getDescripcion() + "");
-
-
-                                    break;
-                                case "3":
-
-                                    fcurl3s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl3 = new Doctos.Fcurl3(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl3s.add(fcurl3);
-                                                documentacion.setFcurl3(fcurl3s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //     cantidad.setVisibility(View.GONE);
-
-                                                fcurl3s.add(fcurl3);
-                                                fcurl3s.clear();
-                                                documentacion.setFcurl3(fcurl3s);
-                                            }
-                                        }
-                                    } else {
-                                        // cantidad.setVisibility(View.GONE);
-
-                                        fcurl3s.add(fcurl3);
-                                        fcurl3s.clear();
-                                        documentacion.setFcurl3(fcurl3s);
-                                    }
-
-
-                                    documentacion.setFcurl3Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl3(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-                                case "4":
-
-                                    fcurl4s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl4 = new Doctos.Fcurl4(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl4s.add(fcurl4);
-                                                documentacion.setFcurl4(fcurl4s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //    cantidad.setVisibility(View.GONE);
-                                                fcurl4s.add(fcurl4);
-                                                fcurl4s.clear();
-                                                documentacion.setFcurl4(fcurl4s);
-                                            }
-                                        }
-                                    } else {
-                                        //   cantidad.setVisibility(View.GONE);
-                                        fcurl4s.add(fcurl4);
-                                        fcurl4s.clear();
-                                        documentacion.setFcurl4(fcurl4s);
-                                    }
-
-
-                                    documentacion.setFcurl4Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl4(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-                                case "5":
-
-                                    fcurl5s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl5 = new Doctos.Fcurl5(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl5s.add(fcurl5);
-                                                documentacion.setFcurl5(fcurl5s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //    cantidad.setVisibility(View.GONE);
-                                                fcurl5s.add(fcurl5);
-                                                fcurl5s.clear();
-                                                documentacion.setFcurl5(fcurl5s);
-                                            }
-                                        }
-                                    } else {
-                                        //   cantidad.setVisibility(View.GONE);
-                                        fcurl5s.add(fcurl5);
-                                        fcurl5s.clear();
-                                        documentacion.setFcurl5(fcurl5s);
-                                    }
-                                    documentacion.setFcurl5Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl5(documentos.getDatos().get(i).getDescripcion() + "");
-                                    break;
-                                case "6":
-
-                                    fcurl6s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl6 = new Doctos.Fcurl6(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl6s.add(fcurl6);
-                                                documentacion.setFcurl6(fcurl6s);
-                                                cantidad.setVisibility(View.VISIBLE);
-                                            } else {
-                                                //   cantidad.setVisibility(View.GONE);
-                                                fcurl6s.add(fcurl6);
-                                                fcurl6s.clear();
-                                                documentacion.setFcurl6(fcurl6s);
-                                            }
-                                        }
-                                    } else {
-                                        //  cantidad.setVisibility(View.GONE);
-                                        fcurl6s.add(fcurl6);
-                                        fcurl6s.clear();
-                                        documentacion.setFcurl6(fcurl6s);
-                                    }
-
-
-                                    documentacion.setFcurl6Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl6(documentos.getDatos().get(i).getDescripcion() + "");
-                                    break;
-                                case "7":
-
-
-                                    fcurl7s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl7 = new Doctos.Fcurl7(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl7s.add(fcurl7);
-                                                documentacion.setFcurl7(fcurl7s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //  cantidad.setVisibility(View.GONE);
-
-                                                fcurl7s.add(fcurl7);
-                                                fcurl7s.clear();
-                                                documentacion.setFcurl7(fcurl7s);
-                                            }
-                                        }
-                                    } else {
-                                        // cantidad.setVisibility(View.GONE);
-
-                                        fcurl7s.add(fcurl7);
-                                        fcurl7s.clear();
-                                        documentacion.setFcurl7(fcurl7s);
-                                    }
-
-
-                                    documentacion.setFcurl7Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl7(documentos.getDatos().get(i).getDescripcion() + "");
-                                    break;
-
-                                case "8":
-
-                                    fcurl8s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl8 = new Doctos.Fcurl8(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl8s.add(fcurl8);
-                                                documentacion.setFcurl8(fcurl8s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //   cantidad.setVisibility(View.GONE);
-
-                                                fcurl8s.add(fcurl8);
-                                                fcurl8s.clear();
-                                                documentacion.setFcurl8(fcurl8s);
-                                            }
-                                        }
-                                    } else {
-                                        //  cantidad.setVisibility(View.GONE);
-
-                                        fcurl8s.add(fcurl8);
-                                        fcurl8s.clear();
-                                        documentacion.setFcurl8(fcurl8s);
-                                    }
-
-
-                                    documentacion.setFcurl8Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl8(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-
-                                case "9":
-
-                                    fcurl9s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl9 = new Doctos.Fcurl9(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl9s.add(fcurl9);
-                                                documentacion.setFcurl9(fcurl9s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //   cantidad.setVisibility(View.GONE);
-
-                                                fcurl9s.add(fcurl9);
-                                                fcurl9s.clear();
-                                                documentacion.setFcurl9(fcurl9s);
-                                            }
-                                        }
-                                    } else {
-                                        // cantidad.setVisibility(View.GONE);
-
-                                        fcurl9s.add(fcurl9);
-                                        fcurl9s.clear();
-                                        documentacion.setFcurl9(fcurl9s);
-                                    }
-
-
-                                    documentacion.setFcurl9Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl9(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-
-                                case "10":
-
-                                    fcurl10s = new ArrayList<>();
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                                fcurl10 = new Doctos.Fcurl10(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl10s.add(fcurl10);
-                                                documentacion.setFcurl10(fcurl10s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //   cantidad.setVisibility(View.GONE);
-
-                                                fcurl10s.add(fcurl10);
-                                                fcurl10s.clear();
-                                                documentacion.setFcurl10(fcurl10s);
-                                            }
-                                        }
-                                    } else {
-                                        // cantidad.setVisibility(View.GONE);
-
-                                        fcurl10s.add(fcurl10);
-                                        fcurl10s.clear();
-                                        documentacion.setFcurl10(fcurl10s);
-                                    }
-
-                                    documentacion.setFcurl10Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl10(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-
-                                case "11":
-
-                                    fcurl11s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl11 = new Doctos.Fcurl11(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl11s.add(fcurl11);
-                                                documentacion.setFcurl11(fcurl11s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                fcurl11s.add(fcurl11);
-                                                fcurl11s.clear();
-                                                documentacion.setFcurl11(fcurl11s);
-                                                //  cantidad.setVisibility(View.GONE);
-
-                                            }
-                                        }
-                                    } else {
-                                        // cantidad.setVisibility(View.GONE);
-
-                                        fcurl11s.add(fcurl11);
-                                        fcurl11s.clear();
-                                        documentacion.setFcurl11(fcurl11s);
-                                    }
-
-
-                                    documentacion.setFcurl11Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl11(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-
-                                case "12":
-
-                                    fcurl12s = new ArrayList<>();
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl12 = new Doctos.Fcurl12(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl12s.add(fcurl12);
-                                                documentacion.setFcurl12(fcurl12s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //    cantidad.setVisibility(View.GONE);
-                                                fcurl12s.add(fcurl12);
-                                                fcurl12s.clear();
-                                                documentacion.setFcurl12(fcurl12s);
-                                            }
-                                        }
-                                    } else {
-                                        //  cantidad.setVisibility(View.GONE);
-
-                                        fcurl12s.add(fcurl12);
-                                        fcurl12s.clear();
-                                        documentacion.setFcurl12(fcurl12s);
-                                    }
-
-                                    documentacion.setFcurl12Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl12(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-
-                                case "13":
-
-                                    fcurl13s = new ArrayList<>();
-
-
-                                    if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-                                        for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
-                                            if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
-
-                                                fcurl13 = new Doctos.Fcurl13(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
-                                                        documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo()
-                                                );
-                                                fcurl13s.add(fcurl13);
-                                                documentacion.setFcurl13(fcurl13s);
-                                                cantidad.setVisibility(View.VISIBLE);
-
-                                            } else {
-                                                //  cantidad.setVisibility(View.GONE);
-
-                                                fcurl13s.add(fcurl13);
-                                                fcurl13s.clear();
-                                                documentacion.setFcurl13(fcurl13s);
-                                            }
-                                        }
-                                    } else {
-                                        //cantidad.setVisibility(View.GONE);
-
-                                        fcurl13s.add(fcurl13);
-                                        fcurl13s.clear();
-                                        documentacion.setFcurl13(fcurl13s);
-                                    }
-
-
-                                    documentacion.setFcurl13Id(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
-                                    documentacion.setNombreCurl13(documentos.getDatos().get(i).getDescripcion() + "");
-
-                                    break;
-                                default:
-                                    break;
+                            List<Docto.DocumentoHoja> listaHojas = new ArrayList<Docto.DocumentoHoja>();
+                            Docto doctoWS = new Docto();
+
+                            if(documentos.getDatos().get(i).getDocumentos() != null && documentos.getDatos().get(i).getDocumentos().size() > 0) {
+                                for (int j = 0; j < documentos.getDatos().get(i).getDocumentos().size(); j++) {
+                                    Docto.DocumentoHoja hoja = new Docto.DocumentoHoja(documentos.getDatos().get(i).getDocumentos().get(j).getUrl(),
+                                            documentos.getDatos().get(i).getDocumentos().get(j).getFecha(),
+                                            documentos.getDatos().get(i).getDocumentos().get(j).getNombreArchivo());
+                                    listaHojas.add(hoja);
+                                }
                             }
+                            doctoWS.setDocumentos(listaHojas);
+                            doctoWS.setDescripcion(documentos.getDatos().get(i).getDescripcion());
+                            doctoWS.setDocumentoId(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
+                            doctoWS.setOpcional(Integer.valueOf(documentos.getDatos().get(i).getOpcional()));
+                            listaDocumentos.add(doctoWS);
+
 
                             TableRow tbrow = new TableRow(ActivityDocumentos.this);
                             tbrow.setBackgroundColor(resource.getColor(R.color.blanco));
@@ -833,6 +329,7 @@ public class ActivityDocumentos extends AppCompatActivity {
 
                             imageView.setCompoundDrawablesWithIntrinsicBounds(R.drawable.cam, 0, 0, 0);
                             imageView.setText(" ");
+                            imageView.setTag(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
 
 
                             TextView upload = new TextView(ActivityDocumentos.this);
@@ -848,6 +345,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                             masFotos.setLayoutParams(layoutParams);
 
                             masFotos.setVisibility(View.GONE);
+                            //masFotos.setTag(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
                             upload.setVisibility(View.GONE);
 
                             if (documentos.getDatos().get(i).getDocumentos().size() > 0) {
@@ -875,6 +373,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                             size.setGravity(Gravity.START);
                             size.setLayoutParams(new TableRow.LayoutParams(6,
                                     android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 0));
+                            size.setTag(Integer.valueOf(documentos.getDatos().get(i).getDocumentoId()));
 
 
                             tbrow.addView(t1v1);
@@ -887,6 +386,8 @@ public class ActivityDocumentos extends AppCompatActivity {
                             imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    doctoSeleccionadoId = Integer.parseInt(imageView.getTag().toString());
+
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityDocumentos.this, R.style.AlertDialogCustom);
                                     builder.setMessage(resource.getString(R.string.camara))
                                             .setCancelable(true)
@@ -896,7 +397,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                     intent.setType("image/*");
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
                                                     startActivityForResult(Intent.createChooser(intent, "Select Imagen"), Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                    sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                    estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                     setImage(masFotos);
                                                     banderaCam = 0;
                                                 }
@@ -918,7 +419,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                             Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
                                                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                                             startActivityForResult(intent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                             banderaCam = 0;
                                                             setImage(masFotos);
                                                         }
@@ -938,7 +439,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                             Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
                                                             pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                                             startActivityForResult(pictureIntent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                             banderaCam = 0;
                                                             setImage(masFotos);
                                                         }
@@ -954,6 +455,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                             masFotos.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View view) {
+                                    doctoSeleccionadoId = Integer.parseInt(imageView.getTag().toString());
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(ActivityDocumentos.this, R.style.AlertDialogCustom);
                                     builder.setMessage(resource.getString(R.string.camara))
@@ -964,7 +466,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                     intent.setType("image/*");
                                                     intent.setAction(Intent.ACTION_GET_CONTENT);
                                                     startActivityForResult(Intent.createChooser(intent, "ChooseFile"), Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                    sumSize(size, documentos.getDatos().get(finalI1).getDocumentoId());
+                                                    estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                     banderaCam = 1;
                                                 }
                                             })
@@ -985,7 +487,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                             Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
                                                             intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                                             startActivityForResult(intent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                            sumSize(size, documentos.getDatos().get(finalI).getDocumentoId());
+                                                            estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                             banderaCam = 1;
                                                         }
                                                         masFotos.setVisibility(View.VISIBLE);
@@ -1005,7 +507,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                                                             Uri photoURI = FileProvider.getUriForFile(ActivityDocumentos.this, getString(R.string.file_provider_authority), photoFile);
                                                             pictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                                             startActivityForResult(pictureIntent, Integer.parseInt(documentos.getDatos().get(finalI).getDocumentoId()));
-                                                            sumSize(size, documentos.getDatos().get(finalI1).getDocumentoId());
+                                                            estableceCantidadTextView(doctoSeleccionadoId, documentos.getDatos().get(finalI).getDocumentos().size());
                                                             banderaCam = 1;
                                                         }
                                                     }
@@ -1022,20 +524,7 @@ public class ActivityDocumentos extends AppCompatActivity {
                             plomoTable.addView(cantidad);
                             plomoTable.addView(size);
                         }
-                        for (int i = 0; i < docto.getDatos().size(); i++) {
-                            if (docto.getDatos().get(i).getOpcional().equals("0")) {
-                                if (!documentacion.getFcurl1().isEmpty() &&
-                                        !documentacion.getFcurl2().isEmpty() &&
-                                        !documentacion.getFcurl3().isEmpty() &&
-                                        !documentacion.getFcurl4().isEmpty() &&
-                                        !documentacion.getFcurl7().isEmpty() &&
-                                        !documentacion.getFcurl8().isEmpty() &&
-                                        !documentacion.getFcurl9().isEmpty()) {
-                                    permisos[0] = true;
-
-                                }
-                            }
-                        }
+                        permisos[0] = getObligatorios();
                         if (permisos[0]) {
                             binding.btnFinalizar.setEnabled(true);
                             binding.btnFinalizar.setAlpha(1);
@@ -1064,59 +553,6 @@ public class ActivityDocumentos extends AppCompatActivity {
         masFotosP = new TextView(this);
         this.masFotosP = image;
     }
-
-    TextView sizeBandera;
-
-    public void sumSize(TextView view, String id) {
-        sizeBandera = view;
-        if (documentacion != null) {
-            switch (id) {
-                case "1":
-                    view.setText(documentacion.getFcurl1().size() + "");
-                    break;
-                case "2":
-                    view.setText(documentacion.getFcurl2().size() + "");
-                    break;
-                case "3":
-                    view.setText(documentacion.getFcurl3().size() + "");
-                    break;
-                case "4":
-                    view.setText(documentacion.getFcurl4().size() + "");
-                    break;
-                case "5":
-                    view.setText(documentacion.getFcurl5().size() + "");
-                    break;
-                case "6":
-                    view.setText(documentacion.getFcurl6().size() + "");
-                    break;
-                case "7":
-                    view.setText(documentacion.getFcurl7().size() + "");
-                    break;
-                case "8":
-                    view.setText(documentacion.getFcurl8().size() + "");
-                    break;
-                case "9":
-                    view.setText(documentacion.getFcurl9().size() + "");
-                    break;
-                case "10":
-                    view.setText(documentacion.getFcurl10().size() + "");
-                    break;
-                case "11":
-                    view.setText(documentacion.getFcurl11().size() + "");
-                    break;
-                case "12":
-                    view.setText(documentacion.getFcurl12().size() + "");
-                    break;
-                case "13":
-                    view.setText(documentacion.getFcurl3().size() + "");
-                    break;
-                default:
-                    break;
-            }
-        }
-
-    }
-
 
     private int CAMERA_CONTRATO = 1;
     private int CAMERA_TITULO_PROPIEDAD = 2;
@@ -1226,9 +662,8 @@ public class ActivityDocumentos extends AppCompatActivity {
         SharedPreferences preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
         String mdid = preferences.getString("mdId", "");
 
-        if (requestCode == CAMERA_CONTRATO && resultCode == -1) {
-
-            nombreImagen = Util.random() + "CAMERA_CONTRATO";
+        if (resultCode == -1) {
+            nombreImagen = Util.random() + "DOCTO";
             if (getBitmap(imageFilePath) != null) {
                 obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
             } else {
@@ -1242,233 +677,10 @@ public class ActivityDocumentos extends AppCompatActivity {
                         obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
                     }
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    Toast.makeText(ActivityDocumentos.this, "Error al generar el archivo del documento, vuelve a intentarlo", Toast.LENGTH_LONG).show();
                 }
             }
-
-
-        } else if (requestCode == CAMERA_TITULO_PROPIEDAD && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_TITULO_PROPIEDAD";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_IDENTIFICACION_OFICIAL && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_IDENTIFICACION_OFICIAL";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_PREDIAL && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_PREDIAL";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_RECIBO_LUZ && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_RECIBO_LUZ";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_RECIBO_AGUA && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_RECIBO_AGUA";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_RFC_R1 && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_RFC_R1";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_ESTADO_CUENTA && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_ESTADO_CUENTA";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_COMPROBANTE_DOMICILIO && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_COMPROBANTE_DOMICILIO";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_ACTA_MATRIMONIO && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_ACTA_MATRIMONIO";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_ACTA_CONSTITUTIVA && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_ACTA_CONSTITUTIVA";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_CARTA_PODER_REPRESENTANTE && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_CARTA_PODER_REPRESENTANTE";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (requestCode == CAMERA_ID_REPRESENTANTE && resultCode == -1) {
-            nombreImagen = Util.random() + "CAMERA_ID_REPRESENTANTE";
-            if (getBitmap(imageFilePath) != null) {
-                obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(imageFilePath));
-            } else {
-                Uri filePath = data.getData();
-                String filePathUri = saveFile(filePath, nombreImagenPdf);
-                try {
-                    Bitmap bitfromPath = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), filePath);
-                    if (bitfromPath != null) {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "png", "1", Uri.parse(filePathUri));
-                    } else {
-                        obtenerUrl(String.valueOf(mdid), nombreImagen, "pdf", "2", Uri.parse(filePathUri));
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-
-        } else if (resultCode == 0) {
-
-
         }
-
     }
 
     public static Bitmap getBitmap(String path) {
@@ -1525,223 +737,21 @@ public class ActivityDocumentos extends AppCompatActivity {
                     final Boolean[] permisos = {false};
                     if (codigo.getResultado() != null) {
                         imageFilePath = "";
-                        if (codigo.getResultado().getSecureUrl().contains("CAMERA_CONTRATO")) {
-                            if (banderaCam == 0) {
-                                fcurl1s.clear();
-                                fcurl1 = new Doctos.Fcurl1(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl1s.add(fcurl1);
-                                documentacion.setFcurl1(fcurl1s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CONTRATO));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl1 = new Doctos.Fcurl1(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl1s.add(fcurl1);
-                                documentacion.setFcurl1(fcurl1s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CONTRATO));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
 
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_TITULO_PROPIEDAD")) {
-                            if (banderaCam == 0) {
-                                fcurl2s.clear();
-                                fcurl2 = new Doctos.Fcurl2(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl2s.add(fcurl2);
-                                documentacion.setFcurl2(fcurl2s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_TITULO_PROPIEDAD));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl2 = new Doctos.Fcurl2(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl2s.add(fcurl2);
-                                documentacion.setFcurl2(fcurl2s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_TITULO_PROPIEDAD));
+                        if(listaDocumentos.size() > 0) {
+                            for(int i = 0; i < listaDocumentos.size(); i++) {
+                                if(doctoSeleccionadoId == listaDocumentos.get(i).getDocumentoId()) {
+                                    if (banderaCam == 0) { //Cuando se abra la cámara para sustituir el docto
+                                        listaDocumentos.get(i).getDocumentos().clear();
+                                        masFotosP.setVisibility(View.VISIBLE);
+                                    }
+                                    Docto.DocumentoHoja doctoHoja = new Docto.DocumentoHoja(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
+                                    listaDocumentos.get(i).getDocumentos().add(doctoHoja);
+                                    estableceCantidadTextView(doctoSeleccionadoId, listaDocumentos.get(i).getDocumentos().size());
+                                    botonFinaliza();
+                                    loadingProgress(progressDialog, 1);
+                                }
                             }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_IDENTIFICACION_OFICIAL")) {
-                            if (banderaCam == 0) {
-                                fcurl3s.clear();
-                                fcurl3 = new Doctos.Fcurl3(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl3s.add(fcurl3);
-                                documentacion.setFcurl3(fcurl3s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_IDENTIFICACION_OFICIAL));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl3 = new Doctos.Fcurl3(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl3s.add(fcurl3);
-                                documentacion.setFcurl3(fcurl3s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_IDENTIFICACION_OFICIAL));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_PREDIAL")) {
-                            if (banderaCam == 0) {
-                                fcurl4s.clear();
-                                fcurl4 = new Doctos.Fcurl4(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl4s.add(fcurl4);
-                                documentacion.setFcurl4(fcurl4s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_PREDIAL));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl4 = new Doctos.Fcurl4(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl4s.add(fcurl4);
-                                documentacion.setFcurl4(fcurl4s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_PREDIAL));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RECIBO_LUZ")) {
-                            if (banderaCam == 0) {
-                                fcurl5s.clear();
-                                fcurl5 = new Doctos.Fcurl5(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl5s.add(fcurl5);
-                                documentacion.setFcurl5(fcurl5s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_LUZ));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl5 = new Doctos.Fcurl5(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl5s.add(fcurl5);
-                                documentacion.setFcurl5(fcurl5s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_LUZ));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RECIBO_AGUA")) {
-                            if (banderaCam == 0) {
-                                fcurl6s.clear();
-                                fcurl6 = new Doctos.Fcurl6(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl6s.add(fcurl6);
-                                documentacion.setFcurl6(fcurl6s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_AGUA));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl6 = new Doctos.Fcurl6(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl6s.add(fcurl6);
-                                documentacion.setFcurl6(fcurl6s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RECIBO_AGUA));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_RFC_R1")) {
-                            if (banderaCam == 0) {
-                                fcurl7s.clear();
-                                fcurl7 = new Doctos.Fcurl7(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl7s.add(fcurl7);
-                                documentacion.setFcurl7(fcurl7s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RFC_R1));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl7 = new Doctos.Fcurl7(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl7s.add(fcurl7);
-                                documentacion.setFcurl7(fcurl7s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_RFC_R1));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ESTADO_CUENTA")) {
-                            if (banderaCam == 0) {
-                                fcurl8s.clear();
-                                fcurl8 = new Doctos.Fcurl8(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl8s.add(fcurl8);
-                                documentacion.setFcurl8(fcurl8s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ESTADO_CUENTA));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl8 = new Doctos.Fcurl8(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl8s.add(fcurl8);
-                                documentacion.setFcurl8(fcurl8s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ESTADO_CUENTA));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_COMPROBANTE_DOMICILIO")) {
-                            if (banderaCam == 0) {
-                                fcurl9s.clear();
-                                fcurl9 = new Doctos.Fcurl9(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl9s.add(fcurl9);
-                                documentacion.setFcurl9(fcurl9s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_COMPROBANTE_DOMICILIO));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl9 = new Doctos.Fcurl9(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl9s.add(fcurl9);
-                                documentacion.setFcurl9(fcurl9s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_COMPROBANTE_DOMICILIO));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ACTA_MATRIMONIO")) {
-                            if (banderaCam == 0) {
-                                fcurl10s.clear();
-                                fcurl10 = new Doctos.Fcurl10(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl10s.add(fcurl10);
-                                documentacion.setFcurl10(fcurl10s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_MATRIMONIO));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl10 = new Doctos.Fcurl10(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl10s.add(fcurl10);
-                                documentacion.setFcurl10(fcurl10s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_MATRIMONIO));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ACTA_CONSTITUTIVA")) {
-
-                            if (banderaCam == 0) {
-                                fcurl11s.clear();
-                                fcurl11 = new Doctos.Fcurl11(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl11s.add(fcurl11);
-                                documentacion.setFcurl11(fcurl11s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_CONSTITUTIVA));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl11 = new Doctos.Fcurl11(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl11s.add(fcurl11);
-                                documentacion.setFcurl11(fcurl11s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ACTA_CONSTITUTIVA));
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_CARTA_PODER_REPRESENTANTE")) {
-
-                            if (banderaCam == 0) {
-                                fcurl12s.clear();
-                                fcurl12 = new Doctos.Fcurl12(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl12s.add(fcurl12);
-                                documentacion.setFcurl12(fcurl12s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CARTA_PODER_REPRESENTANTE));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl12 = new Doctos.Fcurl12(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl12s.add(fcurl12);
-                                documentacion.setFcurl12(fcurl12s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_CARTA_PODER_REPRESENTANTE));
-
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-
-                        } else if (codigo.getResultado().getSecureUrl().contains("CAMERA_ID_REPRESENTANTE")) {
-
-                            if (banderaCam == 0) {
-                                fcurl13s.clear();
-                                fcurl13 = new Doctos.Fcurl13(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl13s.add(fcurl13);
-                                documentacion.setFcurl13(fcurl13s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ID_REPRESENTANTE));
-                                masFotosP.setVisibility(View.VISIBLE);
-                            } else {
-                                fcurl13 = new Doctos.Fcurl13(codigo.getResultado().getSecureUrl() + "", getFechaHora(), nombreImagen);
-                                fcurl13s.add(fcurl13);
-                                documentacion.setFcurl13(fcurl13s);
-                                sumSize(sizeBandera, String.valueOf(CAMERA_ID_REPRESENTANTE));
-
-                            }
-                            botonFinaliza();
-                            loadingProgress(progressDialog, 1);
-
                         } else {
                             loadingProgress(progressDialog, 1);
                         }
@@ -1750,6 +760,11 @@ public class ActivityDocumentos extends AppCompatActivity {
                     }
                 } else {
                     loadingProgress(progressDialog, 1);
+
+
+
+
+
                     Toast.makeText(ActivityDocumentos.this, R.string.intenta, Toast.LENGTH_SHORT).show();
                 }
             }
@@ -1759,6 +774,21 @@ public class ActivityDocumentos extends AppCompatActivity {
 
             }
         });
+    }
+
+    public void estableceCantidadTextView(int doctoId, int size) {
+        TableLayout plomoTable = (TableLayout) findViewById(R.id.plomosTable);
+
+        for (int i = 0; i < plomoTable.getChildCount(); i++) {
+            View parentRow = plomoTable.getChildAt(i);
+
+            View cajaTexto = parentRow.findViewWithTag(doctoId);
+            if (cajaTexto instanceof TextView) {
+                if(((TextView) cajaTexto).getTag() != null && Integer.parseInt(((TextView) cajaTexto).getTag() + "") == doctoId) {
+                    ((TextView) cajaTexto).setText(String.valueOf(size));
+                }
+            }
+        }
     }
 
     public static void loadingProgress(final ProgressDialog progressDialog, int i) {

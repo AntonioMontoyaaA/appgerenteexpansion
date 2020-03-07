@@ -6,21 +6,21 @@ package expansion.neto.com.mx.gerenteapp.constantes;
  */
 public class RestUrl {
 
-    public static String dominioFileDes = "voksedesfiles"; // desarrollo
+    public static String dominioImagenesWS = "voksedesfiles"; // desarrollo
 
-    public static String dominioFileProd = "voksefiles"; // produccion
+    //public static String dominioImagenesWS = "voksefiles"; // produccion
 
     //358781
     //289106
-    //public static String ip = "206.189.68.177"; //desarrollo
+    public static String ip = "206.189.68.177"; //desarrollo
     //public static String ip = "167.99.102.173"; // QA
-    public static String ip = "206.189.223.154"; // produccion
+    //public static String ip = "206.189.223.154"; // produccion
     
     //cuando se finalice aparesca progress dialog de finalizado, cuando damos aceptar menu documentos
 
-    //public static String dominio = "voksedesapi"; // desarrollo
+    public static String dominio = "voksedesapi"; // desarrollo
     //public static String dominio = "vokseqaapi"; // QA
-    public static String dominio = "vokseapi"; // produccion
+    //public static String dominio = "vokseapi"; // produccion
 
     public static String VERSION_APP = "2.0.1";
 
@@ -132,7 +132,7 @@ public class RestUrl {
 
     public static String REST_CONSULTA_MONTO = "http://"+ ip +"/"+ dominio +"/guardadocsmontos/";
 
-    public static String REST_ACTION_GUARDA_TODO_TIPO_DOCUMENTO = "http://"+ ip +"/"+ dominioFileProd +"/cloudinaryset/";
+    public static String REST_ACTION_GUARDA_TODO_TIPO_DOCUMENTO = "http://"+ ip +"/"+ dominioImagenesWS +"/cloudinaryset/";
 
     public static String REST_ACTION_NUM_MENSAJES = "http://"+ ip +"/"+ dominio +"/obtienenummensajes/";
 
