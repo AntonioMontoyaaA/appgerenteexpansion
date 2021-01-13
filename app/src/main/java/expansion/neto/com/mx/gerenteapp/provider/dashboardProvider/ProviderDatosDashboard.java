@@ -83,6 +83,7 @@ public class ProviderDatosDashboard {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
+                    System.out.println( "Respuesta Dashboard: " + jsonInString );
                     callback = gson.fromJson(jsonInString, Dashboard.class);
                     if(callback.getCodigo() == 404) {
                         Util.cerrarSesion(context);

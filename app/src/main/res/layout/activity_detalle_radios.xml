@@ -1,0 +1,1394 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+    </data>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/background"
+        android:orientation="vertical">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/tab_layout"
+             />
+
+        <!-- mis radios-->
+        <LinearLayout
+            android:id="@+id/linearLayout13"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:id="@+id/btn_atras"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="-20dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:src="@drawable/flechaizqblanca" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="40dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txt_titulo_crear"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="17dp"
+                        android:gravity="center"
+                        android:text="@string/mis_radios"
+                        android:textColor="@color/snackBar"
+                        android:textSize="17sp" />
+
+                    <ImageView
+                        android:id="@+id/img_avance"
+                        android:layout_width="180dp"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:visibility="invisible" />
+                </LinearLayout>
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:visibility="invisible">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center" />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <!-- movimineto -->
+        <android.support.design.widget.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_below="@+id/linearLayout13"
+            android:elevation="6dp"
+            android:minHeight="?attr/actionBarSize"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+            app:tabIndicatorColor="@android:color/white" />
+
+        <!-- Asignado descripcion principal -->
+        <LinearLayout
+            android:id="@+id/llDescripcionPrincipal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tab_layout"
+            android:layout_marginBottom="@dimen/espaciado"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/snackBar">
+
+            <LinearLayout
+                android:layout_width="12dp"
+                android:layout_height="match_parent"
+                android:background="@color/grisedt"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:paddingLeft="5dp"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/tvNombreRadio"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/azultaco"
+                        android:textSize="16sp"
+                        app:typeface="robotoBold"
+                        android:layout_gravity="left|center"
+                        android:gravity="left|center"
+                        android:layout_weight="1"/>
+                </LinearLayout>
+
+
+
+
+
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginTop="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:orientation="vertical">
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:id="@+id/tvFechaAsignadoD"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingLeft="5dp"
+                            android:text="@string/asignado_el"
+                            android:textColor="@color/grisetxt"
+                            android:textSize="12sp"
+                            app:typeface="robotoRegular" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:orientation="vertical">
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="1dp"
+                            android:paddingStart="5dp"
+                            android:text="@string/estatus"
+                            android:textColor="@color/grisetxt"
+                            android:textSize="12sp"
+                            app:typeface="robotoRegular" />
+
+                        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                            android:id="@+id/tvStatus"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingEnd="1dp"
+                            android:paddingStart="5dp"
+                            android:textColor="@color/azul"
+                            android:textSize="12sp"
+                            app:typeface="robotoRegular" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:id="@+id/tvDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/RoboTextView_height"
+            android:layout_below="@id/llDescripcionPrincipal"
+            android:layout_marginBottom="@dimen/espaciado"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="@dimen/espaciado"
+            android:paddingEnd="5dp"
+            android:paddingStart="5dp"
+            android:textColor="@color/snackBar"
+            android:textSize="16sp"
+            app:typeface="robotoRegular" />
+
+        <!-- detalle -->
+        <LinearLayout
+            android:id="@+id/lldetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvDetalle"
+            android:layout_marginBottom="70dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="@dimen/espaciado"
+            android:background="@color/letra"
+            android:orientation="vertical">
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/tv_detalle_Nombre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="@string/informaci_n_socio_demogr_fica"
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        android:gravity="center"
+                        android:layout_gravity="center"/>
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:id="@+id/tvAsignado"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="Asignado: "
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Coordenadas:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_coordenas"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Radio:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_radio"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="URL:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_url"
+                            android:autoLink="web"
+                            android:textColor="#0645AD"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Estatus:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_estatus"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Calle principal:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_calleP"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Entre calle 1:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_calle1"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Entre calle 2:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_calle2"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Colonia:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_colonia"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="Municipio:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_municipio"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:text="No. Visitas:"
+                            android:textColor="@color/blanco"
+                            android:layout_weight="2.5"
+                            />
+
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_no_Visitas"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+
+
+                    </LinearLayout>
+
+
+
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="Información Socio Demográfica"
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical" >
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Edad predominante"
+                            android:textColor="@color/blanco"/>
+                        
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+                            
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_menor20"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_menor18"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_menor20"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"
+                                    android:text="-20"/>
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_21_30"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_mayor20"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="21-30"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_31_40"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_31_40"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="31-40"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_41_50"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_41_50"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"
+                                    android:text="41-50"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_51_60"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_51_60"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="51-60"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valor_mas61"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:padding="0dp"
+                                    android:src="@mipmap/icon_mayor60" />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_mayor60"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="61-"/>
+                            </LinearLayout>
+                            
+                        </LinearLayout>
+                        <LinearLayout
+                            android:paddingTop="15dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:text="Población total:"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"/>
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:id="@+id/tv_pTotal"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:text="Población flotante:"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"/>
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:id="@+id/tv_pFlotante"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:text="PEA:"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"/>
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:id="@+id/tv_pea"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:text="Hogares:"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1.5"/>
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:gravity="left|center"
+                                android:id="@+id/tv_hogares"
+                                android:textColor="@color/blanco"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"/>
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="Generadores"
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        />
+
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:text="Mercados"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_mercado"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valorMercados"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:text="Escuelas"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_escuela"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valorEscuelas"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:text="Hospitales"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_hospital"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valorHospitales"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:text="Templos"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_templo"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_valorTemplos"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco"/>
+                            </LinearLayout>
+                            <LinearLayout
+                                android:layout_weight="1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:text="O.gobierno"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/blanco"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:layout_gravity="center"/>
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:src="@mipmap/icon_office"
+                                    android:padding="0dp"
+                                    android:layout_gravity="center"
+                                    />
+
+                                <TextView android:textSize="@dimen/text_size"
+                                    android:id="@+id/tv_OficinasGob"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:textColor="@color/blanco" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="Competencias"
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_compe_3b"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorCompetencia1"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_compe_bod"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorCompetencia2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_compe_bod_expres"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorCompetencia3"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <!--LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                   android:textSize="@dimen/text_size"
+                                android:text="Templos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_templo"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                   android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorTemplos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView
+                                   android:textSize="@dimen/text_size"
+                                android:text="O.gobierno"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_office"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView
+                                   android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_OficinasGob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco" />
+                        </LinearLayout-->
+
+                    </LinearLayout>
+
+
+                    <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="8dp"
+                        android:paddingEnd="1dp"
+                        android:textColor="@color/estrellaWith"
+                        android:paddingStart="17dp"
+                        android:paddingTop="8dp"
+                        android:text="Unidades Economicas"
+                        android:textSize="12sp"
+                        app:typeface="robotoBold"
+                        />
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:text="Venta y preparación de alimentos:"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_valorPreparacionAlim"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"/>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:text="Venta de artículos personales y del hogar:"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_valorVentaArt"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"/>
+
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:text="Servicios:"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+                        <TextView
+                            android:textSize="@dimen/text_size"
+                            android:gravity="left|center"
+                            android:id="@+id/tv_valorServicios"
+                            android:textColor="@color/blanco"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="2"/>
+
+                    </LinearLayout>
+
+
+
+
+                </LinearLayout>
+
+            </ScrollView>
+
+        </LinearLayout>
+
+
+
+        <!--botones -->
+
+        <LinearLayout
+            android:id="@+id/ll_botones"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
+            android:orientation="vertical"
+            android:weightSum="4">
+            <LinearLayout
+                android:id="@+id/botones"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_marginBottom="10dp"
+                >
+
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:background="@drawable/estilo_boton_radios"
+                    android:onClick="Autorizar"
+                    android:text="@string/autorizar"
+                    android:textAllCaps="false"
+                    android:textColor="@color/blanco"
+                    android:textSize="14sp"
+                    app:typeface="robotoRegular"/>
+                <Button
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+                    android:layout_margin="10dp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+
+                    android:background="@drawable/estilo_boton_radios"
+                    android:text="@string/rechazar"
+                    android:textAllCaps="false"
+                    android:onClick="Rechazar"
+                    android:textColor="@color/blanco"
+                    android:textSize="14sp"
+                    app:typeface="robotoRegular"/>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+
+    </RelativeLayout>
+
+
+</layout>

@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.Spannable;
@@ -260,9 +261,15 @@ public class Util {
     }
 
     public static String getImei(Context context) {
-        TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        @SuppressLint("MissingPermission") String imei = mTelephonyManager.getImei();
-        return imei;
+        //TelephonyManager mTelephonyManager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+        //@SuppressLint("MissingPermission") String imei = mTelephonyManager.getImei();
+        return "0";
+    }
+
+
+    public static String getAndroidId(Context context) {
+        String idAndroid = Settings.Secure.getString( context.getContentResolver(), Settings.Secure.ANDROID_ID);
+        return idAndroid;
     }
 
     public static String random() {

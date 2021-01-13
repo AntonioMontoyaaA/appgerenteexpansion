@@ -156,7 +156,8 @@ public class Usuario {
                                     Intent main = new Intent(context, ActivityMain.class);
                                     context.startActivity(main);
                                     binding.entrar.setAlpha(1f);
-                                    usuarioLogin.getPerfil().setImei(Util.getImei(context));
+                                    //usuarioLogin.getPerfil().setImei(Util.getImei(context));
+                                    usuarioLogin.getPerfil().setImei(Util.getAndroidId(context));
                                     sharedSave(context, usuario,
                                             usuarioLogin);
                                     unblockUI();

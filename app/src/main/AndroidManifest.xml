@@ -167,6 +167,14 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
+        <activity
+            android:name=".radios.ui.radios.ActivityRadios"
+            android:screenOrientation="portrait" />
+
+        <activity
+            android:name=".radios.ui.radios.ActivityDetalleRadios"
+            android:screenOrientation="portrait" />
+
     </application>
 
 </manifest>

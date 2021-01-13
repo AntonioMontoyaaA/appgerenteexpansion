@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="espaciado_login">10dp</dimen>
+    <dimen name="espaciado_login2">30dp</dimen>
+    <dimen name="espaciado_login3">80dp</dimen>
+
+    <!--fragment Switch Sitio-->
+    <dimen name="tamaño_ciudad">100dp</dimen>
+    <dimen name="tamaño_ciudad2">100dp</dimen>
+    <dimen name="alto_card_ciudad">200dp</dimen>
+    <dimen name="ancho_card_ciudad">150dp</dimen>
+
+    <!--fragment Autoriza-->
+    <dimen name="alto_map">460dp</dimen>
+    <dimen name="espacio_dentro_mapa">0dp</dimen>
+    <dimen name="top_dentro_mapa">0dp</dimen>
+    <dimen name="nombre_sitio_size">10sp</dimen>
+    <dimen name="marginTop_linear">0dp</dimen>
+    <dimen name="alto_Cardview">140dp</dimen>
+
+</resources>

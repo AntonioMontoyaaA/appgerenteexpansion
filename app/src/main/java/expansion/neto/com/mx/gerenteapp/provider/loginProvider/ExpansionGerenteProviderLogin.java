@@ -16,6 +16,7 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_APLICACION;
+import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.TIPO_APP;
 import static expansion.neto.com.mx.gerenteapp.constantes.RestUrl.VERSION_APP;
 import static expansion.neto.com.mx.gerenteapp.utils.Util.md5;
 
@@ -47,20 +48,14 @@ public class ExpansionGerenteProviderLogin {
             protected UsuarioLogin doInBackground(Void... voids) {
                 //TODO CONNECT AND GET DATA
                 try {
-                    //Util.getImei(context)
-                    //"202020202020202"
-                    //356017073328381
-                    //Util.getImei(context)
-                    //351881091770691
-                    //352818091381102
-                    //351881091739183 DES
-                    // rosalia
-                    //md5 351881091739456
+
                     FormBody.Builder formBuilder = new FormBody.Builder()
                             .add("usuarioId", usuario.getUsuario())
                             .add("contrasena", md5(usuario.getContra()))
                             .add("numImei", Util.getImei(context))
+                            .add("androidId", Util.getAndroidId(context))
                             .add("versionapp", VERSION_APP)
+                            .add("tipoapp", TIPO_APP)
                             .add("tipoLog", TIPO_APLICACION);
 
                     RequestBody formBody = formBuilder.build();
@@ -73,15 +68,18 @@ public class ExpansionGerenteProviderLogin {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
+
                     return usuarioCallback = gson.fromJson(jsonInString, UsuarioLogin.class);
                 }catch (Exception e){
                     if(e.getMessage().contains("Failed to connect to")){
                         usuarioCallback = new UsuarioLogin();
                         usuarioCallback.setCodigo(1);
+                        usuarioCallback.setMensaje(e.getLocalizedMessage());
                         return usuarioCallback;
                     }else{
                         usuarioCallback = new UsuarioLogin();
                         usuarioCallback.setCodigo(404);
+                        usuarioCallback.setMensaje(e.getLocalizedMessage());
                         return usuarioCallback;
                     }
                 }

@@ -55,6 +55,7 @@ public class ProviderLocalizador {
                     respuesta = response.body().string();
                     Gson gson = new Gson();
                     String jsonInString = respuesta;
+                    System.out.println( "RESPUESTA " + respuesta );
                     return codigo = gson.fromJson(jsonInString, Codigos.class);
 
                 }catch (Exception e){

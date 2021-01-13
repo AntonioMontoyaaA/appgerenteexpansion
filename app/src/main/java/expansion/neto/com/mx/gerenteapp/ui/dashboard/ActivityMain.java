@@ -363,6 +363,7 @@ public class ActivityMain extends AppCompatActivity implements NavigationView.On
             for(int i=0;i<permiso.size();i++){
                 if(permiso.get(i).getFimoduloid() == MODULO_DASHBOARD) {
                     permisosGerente.add(permiso.get(i));
+                    System.out.println( "PERMISOS: "+ permisosGerente.get( i ) );
                 }
             }
 

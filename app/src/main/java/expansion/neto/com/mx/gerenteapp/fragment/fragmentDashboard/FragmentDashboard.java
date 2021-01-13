@@ -38,6 +38,7 @@ import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Permiso;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.Usuario;
 import expansion.neto.com.mx.gerenteapp.modelView.loginModel.UsuarioLogin;
 import expansion.neto.com.mx.gerenteapp.provider.dashboardProvider.ProviderDatosDashboard;
+import expansion.neto.com.mx.gerenteapp.radios.ui.radios.ActivityRadios;
 import expansion.neto.com.mx.gerenteapp.utils.Util;
 
 import java.util.GregorianCalendar;
@@ -99,6 +100,14 @@ public class FragmentDashboard extends Fragment {
         Date hoy = Calendar.getInstance().getTime();
         String upperString = Util.getFechaDay(hoy).substring(0,1).toUpperCase() + Util.getFechaDay(hoy).substring(1);
         binding.dia.setText("Hoy " + upperString + ", " + Util.getFechaFormat(hoy));
+
+        binding.radio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent main = new Intent(getContext(), ActivityRadios.class);
+                startActivity(main);
+            }
+        });
 
         binding.autorizar.setOnClickListener(new View.OnClickListener() {
             @Override

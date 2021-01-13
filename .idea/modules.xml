@@ -2,9 +2,9 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calendarlibrary/calendarlibrary.iml" filepath="$PROJECT_DIR$/calendarlibrary/calendarlibrary.iml" />
-      <module fileurl="file://$PROJECT_DIR$/evaluaappsc2.iml" filepath="$PROJECT_DIR$/evaluaappsc2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/evaluaappsc2.iml" filepath="$PROJECT_DIR$/.idea/modules/evaluaappsc2.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/evaluaappsc2.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/evaluaappsc2.app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/calendarlibrary/evaluaappsc2.calendarlibrary.iml" filepath="$PROJECT_DIR$/.idea/modules/calendarlibrary/evaluaappsc2.calendarlibrary.iml" />
     </modules>
   </component>
 </project>

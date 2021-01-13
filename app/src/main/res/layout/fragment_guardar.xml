@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:background="@drawable/estilo_boton_blanco"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/puntos"
+            android:gravity="center"
+            android:textColor="@color/azultaco"
+            android:textSize="14sp"
+            app:typeface="robotoRegular" />
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/puntuacion"
+            android:background="@android:color/transparent"
+            tools:text="@string/puntos"
+            android:gravity="center"
+            android:textColor="@color/azultaco"
+            android:textSize="50sp"
+            app:typeface="robotoBold" />
+
+
+        <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
+            android:layout_marginTop="8dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="@string/guardo"
+            android:gravity="center"
+            android:textColor="@color/azultaco"
+            android:textSize="14sp"
+            app:typeface="robotoRegular" />
+
+
+
+        <LinearLayout
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <Button
+                android:gravity="center"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="10dp"
+                android:layout_gravity="center"
+                android:background="@drawable/estilo_boton_azul_claro"
+                android:id="@+id/salir"
+                android:layout_width="140dp"
+                android:layout_height="32dp"
+                android:textSize="12sp"
+                android:textColor="@color/blanco"
+                android:text="@string/aceptar"
+                android:layout_margin="10dp" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+</layout>

@@ -41,6 +41,7 @@ public class ActivityLogin extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private Usuario usuario;
+    private String idAndroid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class ActivityLogin extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
         permisos();
+        idAndroid = Settings.Secure.getString( getApplicationContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         initDataBinding();
 
     }
@@ -65,6 +67,8 @@ public class ActivityLogin extends AppCompatActivity {
         usuario = new Usuario("", "", this, binding);
         binding.setLoginViewModel(usuario);
         binding.entrar.setEnabled(true);
+
+        binding.tvIdAndroid.setText( "ID: " + idAndroid);
     }
 
     private static final int TIME_DELAY = 2000;
@@ -166,5 +170,14 @@ public class ActivityLogin extends AppCompatActivity {
             locationProviders = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
             return !TextUtils.isEmpty(locationProviders);
         }
+    }
+
+    public void compartir(View view) {
+
+        Intent intentCompartir = new Intent();
+        intentCompartir.setAction(Intent.ACTION_SEND);
+        intentCompartir.putExtra(Intent.EXTRA_TEXT, idAndroid);
+        intentCompartir.setType("text/plain");
+        startActivity(Intent.createChooser(intentCompartir, "Compartir via"));
     }
 }

@@ -55,6 +55,7 @@
     <string name="md">MD</string>
     <string name="area">Área</string>
     <string name="puntos">Puntos</string>
+    <string name="guardo">Se guardo correctamente el sitio para editarlo entra en la opción "Por terminar" en tu menú.</string>
     <string name="categoria">Categoría</string>
 
     <string name="obtuvo">Este sitio obtuvo</string>
@@ -91,6 +92,7 @@
     <string name="inmediata">\u2022 Inmediata</string>
 
 
+    <string name="misradios">Mis Radios</string>
     <string name="porAutorizar">Por autorizar</string>
     <string name="enProceso">En proceso</string>
     <string name="mdsRechazadas">Rechazadas</string>
@@ -314,4 +316,29 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="asignado_el">ASIGNADO EL</string>
+    <string name="estatus">ESTATUS</string>
+
+
+    <string name="sin_radios">Se ha marcado este radio como autorizado</string>
+    <string name="sin_radios_asignados">No tienes radios asignados</string>
+
+    <string name="cancelado">Se ha marcado este radio como Rechazado</string>
+
+    <string name="detalle">Detalle</string>
+    <string name="mapa">Mapa</string>
+
+    <string name="mis_radios">Mis Radios</string>
+    <string name="crear_md">Crear MD</string>
+    <string name="sin_sitios_disponibles">Radio sin sitio</string>
+    <string name="cancelar_Radio">Cancelar Radio</string>
+    <string name="informaci_n_socio_demogr_fica">Información Socio demográfica</string>
+    <string name="salirmd">Estás apunto de salir de está MD, para continuar editando entra a la opción "Por terminar" en tu menú.</string>
+
+    <string name="categorias">Categorías</string>
+    <string name="correctamente">Se envío correctamente el sitio</string>
+    <string name="guardarmd">Se guardo correctamente el sitio para editarlo, entra en la opción "Por terminar" en tu menú.</string>
+
 </resources>

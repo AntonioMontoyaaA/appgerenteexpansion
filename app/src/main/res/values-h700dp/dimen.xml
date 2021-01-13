@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="espaciado_login">50dp</dimen>
+    <dimen name="espaciado_login2">80dp</dimen>
+    <dimen name="espaciado_login3">120dp</dimen>
+
+    <!--fragment Switch Sitio-->
+    <dimen name="tamaño_ciudad">230dp</dimen>
+    <dimen name="tamaño_ciudad2">130dp</dimen>
+    <dimen name="alto_card_ciudad">300dp</dimen>
+    <dimen name="ancho_card_ciudad">210dp</dimen>
+
+    <!--fragment Autoriza-->
+    <dimen name="alto_map">700dp</dimen>
+    <dimen name="espacio_dentro_mapa">20dp</dimen>
+    <dimen name="top_dentro_mapa">2dp</dimen>
+    <dimen name="nombre_sitio_size">12sp</dimen>
+    <dimen name="marginTop_linear">8dp</dimen>
+    <dimen name="alto_Cardview">180dp</dimen>
+
+    <!--fragment Autoriza 1-->
+    <dimen name="alto_Linear">700dp</dimen>
+
+    <!--activity Autoriza-->
+    <dimen name="margin_start_help">477dp</dimen>
+
+
+    <!--fragment Autoriza 2-->
+    <dimen name="margin_text">16dp</dimen>
+    <dimen name="size_text">12dp</dimen>
+    <dimen name="size_Linear">210dp</dimen>
+
+    <!--activity_detalle_radios-->
+    <dimen name="espaciado">6dp</dimen>
+    <dimen name="text_size">14dp</dimen>
+    <dimen name="RoboTextView_height">25dp</dimen>
+</resources>

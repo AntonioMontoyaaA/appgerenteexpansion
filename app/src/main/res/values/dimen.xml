@@ -23,4 +23,39 @@
     <dimen name="ic_album_overflow_height">30dp</dimen>
     <dimen name="ic_album_overflow_margin_top">10dp</dimen>
 
+    <dimen name="espaciado_login">0dp</dimen>
+    <dimen name="espaciado_login2">10dp</dimen>
+    <dimen name="espaciado_login3">10dp</dimen>
+
+    <!--fragment Switch Sitio-->
+    <dimen name="tamaño_ciudad">100dp</dimen>
+    <dimen name="tamaño_ciudad2">100dp</dimen>
+    <dimen name="alto_card_ciudad">200dp</dimen>
+    <dimen name="ancho_card_ciudad">150dp</dimen>
+
+    <!--fragment Autoriza-->
+    <dimen name="alto_map">350dp</dimen>
+    <dimen name="espacio_dentro_mapa">0dp</dimen>
+    <dimen name="top_dentro_mapa">0dp</dimen>
+    <dimen name="nombre_sitio_size">10sp</dimen>
+    <dimen name="marginTop_linear">0dp</dimen>
+    <dimen name="alto_Cardview">140dp</dimen>
+
+    <!--fragment Autoriza 1-->
+    <dimen name="alto_Linear">610dp</dimen>
+
+    <!--activity Autoriza-->
+    <dimen name="margin_start_help">450dp</dimen>
+
+    <!--fragment Autoriza 2-->
+    <dimen name="margin_text">0dp</dimen>
+    <dimen name="size_text">10dp</dimen>
+    <dimen name="size_Linear">146dp</dimen>
+
+    <!--activity_detalle_radios-->
+    <dimen name="espaciado">0dp</dimen>
+    <dimen name="text_size">12dp</dimen>
+    <dimen name="RoboTextView_height">12dp</dimen>
+
+
 </resources>
