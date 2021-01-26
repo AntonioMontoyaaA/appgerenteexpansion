@@ -63,6 +63,7 @@ public class FragmentDashboard extends Fragment {
     private static final int MODULO_RECHAZADAS_ID = 4;
     private static final int MODULO_AGENDA_ID = 6;
     private static final int MODULO_COLABORADORES_ID = 8;
+    private static final int MODULO_RADIOS_ID = 12;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -282,7 +283,7 @@ public class FragmentDashboard extends Fragment {
         });
 
         ReminderUtilities.scheduleCronReminder(getContext());
-        ReminderUtilitiesJob.scheduleCronReminder(getContext());
+        //ReminderUtilitiesJob.scheduleCronReminder(getContext());
 
         return v;
     }
@@ -616,6 +617,13 @@ public class FragmentDashboard extends Fragment {
                             binding.colaboradores.setVisibility(View.VISIBLE);
                         }else{
                             binding.colaboradores.setVisibility(View.GONE);
+                        }
+                        break;
+                    case MODULO_RADIOS_ID:
+                        if(permisosGerente.get(j).getFiestatus()==1){
+                            binding.radio.setVisibility(View.VISIBLE);
+                        }else{
+                            binding.radio.setVisibility(View.GONE);
                         }
                         break;
                 }

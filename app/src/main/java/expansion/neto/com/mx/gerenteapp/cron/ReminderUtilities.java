@@ -58,7 +58,7 @@ public class ReminderUtilities {
         int cancel = dispatcher.cancel(REMINDER_ID);
         if(cancel==0){
             dispatcher.schedule(constraintReminderJob);
-            Log.w(ReminderUtilities.class.getName(), Cron.class.toString() + "Cron Job iniciado");
+            Log.w(ReminderUtilities.class.getName(), Cron.class.toString() + "Cron iniciado");
         }
     }
 

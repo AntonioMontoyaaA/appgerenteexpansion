@@ -20,7 +20,7 @@ public class CronJob extends JobService {
     @Override
     public boolean onStartJob(final JobParameters jobParameters) {
         sendLocalizador();
-        //Log.e("Service ejecutado!","Cron LOCALIZADOR");
+        Log.e("Service ejecutado!","Cron LOCALIZADOR");
         return false;
     }
 
