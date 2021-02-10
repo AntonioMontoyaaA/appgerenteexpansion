@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@+id/tab_layout"
-             />
+            />
 
         <!-- mis radios-->
         <LinearLayout
@@ -84,13 +84,15 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
-                android:visibility="invisible">
+                android:gravity="right"
+                android:visibility="visible">
 
                 <ImageView
-                    android:layout_width="wrap_content"
+                    android:layout_width="30dp"
                     android:layout_height="wrap_content"
-                    android:gravity="center" />
+                    android:gravity="right"
+                    android:src="@drawable/ic_menu"
+                    android:onClick="mostrarMenu"/>
             </RelativeLayout>
 
         </LinearLayout>
@@ -582,12 +584,12 @@
                             android:layout_height="wrap_content"
                             android:text="Edad predominante"
                             android:textColor="@color/blanco"/>
-                        
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
-                            
+
                             <LinearLayout
                                 android:layout_weight="1"
                                 android:layout_width="wrap_content"
@@ -788,7 +790,7 @@
                                     android:gravity="center"
                                     android:text="61-"/>
                             </LinearLayout>
-                            
+
                         </LinearLayout>
                         <LinearLayout
                             android:paddingTop="15dp"
@@ -902,173 +904,173 @@
                         />
 
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                            <LinearLayout
-                                android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView android:textSize="@dimen/text_size"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/blanco"
-                                    android:layout_weight="1"
-                                    android:text="Mercados"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@mipmap/icon_mercado"
-                                    android:padding="0dp"
-                                    android:layout_gravity="center"
-                                    />
-
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:id="@+id/tv_valorMercados"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/blanco"/>
-                            </LinearLayout>
-                            <LinearLayout
+                                android:textColor="@color/blanco"
                                 android:layout_weight="1"
+                                android:text="Mercados"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/blanco"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:text="Escuelas"
-                                    android:layout_gravity="center"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@mipmap/icon_escuela"
-                                    android:padding="0dp"
-                                    android:layout_gravity="center"
-                                    />
-
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:id="@+id/tv_valorEscuelas"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/blanco"/>
-                            </LinearLayout>
-                            <LinearLayout
                                 android:layout_weight="1"
+                                android:src="@mipmap/icon_mercado"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorMercados"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:text="Hospitales"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/blanco"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@mipmap/icon_hospital"
-                                    android:padding="0dp"
-                                    android:layout_gravity="center"
-                                    />
-
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:id="@+id/tv_valorHospitales"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/blanco"/>
-                            </LinearLayout>
-                            <LinearLayout
+                                android:layout_gravity="center"
                                 android:layout_weight="1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:text="Templos"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/blanco"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@mipmap/icon_templo"
-                                    android:padding="0dp"
-                                    android:layout_gravity="center"
-                                    />
-
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:id="@+id/tv_valorTemplos"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/blanco"/>
-                            </LinearLayout>
-                            <LinearLayout
-                                android:layout_weight="1"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical">
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:text="O.gobierno"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="@color/blanco"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:layout_gravity="center"/>
-
-                                <ImageView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:src="@mipmap/icon_office"
-                                    android:padding="0dp"
-                                    android:layout_gravity="center"
-                                    />
-
-                                <TextView android:textSize="@dimen/text_size"
-                                    android:id="@+id/tv_OficinasGob"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_weight="1"
-                                    android:gravity="center"
-                                    android:textColor="@color/blanco" />
-                            </LinearLayout>
-
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
                         </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView android:textSize="@dimen/text_size"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Escuelas"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_escuela"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorEscuelas"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView android:textSize="@dimen/text_size"
+                                android:text="Hospitales"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_hospital"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorHospitales"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView android:textSize="@dimen/text_size"
+                                android:text="Templos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_templo"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_valorTemplos"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <TextView android:textSize="@dimen/text_size"
+                                android:text="O.gobierno"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/blanco"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:layout_gravity="center"/>
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:src="@mipmap/icon_office"
+                                android:padding="0dp"
+                                android:layout_gravity="center"
+                                />
+
+                            <TextView android:textSize="@dimen/text_size"
+                                android:id="@+id/tv_OficinasGob"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:textColor="@color/blanco" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <expansion.neto.com.mx.gerenteapp.utils.font.RobotoTextView
                         android:layout_width="wrap_content"
@@ -1383,6 +1385,342 @@
 
 
             </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageButton
+            android:alpha="0"
+            android:id="@+id/iv_menu"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#A3000000"
+            android:visibility="invisible"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:gravity="end">
+
+
+            <ImageView
+                android:alpha="0"
+                android:visibility="invisible"
+                android:id="@+id/iv_menu2"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:gravity="right"
+                android:src="@drawable/ic_menu"
+                android:onClick="desaparecer"
+                android:layout_marginRight="8dp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:alpha="0"
+            android:visibility="invisible"
+            android:id="@+id/ly_menu"
+            android:translationZ="10dp"
+            android:layout_marginTop="44dp"
+            android:layout_width="match_parent"
+            android:gravity="end"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="25dp"
+            android:orientation="vertical">
+            <ScrollView
+                android:layout_width="wrap_content"
+                android:background="@android:color/white"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/background"
+                    android:gravity="left">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/ThemeOverlay.AppCompat"
+                            android:id="@+id/checkTiendas3B"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tiendas 3B"/>
+                        <ImageView
+                            android:src="@mipmap/pin_tres_b_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkBodegaAurreraEx"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Bodega Aurrera Ex."/>
+                        <ImageView
+                            android:src="@mipmap/pin_aurrera_express_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkMiBodegaAurrera"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mi Bodega Aurrera"/>
+                        <ImageView
+                            android:src="@mipmap/pin_aurrera_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkPanaderia"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Panaderia"/>
+                        <ImageView
+                            android:src="@mipmap/pin_panaderia_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkTortilleria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tortilleria"/>
+                        <ImageView
+                            android:src="@mipmap/pin_tortilleria_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkAbarrotes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Abarrotes"/>
+                        <ImageView
+                            android:src="@mipmap/pin_abarrotes_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkCarniceria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Carniceria"/>
+                        <ImageView
+                            android:src="@mipmap/pin_carniceria_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkPolleria"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Polleria"/>
+                        <ImageView
+                            android:src="@mipmap/pin_polleria_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkHospitales"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Hospitales"/>
+                        <ImageView
+                            android:src="@mipmap/pin_hospital_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkEscuelas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Escuelas"/>
+                        <ImageView
+                            android:src="@mipmap/pin_escuela_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkMercado"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Mercado"/>
+                        <ImageView
+                            android:src="@mipmap/pin_mercado_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkOGobierno"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="O.Gobierno"/>
+                        <ImageView
+                            android:src="@mipmap/pin_ofgobierno_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkRecauderias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Recauderias"/>
+                        <ImageView
+                            android:src="@mipmap/pin_recauderia_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkIglesias"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Iglesias"/>
+                        <ImageView
+                            android:src="@mipmap/pin_templo_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+
+                    <Button
+                        android:layout_gravity="center"
+                        android:layout_marginBottom="10dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Finalizar"
+                        android:textColor="@android:color/white"
+                        android:background="@android:color/darker_gray"
+                        android:onClick="desaparecer"/>
+
+                </LinearLayout>
+
+            </ScrollView>
 
         </LinearLayout>
 

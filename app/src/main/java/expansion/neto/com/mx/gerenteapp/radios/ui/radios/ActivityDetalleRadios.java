@@ -9,11 +9,15 @@ import android.content.res.Resources;
 import android.databinding.DataBindingUtil;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,8 +28,10 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import expansion.neto.com.mx.gerenteapp.databinding.ActivityDetalleRadiosBinding;
@@ -108,9 +114,31 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
     public static final String LONG_RADIO = "tvLongRadio";
     public static final String NOMBRERADIO = "tvNombreRadio";
 
+    private ArrayList<Marker> marcadoresTiendas3B = new ArrayList<>();
+    private ArrayList<Marker> marcadoresBodegaAurreraEx = new ArrayList<>();
+    private ArrayList<Marker> marcadoresMiBodegaAurrera = new ArrayList<>();
+    private ArrayList<Marker> marcadoresPanaderia = new ArrayList<>();
+    private ArrayList<Marker> marcadoresTortilleria = new ArrayList<>();
+    private ArrayList<Marker> marcadoresAbarrotes = new ArrayList<>();
+    private ArrayList<Marker> marcadoresCarniceria = new ArrayList<>();
+    private ArrayList<Marker> marcadoresPolleria = new ArrayList<>();
+    private ArrayList<Marker> marcadoresHospitales = new ArrayList<>();
+    private ArrayList<Marker> marcadoresEscuelas = new ArrayList<>();
+    private ArrayList<Marker> marcadoresMercado = new ArrayList<>();
+    private ArrayList<Marker> marcadoresOGobierno = new ArrayList<>();
+    private ArrayList<Marker> marcadoresRecauderias = new ArrayList<>();
+    private ArrayList<Marker> marcadoresIglesias = new ArrayList<>();
+
+
+    private ImageView ivMenu,ivMenu2 ;
+    private LinearLayout lyMenu ;
+
+
     ProgressDialog progressDialog;
     String radioID;
     private static ActivityDetalleRadios myContext;
+
+    final Handler handler = new Handler();
 
     public static ActivityDetalleRadios getMyContext() {
         return myContext;
@@ -123,6 +151,9 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
 
         initDataBinding();
 
+        ivMenu = findViewById( R.id.iv_menu );
+        ivMenu2 = findViewById( R.id.iv_menu2 );
+        lyMenu = findViewById( R.id.ly_menu );
 
 
         final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
@@ -241,12 +272,19 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
         Double latitud = Double.parseDouble(bundle.getString(LATITUD));
         Double longitud = Double.parseDouble(bundle.getString(LONGITUD));
         Resources resource = ActivityDetalleRadios.this.getResources();
+        googleMap.addMarker( new MarkerOptions()
+                .anchor( 0.5f,0.5f )
+                .position( new LatLng( latitud,longitud ) )
+                .zIndex( 0f )
+                .icon( BitmapDescriptorFactory.defaultMarker( BitmapDescriptorFactory.HUE_AZURE ) ));
         googleMap.addCircle(new CircleOptions()
-        .center(new LatLng(latitud,longitud))
-        .radius(500)
+                .center(new LatLng(latitud,longitud))
+                .radius(500)
                 .strokeColor(resource.getColor(R.color.radios))
                 .fillColor(resource.getColor(R.color.radios)));
-        for (int i = 0; i<listaCompetencia.size();i++){
+
+        PintarMarcadores( googleMap, listaCompetencia, listaGeneradores );
+        /*for (int i = 0; i<listaCompetencia.size();i++){
             switch (listaCompetencia.get( i ).getGenerador()){
                 case "Tiendas 3B":
                     googleMap.addMarker( new MarkerOptions()
@@ -376,7 +414,7 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
 
 
             }
-        }
+        }*/
 
         /*googleMap.addMarker( new MarkerOptions()
         .position( new LatLng( Double.parseDouble(listaGeneradores.get( 0 ).getLatitud()),Double.parseDouble(listaGeneradores.get( 0 ).getLongitud() )))
@@ -391,6 +429,310 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
                 .build();
         googleMap.animateCamera( CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
+
+    private void PintarMarcadores(GoogleMap googleMap, List<Competencia> listaCompetencia, List<GeneradoresRadio> listaGeneradores) {
+        for (int i = 0; i<listaCompetencia.size();i++){
+            switch (listaCompetencia.get( i ).getGenerador()){
+                case "Tiendas 3B":
+                    marcadoresTiendas3B.add(  googleMap.addMarker( new MarkerOptions()
+                            .anchor( 0.5f,0.5f )
+                            .position( new LatLng( Double.parseDouble(listaCompetencia.get( i ).getLatitud()),Double.parseDouble(listaCompetencia.get( i ).getLongitud() )))
+                            .zIndex( 1.0f )
+                            .title( listaCompetencia.get( i ).getGenerador() )
+                            .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_tres_b2_foreground ) ) ));
+                    /*if (listaCompetencia.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresTiendas3B.get( i ).setVisible( false );
+                    }else {
+                        marcadoresTiendas3B.get( i ).setVisible( true );
+
+                    }*/
+                    break;
+                case "BODEGA AURRERA EXPRESS":
+                    marcadoresBodegaAurreraEx.add(  googleMap.addMarker( new MarkerOptions()
+                            .anchor( 0.5f,0.5f )
+                            .position( new LatLng( Double.parseDouble(listaCompetencia.get( i ).getLatitud()),Double.parseDouble(listaCompetencia.get( i ).getLongitud() )))
+                            .zIndex( 1.0f )
+                            .title( listaCompetencia.get( i ).getGenerador() )
+                            .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_aurrera_express2_foreground ) ) ));
+                    /*if (listaCompetencia.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresBodegaAurreraEx.get( i ).setVisible( false );
+                    }else {
+                        marcadoresBodegaAurreraEx.get( i ).setVisible( true );
+
+                    }*/
+                    break;
+                case "MI BODEGA AURRERA":
+                    marcadoresMiBodegaAurrera.add(  googleMap.addMarker( new MarkerOptions()
+                            .anchor( 0.5f,0.5f )
+                            .position( new LatLng( Double.parseDouble(listaCompetencia.get( i ).getLatitud()),Double.parseDouble(listaCompetencia.get( i ).getLongitud() )))
+                            .zIndex( 1.0f )
+                            .title( listaCompetencia.get( i ).getGenerador() )
+                            .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_aurrera2_foreground ) ) ));
+                    /*if (listaCompetencia.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresMiBodegaAurrera.get( i ).setVisible( false );
+                    }else {
+                        marcadoresMiBodegaAurrera.get( i ).setVisible( true );
+
+                    }*/
+                    break;
+                default:
+                    googleMap.addMarker( new MarkerOptions()
+                            .anchor( 0.5f,0.5f )
+                            .position( new LatLng( Double.parseDouble(listaCompetencia.get( i ).getLatitud()),Double.parseDouble(listaCompetencia.get( i ).getLongitud() )))
+                            .zIndex( 1.0f )
+                            .title( listaCompetencia.get( i ).getGenerador() )
+                            .icon( BitmapDescriptorFactory.fromResource( R.mipmap.icon_templo ) ));
+                    break;
+            }
+        }
+
+
+        for (int i = 0; i<listaGeneradores.size();i++){
+            switch (listaGeneradores.get( i ).getGenerador()){
+                case "PANADERIA":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresPanaderia.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_panaderia2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresPanaderia.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_panaderia2_foreground ) )
+                                .visible( true )));
+                        binding.checkPanaderia.setChecked( true );
+
+
+                    }
+                    break;
+                case "TORTILLERIA":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresTortilleria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_tortilleria2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresTortilleria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_tortilleria2_foreground ) )
+                                .visible( true )));
+                        binding.checkTortilleria.setChecked( true );
+
+
+                    }
+                    break;
+                case "ABARROTES":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresAbarrotes.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_abarrotes2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresAbarrotes.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_abarrotes2_foreground ) )
+                                .visible( true )));
+                        binding.checkAbarrotes.setChecked( true );
+
+
+                    }
+                    break;
+                case "CARNICERIA":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresCarniceria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_carniceria2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresCarniceria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_carniceria2_foreground ) )
+                                .visible( true )));
+                        binding.checkCarniceria.setChecked( true );
+
+
+                    }
+                    break;
+                case "POLLERIA":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresPolleria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_polleria2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresPolleria.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_polleria2_foreground ) )
+                                .visible( true )));
+                        binding.checkPolleria.setChecked( true );
+
+
+                    }
+                    break;
+                case "HOSPITALES":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresHospitales.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_hospital2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresHospitales.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_hospital2_foreground ) )
+                                .visible( true )));
+                        binding.checkHospitales.setChecked( true );
+
+
+                    }
+                    break;
+                case "ESCUELAS":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresEscuelas.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_escuela2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresEscuelas.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_escuela2_foreground ) )
+                                .visible( true )));
+                        binding.checkEscuelas.setChecked( true );
+
+
+                    }
+                    break;
+                case "MERCADO":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresMercado.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_mercado2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresMercado.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_mercado2_foreground ) )
+                                .visible( true )));
+                        binding.checkMercado.setChecked( true );
+
+
+                    }
+                    break;
+                case "OFICINA DE GOBIERNO":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresOGobierno.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_ofgobierno2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresOGobierno.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_ofgobierno2_foreground ) )
+                                .visible( true )));
+                        binding.checkOGobierno.setChecked( true );
+
+
+                    }
+                    break;
+                case "RECAUDERIAS":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresRecauderias.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_recauderia2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresRecauderias.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_recauderia2_foreground ) )
+                                .visible( true )));
+                        binding.checkRecauderias.setChecked( true );
+
+
+                    }
+                    break;
+                case "IGLESIAS":
+                    if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
+                        marcadoresIglesias.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_templo2_foreground ) )
+                                .visible( false )));
+
+                    }else {
+                        marcadoresIglesias.add(  googleMap.addMarker( new MarkerOptions()
+                                .anchor( 0.5f,0.5f )
+                                .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                                .title( listaGeneradores.get( i ).getGenerador() )
+                                .icon( BitmapDescriptorFactory.fromResource( R.mipmap.pin_templo2_foreground ) )
+                                .visible( true )));
+                        binding.checkIglesias.setChecked( true );
+
+
+                    }
+                    break;
+                default:
+                    googleMap.addMarker( new MarkerOptions()
+                            .anchor( 0.5f,0.5f )
+                            .position( new LatLng( Double.parseDouble(listaGeneradores.get( i ).getLatitud()),Double.parseDouble(listaGeneradores.get( i ).getLongitud() )))
+                            .title( listaGeneradores.get( i ).getLatitud() )
+                            .icon( BitmapDescriptorFactory.fromResource( R.mipmap.icon_templo ) ));
+                    break;
+
+
+            }
+        }
+    }
+
 
     public void Autorizar(final View view) {
 
@@ -533,6 +875,218 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
         TextView textView = (TextView) view2.findViewById(android.support.design.R.id.snackbar_text);
         textView.setTextColor(Color.WHITE);
         snackbar.show();
+    }
+
+    public void verMacador(View view) {
+        boolean checked = ((CheckBox) view).isChecked();
+        switch (view.getId()){
+            case R.id.checkTiendas3B:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkTiendas3B ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresTiendas3B.size();i ++ ){
+                        marcadoresTiendas3B.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresTiendas3B.size();i ++ ){
+                        marcadoresTiendas3B.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkBodegaAurreraEx:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkBodegaAurreraEx ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresBodegaAurreraEx.size();i ++ ){
+                        marcadoresBodegaAurreraEx.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresBodegaAurreraEx.size();i ++ ){
+                        marcadoresBodegaAurreraEx.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkMiBodegaAurrera:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkMiBodegaAurrera ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresMiBodegaAurrera.size();i ++ ){
+                        marcadoresMiBodegaAurrera.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresMiBodegaAurrera.size();i ++ ){
+                        marcadoresMiBodegaAurrera.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkPanaderia:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkPanaderia ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresPanaderia.size();i ++ ){
+                        marcadoresPanaderia.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresPanaderia.size();i ++ ){
+                        marcadoresPanaderia.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkTortilleria:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkTortilleria ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresTortilleria.size();i ++ ){
+                        marcadoresTortilleria.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresTortilleria.size();i ++ ){
+                        marcadoresTortilleria.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkAbarrotes:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkAbarrotes ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresAbarrotes.size();i ++ ){
+                        marcadoresAbarrotes.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresAbarrotes.size();i ++ ){
+                        marcadoresAbarrotes.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkCarniceria:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkCarniceria ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresCarniceria.size();i ++ ){
+                        marcadoresCarniceria.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresCarniceria.size();i ++ ){
+                        marcadoresCarniceria.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkPolleria:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkPolleria ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresPolleria.size();i ++ ){
+                        marcadoresPolleria.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresPolleria.size();i ++ ){
+                        marcadoresPolleria.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkHospitales:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkHospitales ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresHospitales.size();i ++ ){
+                        marcadoresHospitales.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresHospitales.size();i ++ ){
+                        marcadoresHospitales.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkEscuelas:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkEscuelas ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresEscuelas.size();i ++ ){
+                        marcadoresEscuelas.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresEscuelas.size();i ++ ){
+                        marcadoresEscuelas.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkMercado:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkMercado ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresMercado.size();i ++ ){
+                        marcadoresMercado.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresMercado.size();i ++ ){
+                        marcadoresMercado.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkOGobierno:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkOGobierno ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresOGobierno.size();i ++ ){
+                        marcadoresOGobierno.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresOGobierno.size();i ++ ){
+                        marcadoresOGobierno.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkRecauderias:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkRecauderias ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresRecauderias.size();i ++ ){
+                        marcadoresRecauderias.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresRecauderias.size();i ++ ){
+                        marcadoresRecauderias.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkIglesias:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkIglesias ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresIglesias.size();i ++ ){
+                        marcadoresIglesias.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresIglesias.size();i ++ ){
+                        marcadoresIglesias.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+        }
+    }
+
+    public void desaparecer(View view) {
+        ivMenu.animate().setDuration( 1000 ).alpha( 0f );
+        ivMenu2.animate().setDuration( 1000 ).alpha( 0f );
+        lyMenu.animate().setDuration( 1000 ).alpha( 0f );
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                ivMenu2.setVisibility( View.INVISIBLE );
+                ivMenu.setVisibility( View.INVISIBLE );
+                lyMenu.setVisibility( View.INVISIBLE );
+            }
+        }, 1000);
+    }
+
+    public void mostrarMenu(View view) {
+        ivMenu.animate().setDuration( 1000 ).alpha( 1f );
+        ivMenu.setVisibility( View.VISIBLE );
+        ivMenu2.animate().setDuration( 1000 ).alpha( 1f );
+        ivMenu2.setVisibility( View.VISIBLE );
+        lyMenu.animate().setDuration( 1000 ).alpha( 1f );
+        lyMenu.setVisibility( View.VISIBLE );
     }
 
 }
