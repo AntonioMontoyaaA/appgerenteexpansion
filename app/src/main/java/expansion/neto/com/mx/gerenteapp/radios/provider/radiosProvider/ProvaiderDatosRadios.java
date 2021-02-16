@@ -7,6 +7,8 @@ import com.google.gson.Gson;
 
 import expansion.neto.com.mx.gerenteapp.constantes.RestUrl;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.GuardarV;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.JefeRadiosNuevoV;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.JefeRadiosV;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.Radios;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.SinSitios;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.ValidaUb;
@@ -28,6 +30,9 @@ public class ProvaiderDatosRadios {
     SinSitios sinSitios;
     ValidaUb validaUb;
     GuardarV guardarV;
+    JefeRadiosV jefeRadiosV;
+    JefeRadiosNuevoV jefeRadiosNuevoV;
+    private final String CONSTANTE_ASIGNA_RADIO = "1";
 
 
     public ProvaiderDatosRadios () {}
@@ -210,6 +215,88 @@ public class ProvaiderDatosRadios {
         }).execute();
     }
 
+    public void obtieneJefesXgerente (final String usuarioId, final JefeRadio promise) {
+        final OkHttpClient client = new OkHttpClient();
+        (new AsyncTask<Void, Void, JefeRadiosV>() {
+            @Override
+            protected JefeRadiosV doInBackground(Void... voids) {
+                try {
+                    FormBody.Builder formBuilder = new FormBody.Builder()
+                            .add("usuarioId", usuarioId);
+
+                    RequestBody formBody = formBuilder.build();
+                    Request request = new Request.Builder()
+                            .url(RestUrl.REST_ACTION_OBTIENE_JEFES_X_GERENTE)
+                            .post(formBody)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    respuesta3 = response.body().string();
+                    Gson gson = new Gson();
+                    String jsonInString = respuesta3;
+                    return jefeRadiosV = gson.fromJson(jsonInString, JefeRadiosV.class);
+
+                } catch (Exception e) {
+                    if (e.getMessage().contains("Failed to connect to")) {
+                        jefeRadiosV = new JefeRadiosV();
+                        jefeRadiosV.setCodigo(1);
+                        return jefeRadiosV;
+                    } else {
+                        jefeRadiosV = new JefeRadiosV();
+                        jefeRadiosV.setCodigo(404);
+                        return jefeRadiosV;
+                    }
+                }
+            }
+
+            @Override
+            protected void onPostExecute(JefeRadiosV jefeRadiosV) {
+                promise.resolve(jefeRadiosV);
+            }
+        }).execute();
+    }
+
+    public void asignaRadioUsuario (final String usuarioId, final String radioId, final String usuarioJefeId, final JefeRadioNuevo promise) {
+        final OkHttpClient client = new OkHttpClient();
+        (new AsyncTask<Void, Void, JefeRadiosNuevoV>() {
+            @Override
+            protected JefeRadiosNuevoV doInBackground(Void... voids) {
+                try {
+                    FormBody.Builder formBuilder = new FormBody.Builder()
+                            .add("usuarioId", usuarioId)
+                            .add("radioId", radioId)
+                            .add("usuarioAsignaId", usuarioJefeId)
+                            .add("valorAsigna", CONSTANTE_ASIGNA_RADIO);
+
+                    RequestBody formBody = formBuilder.build();
+                    Request request = new Request.Builder()
+                            .url(RestUrl.REST_ACTION_ASIGNA_NUEVO_JEFES_X_GERENTE)
+                            .post(formBody)
+                            .build();
+                    Response response = client.newCall(request).execute();
+                    respuesta3 = response.body().string();
+                    Gson gson = new Gson();
+                    String jsonInString = respuesta3;
+                    return jefeRadiosNuevoV = gson.fromJson(jsonInString, JefeRadiosNuevoV.class);
+
+                } catch (Exception e) {
+                    if (e.getMessage().contains("Failed to connect to")) {
+                        jefeRadiosNuevoV = new JefeRadiosNuevoV();
+                        jefeRadiosNuevoV.setCodigo(1);
+                        return jefeRadiosNuevoV;
+                    } else {
+                        jefeRadiosNuevoV = new JefeRadiosNuevoV();
+                        jefeRadiosNuevoV.setCodigo(404);
+                        return jefeRadiosNuevoV;
+                    }
+                }
+            }
+
+            @Override
+            protected void onPostExecute(JefeRadiosNuevoV jefeRadiosNuevoV) {
+                promise.resolve(jefeRadiosNuevoV);
+            }
+        }).execute();
+    }
 
 
     public interface ConsultaDatosRadios {
@@ -229,6 +316,16 @@ public class ProvaiderDatosRadios {
 
     public interface GuardarVis {
         void resolve(GuardarV guardarV);
+        void reject(Exception e);
+    }
+
+    public interface JefeRadio {
+        void resolve(JefeRadiosV jefeRadiosV);
+        void reject(Exception e);
+    }
+
+    public interface JefeRadioNuevo {
+        void resolve(JefeRadiosNuevoV jefeRadiosNuevoV);
         void reject(Exception e);
     }
 }

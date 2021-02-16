@@ -111,6 +111,7 @@
 
     <string name="aceptar">Aceptar</string>
     <string name="autorizar">Autorizar</string>
+    <string name="reasigna">Reasignar</string>
 
     <string name="datossitio">1. Datos del sitio</string>
     <string name="datospropietario">2. Datos del propietario</string>

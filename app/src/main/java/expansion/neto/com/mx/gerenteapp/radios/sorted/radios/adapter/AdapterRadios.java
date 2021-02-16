@@ -17,6 +17,8 @@ import expansion.neto.com.mx.gerenteapp.R;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.Competencia;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.DetalleRadio;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.GeneradoresRadio;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.MdsVO;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.TiendasVO;
 import expansion.neto.com.mx.gerenteapp.radios.ui.radios.ActivityDetalleRadios;
 
 import static expansion.neto.com.mx.gerenteapp.radios.ui.radios.ActivityDetalleRadios.NOMBRERADIO;
@@ -65,6 +67,18 @@ public class AdapterRadios extends RecyclerView.Adapter<AdapterRadios.ViewHolder
                 Bundle bundleComp = new Bundle( );
                 bundleComp.putParcelableArrayList( ActivityDetalleRadios.COMPETENCIA,arrayListCompetencia );
                 intent.putExtras( bundleComp );
+
+                List<TiendasVO> listaTiendas = detalleRadio.getTiendas();
+                ArrayList<TiendasVO> arrayListTiendas = new ArrayList<TiendasVO>(listaTiendas);
+                Bundle bundleTiendas = new Bundle( );
+                bundleTiendas.putParcelableArrayList( ActivityDetalleRadios.TIENDAS,arrayListTiendas );
+                intent.putExtras( bundleTiendas );
+
+                List<MdsVO> listaMds = detalleRadio.getMds();
+                ArrayList<MdsVO> arrayListMds = new ArrayList<MdsVO>(listaMds);
+                Bundle bundleMds = new Bundle( );
+                bundleMds.putParcelableArrayList( ActivityDetalleRadios.MDS, arrayListMds );
+                intent.putExtras( bundleMds );
 
                 intent.putExtra(ActivityDetalleRadios.LONGITUD, detalleRadio.getLongitud());
                 intent.putExtra(ActivityDetalleRadios.STATUSID, detalleRadio.getEstatusRadioId());

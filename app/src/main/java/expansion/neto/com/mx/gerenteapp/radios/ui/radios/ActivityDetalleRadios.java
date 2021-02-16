@@ -15,6 +15,8 @@ import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -42,7 +44,11 @@ import expansion.neto.com.mx.gerenteapp.radios.fragment.radios.FragmentAceptar;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.Competencia;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.GeneradoresRadio;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.GuardarV;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.JefeRadiosNuevoV;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.JefeRadiosV;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.MdsVO;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.SinSitios;
+import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.TiendasVO;
 import expansion.neto.com.mx.gerenteapp.radios.modelView.radiosModel.ValidaUb;
 import expansion.neto.com.mx.gerenteapp.radios.provider.radiosProvider.ProvaiderDatosRadios;
 import expansion.neto.com.mx.gerenteapp.ui.autoriza.ActivityAutorizar;
@@ -63,6 +69,10 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
     public static final String SIN_SITIO = "sin_sitio";
     public static final String CANCELADO = "cancelado";
     public static final String COMPETENCIA = "competencia";
+
+    public static final String TIENDAS = "tiendas";
+    public static final String MDS = "mds";
+
     public static final String LONGITUD = "longitud";
     public static final String STATUSID = "tvStatusId";
     public static final String fcTotalCompetencia = "fcTotalCompetencia";
@@ -128,6 +138,9 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
     private ArrayList<Marker> marcadoresOGobierno = new ArrayList<>();
     private ArrayList<Marker> marcadoresRecauderias = new ArrayList<>();
     private ArrayList<Marker> marcadoresIglesias = new ArrayList<>();
+
+    private ArrayList<Marker> marcadoresTiendas = new ArrayList<>();
+    private ArrayList<Marker> marcadoresMds = new ArrayList<>();
 
 
     private ImageView ivMenu,ivMenu2 ;
@@ -200,8 +213,90 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
             }
         });
 
+        //Obtiene los jefes asociados al gerente
+        obtieneJefesXGerente();
+
         pintarDatos();
 
+    }
+
+    public void obtieneJefesXGerente() {
+        SharedPreferences preferences = getSharedPreferences("datosExpansion", Context.MODE_PRIVATE);
+        final String usuario = preferences.getString("usuario", "");
+
+        //loadingProgress(progressDialog, 0);
+        ProvaiderDatosRadios.getInstance( this ).obtieneJefesXgerente( usuario, new ProvaiderDatosRadios.JefeRadio() {
+            @Override
+            public void resolve(final JefeRadiosV jefeRadiosV) {
+                //loadingProgress(progressDialog, 1);
+                if(jefeRadiosV.getCodigo()== 200) {
+
+                    ArrayList<String> listaJefes = new ArrayList<String>();
+                    listaJefes.add(":: Selecciona un nuevo jefe ::");
+                    if(jefeRadiosV.getUsuarios() != null && jefeRadiosV.getUsuarios().size() > 0) {
+                        for(JefeRadiosV.UsuarioVO usuario : jefeRadiosV.getUsuarios()) {
+                            listaJefes.add(usuario.getUsuario());
+                        }
+                    }
+                    ArrayAdapter<String> jefesSpinner = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_spinner_item,
+                            listaJefes);
+                    jefesSpinner.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item); // The drop down view
+                    binding.jefesxgerente.setAdapter(jefesSpinner);
+                    binding.jefesxgerente.setSelection(0,false);
+                    binding.jefesxgerente.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView, final View view, final int i, long l) {
+                            //binding.reasignaBoton.setVisibility(View.VISIBLE);
+                            if(i > 0) {
+                                System.out.println("Jefe seleccionado: " + jefeRadiosV.getUsuarios().get(i-1).getUsuario());
+
+
+                                ProvaiderDatosRadios.getInstance( getApplicationContext() ).asignaRadioUsuario( usuario, radioID, String.valueOf(jefeRadiosV.getUsuarios().get(i-1).getUsuarioId()), new ProvaiderDatosRadios.JefeRadioNuevo() {
+                                    @Override
+                                    public void resolve(final JefeRadiosNuevoV jefeRadiosNuevoV) {
+                                        //loadingProgress(progressDialog, 1);
+                                        if(jefeRadiosNuevoV.getCodigo() == 200) {
+                                            //binding.reasignaBoton.setVisibility(View.GONE);
+                                            System.out.println("USUARIO reasignado correctament");
+                                            binding.tvAsignado.setText( "Asignado: " + jefeRadiosV.getUsuarios().get(i-1).getUsuario() );
+                                            MostrarSnack(view, "Se asignó el radio exitosamente");
+                                        }else {
+                                            //loadingProgress( progressDialog,1 );
+                                            MostrarSnack(view, "Error al asignar el radio");
+                                        }
+
+                                    }
+
+                                    @Override
+                                    public void reject(Exception e) {
+                                        //loadingProgress(progressDialog, 1);
+                                    }
+                                } );
+
+
+
+
+                            } else if(i == 0) {
+                                //binding.reasignaBoton.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> adapterView) {
+
+                        }
+                    });
+                }else {
+                    //loadingProgress( progressDialog,1 );
+                }
+
+            }
+
+            @Override
+            public void reject(Exception e) {
+                //loadingProgress(progressDialog, 1);
+            }
+        } );
     }
 
     /* Método que setea la vista con el binding */
@@ -267,8 +362,13 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
     @Override
     public void onMapReady(GoogleMap googleMap) {
         Bundle bundle = getIntent().getExtras();
+
         List<Competencia> listaCompetencia = bundle.getParcelableArrayList( COMPETENCIA );
         List<GeneradoresRadio> listaGeneradores = bundle.getParcelableArrayList( GENERADORES_RADIOS );
+
+        List<TiendasVO> listaTiendas = bundle.getParcelableArrayList( TIENDAS );
+        List<MdsVO> listaMds = bundle.getParcelableArrayList( MDS );
+
         Double latitud = Double.parseDouble(bundle.getString(LATITUD));
         Double longitud = Double.parseDouble(bundle.getString(LONGITUD));
         Resources resource = ActivityDetalleRadios.this.getResources();
@@ -283,7 +383,7 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
                 .strokeColor(resource.getColor(R.color.radios))
                 .fillColor(resource.getColor(R.color.radios)));
 
-        PintarMarcadores( googleMap, listaCompetencia, listaGeneradores );
+        PintarMarcadores( googleMap, listaCompetencia, listaGeneradores, listaTiendas, listaMds);
         /*for (int i = 0; i<listaCompetencia.size();i++){
             switch (listaCompetencia.get( i ).getGenerador()){
                 case "Tiendas 3B":
@@ -430,7 +530,29 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
         googleMap.animateCamera( CameraUpdateFactory.newCameraPosition(cameraPosition));
     }
 
-    private void PintarMarcadores(GoogleMap googleMap, List<Competencia> listaCompetencia, List<GeneradoresRadio> listaGeneradores) {
+    private void PintarMarcadores(GoogleMap googleMap, List<Competencia> listaCompetencia, List<GeneradoresRadio> listaGeneradores, List<TiendasVO> listaTiendas, List<MdsVO> listaMds) {
+
+        for(int i = 0; i < listaTiendas.size(); i++) {
+            marcadoresTiendas.add( googleMap.addMarker( new MarkerOptions()
+                    .anchor( 0.5f,0.5f )
+                    .position( new LatLng( listaTiendas.get( i ).getLatitud(), listaTiendas.get( i ).getLongitud() ))
+                    .zIndex( 1.0f )
+                    .title( listaTiendas.get( i ).getNombre() )
+                    .icon( BitmapDescriptorFactory.fromResource( R.mipmap.ic_tiendas_neto_foreground  ) ) ));
+            binding.checkTiendas.setChecked( true );
+        }
+
+        for(int i = 0; i < listaMds.size(); i++) {
+            marcadoresMds.add( googleMap.addMarker( new MarkerOptions()
+                    .anchor( 0.5f,0.5f )
+                    .position( new LatLng( listaMds.get( i ).getLatitud(), listaMds.get( i ).getLongitud() ))
+                    .zIndex( 1.0f )
+                    .title( listaMds.get( i ).getNombre() )
+                    .icon( BitmapDescriptorFactory.fromResource( R.mipmap.ic_mds_neto_foreground  ) ) ));
+            binding.checkMds.setChecked( true );
+        }
+
+
         for (int i = 0; i<listaCompetencia.size();i++){
             switch (listaCompetencia.get( i ).getGenerador()){
                 case "Tiendas 3B":
@@ -636,7 +758,7 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
 
                     }
                     break;
-                case "MERCADO":
+                case "MERCADOS":
                     if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
                         marcadoresMercado.add(  googleMap.addMarker( new MarkerOptions()
                                 .anchor( 0.5f,0.5f )
@@ -657,7 +779,7 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
 
                     }
                     break;
-                case "OFICINA DE GOBIERNO":
+                case "OFICINAS DE GOBIERNOS":
                     if (listaGeneradores.get( i ).getTipogeneradorId().equals( "2" )){
                         marcadoresOGobierno.add(  googleMap.addMarker( new MarkerOptions()
                                 .anchor( 0.5f,0.5f )
@@ -880,6 +1002,32 @@ public class ActivityDetalleRadios extends AppCompatActivity implements OnMapRea
     public void verMacador(View view) {
         boolean checked = ((CheckBox) view).isChecked();
         switch (view.getId()){
+            case R.id.checkTiendas:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkTiendasNeto ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresTiendas.size();i ++ ){
+                        marcadoresTiendas.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresTiendas.size();i ++ ){
+                        marcadoresTiendas.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
+            case R.id.checkMds:
+                if (checked) {
+                    System.out.println( "~~~~~~~~~~~~~~~~~ checkMds ~~~~~~~~~~~~~~~~~ " );
+                    for (int i = 0; i < marcadoresMds.size();i ++ ){
+                        marcadoresMds.get( i ).setVisible( true );
+                    }
+                }else {
+                    for (int i = 0; i < marcadoresMds.size();i ++ ){
+                        marcadoresMds.get( i ).setVisible( false );
+                    }
+                    System.out.println(" no esta seleccionado :/ ");
+                }
+                break;
             case R.id.checkTiendas3B:
                 if (checked) {
                     System.out.println( "~~~~~~~~~~~~~~~~~ checkTiendas3B ~~~~~~~~~~~~~~~~~ " );

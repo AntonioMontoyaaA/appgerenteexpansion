@@ -290,6 +290,46 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
+
+                        <Spinner
+                            android:layout_marginStart="18dp"
+                            android:layout_marginEnd="18dp"
+                            android:id="@+id/jefesxgerente"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/cal_color_white"
+                            />
+                    </LinearLayout>
+
+                    <!--<LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/reasignaBoton"
+                            android:visibility="gone"
+                            android:layout_width="match_parent"
+                            android:layout_height="35dp"
+                            android:layout_margin="10dp"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:background="@drawable/estilo_boton_radios"
+                            android:onClick="Reasigna"
+                            android:text="@string/reasigna"
+                            android:textAllCaps="false"
+                            android:textColor="@color/blanco"
+                            android:textSize="14sp"
+                            app:typeface="robotoRegular"/>
+
+                    </LinearLayout>-->
+
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
                         <TextView
                             android:textSize="@dimen/text_size"
                             android:gravity="left|center"
@@ -1703,6 +1743,44 @@
                             android:text="Iglesias"/>
                         <ImageView
                             android:src="@mipmap/pin_templo_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkTiendas"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Tiendas Neto"/>
+                        <ImageView
+                            android:src="@mipmap/ic_tiendas_neto_foreground"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"/>
+                    </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:background="@android:color/transparent"
+                        android:gravity="center">
+                        <CheckBox
+                            android:textColor="@android:color/white"
+                            android:onClick="verMacador"
+                            style="@style/Platform.MaterialComponents.Light"
+                            android:id="@+id/checkMds"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="MD's"/>
+                        <ImageView
+                            android:src="@mipmap/ic_mds_neto_foreground"
                             android:layout_width="25dp"
                             android:layout_height="25dp"/>
                     </LinearLayout>
